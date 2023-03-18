@@ -1,4 +1,4 @@
 #!/bin/bash
-# ini file bash kalo mau pakai cmd cukum tulis command dibawa ini saja
+# ini file bash kalo mau pakai cmd cukup tulis command dibawa ini saja
 php -S localhost:6670
 # localhost:6670

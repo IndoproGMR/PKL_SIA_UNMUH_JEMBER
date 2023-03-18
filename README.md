@@ -2,14 +2,14 @@
 
 ---
 
-# Angota
+# Anggota
 
-- 20106511
-- 20106511
-- 20106511
-- 20106511
-- 20106511
-- 20106511
+- 2010651148_FAHMI AKBAR RAFSANJANI
+- 2010651166_AULIA MUHAMMAD FERNANDA
+- 2010651181_FREGI OKTA PRADANA
+- 2010651182_GALIH ADITYA PRAKOSA
+- 2010651164_MOH. MAULANA WISNU
+- 2010651170_Achmad Naji
 
 ---
 
@@ -62,7 +62,6 @@
 - PHP IntelliSense
 - PHP Language Features
 - Prettier - Code formatter
-- Tabnine AI Autocomplete for Javascript, Python, Typescript, PHP, Go, Java, Ruby & more
 
 ---
 
