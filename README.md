@@ -1,16 +1,17 @@
 # PKL SIA UNMUH JEMBER
 
 ---
-___
 
 # Angota
+
 - 20106511
 - 20106511
 - 20106511
 - 20106511
 - 20106511
 - 20106511
-___
+
+---
 
 # hal yang harus di lakukan
 
@@ -48,6 +49,7 @@ ___
 ---
 
 ### Extensions
+
 - Auto Rename Tag
 - advanced-new-file
 - Better Comments
@@ -62,7 +64,8 @@ ___
 - Prettier - Code formatter
 - Tabnine AI Autocomplete for Javascript, Python, Typescript, PHP, Go, Java, Ruby & more
 
-___
+---
 
 ### Link
+
 [Desain UI/UX/Database](https://www.figma.com/file/HYH6LWqCgBxjnr177zxdOb/Desain-UI%2FUX%2FDatabase?node-id=0-1&t=GnZzbyVQC3h8YHnq-0)
