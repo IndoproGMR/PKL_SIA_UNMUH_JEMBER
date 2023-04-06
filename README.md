@@ -7,14 +7,12 @@
 
 # Anggota PKL
 
-- 2010651148_FAHMI AKBAR RAFSANJANI   (Tugas x)
-- 2010651166_AULIA MUHAMMAD FERNANDA  (Tugas x)
-
-- 2010651181_FREGI OKTA PRADANA       (Tugas x)
-- 2010651182_GALIH ADITYA PRAKOSA     (Tugas x)
-
-- 2010651164_MOH. MAULANA WISNU       (Tugas x)
-- 2010651170_Achmad Naji              (Tugas x)
+- 2010651148_FAHMI AKBAR RAFSANJANI
+- 2010651166_AULIA MUHAMMAD FERNANDA
+- 2010651181_FREGI OKTA PRADANA
+- 2010651182_GALIH ADITYA PRAKOSA
+- 2010651164_MOH. MAULANA WISNU
+- 2010651170_Achmad Naji
 
 ---
 
@@ -25,9 +23,9 @@
 3. buat branch sesuai tugas nya
 4. lalu buat 1 file apa saja
 5. lalu push repo
+6. install composer
 
 ---
-
 ## TODO:
 
 - [ ] framework
@@ -38,10 +36,14 @@
 - [ ] UI Surat masuk
 - [ ] Backend Surat masuk
 - [ ] DB Surat masuk
+- [ ] Enckripsi qrcode
+- [ ] Quary Filter
+- [ ] menyimpan namafile
 
 - [ ] UI Archive
 - [ ] Backend Archive
 - [ ] DB Archive
+- [ ] menyimpan namafile
 
 - [ ] UI Quary archive
 - [ ] Backend Quary archive
@@ -51,10 +53,19 @@
 
 - [ ] Dokumentasi PHP
 
+- [x] cara men encripsi TTD
+- [x] cara men decripsi TTD
+- [ ] cara men encripsi file PDF
+- [ ] cara men decripsi file PDF
+- [x] membuat QrCode
+- [x] mensave pdf
+
+
+
+
+
 ---
-
 ### Extensions
-
 - Auto Rename Tag
 - advanced-new-file
 - Better Comments
@@ -67,9 +78,6 @@
 - PHP IntelliSense
 - PHP Language Features
 - Prettier - Code formatter
-
----
-
+___
 ### Link
-
 [Desain UI/UX/Database](https://www.figma.com/file/HYH6LWqCgBxjnr177zxdOb/Desain-UI%2FUX%2FDatabase?node-id=0-1&t=GnZzbyVQC3h8YHnq-0)

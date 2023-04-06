@@ -19,7 +19,7 @@ ada filter sudah tandatangain
 
 status sudah ditanda dan belum
 
-perlu tanda tangan manual(drawing tab)
+menggunakan qrcode
 
 akun mahasiswa
 akun level
@@ -32,6 +32,7 @@ contoh melihat masasiswa TI status aktif lulus maka dia akan keluar semua
 tapi pasti akan keluar semua dosen mau spesific kaya anggatan berapa
 
 akun dosen
+akun pengajaran
 ___
 
 ### tugas 3 : (mengarsipkan surat)
@@ -44,22 +45,24 @@ ___
 
 
 ### Perlu
-format auth untuk login
-framework nya pakai apa ? Natif
-hardware nya apa aja ?
-plugin untuk memasukan ke sia
-desain website
-database sia
-MOU
+format auth untuk login?\n
+framework nya pakai apa ? CodeIgnater4\n
+hardware nya apa aja ? computer untuk cleint\n
+plugin untuk memasukan ke sia ? \n
+desain website ?\n
+database sia ?\n
+MOU ?\n
 
 ___
 
-### LVL: ada 3 lvl
-| nama      | lvl |
-| --------- | --- |
-| mahasiswa | 1   |
-| dosen     | 2   |
-| dekan     | 3   |
+### LVL: ada 4 lvl
+| Nama       | lvl |
+| ---------- | --- |
+| Mahasiswa  | 1   |
+| Dosen      | 2   |
+| Dekan      | 3   |
+| Pengajaran | 4   |
+
 
 ### Lvl Perm:
 | fungsi              | lvl |
@@ -71,11 +74,170 @@ ___
 | UI Quary Arsip      | 2,3 |
 
 ### Tabel Surat:
-| Id_Surat | nomer | tgl  | Id_MHS_fk | ttd_oleh_fk | ttd_done |
-| -------- | ----- | ---- | --------- | ----------- | -------- |
-| int      | int   | date | int       | int         | boolean  |
+| Id_Surat | nomer | tgl  | Id_MHS_fk | ttd_oleh_fk | ttd_done | kapan_diTTD | jenis surat |
+| -------- | ----- | ---- | --------- | ----------- | -------- | ----------- | ----------- |
+| int      | int   | date | int       | int         | boolean  | date        | varchar     |
+
 
 ### Table Arsip:
-| id_Arsip | darimana | no_surat | time_stamp |
-| -------- | -------- | -------- | ---------- |
-| int      | varchar  | varchar  | timestamp  |
+| id_Arsip | darimana | no_surat | time_stamp | jenis surat | kode surat | penerima surat | tdd oleh |
+| -------- | -------- | -------- | ---------- | ----------- | ---------- | -------------- | -------- |
+| int      | varchar  | varchar  | timestamp  | varchar     | varchar    | varchar        | varchar  |
+
+___
+KRS
+| idKRS | idMHS | idMK | nilai T1 | nilai T2 | nilai T3 | UAS | UTS |
+| ----- | ----- | ---- | -------- | -------- | -------- | --- | --- |
+| 1     | 201   | A01  | 90       | 30       | 80       | 50  | 10  |
+| 2     | 201   | A03  | 30       | 50       | 60       | 10  | 90  |
+| 3     | 202   | A01  | 90       | 90       | 100      | 10  | 50  |
+| 4     | 201   | A02  | 10       | 40       | 60       | 80  | 90  |  
+
+MK
+| idMK | NamaMK |
+| ---- | ------ |
+| A01  | DB1    |
+| A02  | BD2    |
+| A03  | AI     |
+
+MHS
+| idMHS | namaMHS |
+| ----- | ------- |
+| 201   | bob1    |
+| 202   | bob2    |
+
+DB_PenandaTangan
+| idPT | idPengajaran/idDosen/IdDekan | UUID |
+| ---- | ---------------------------- | ---- |
+| P01  | D03                          | fw2  |
+| P02  | D04                          | frt3 |
+| P03  | D05                          | ger3 |
+
+DB_Suratmasuk
+| idSuratMasuk | idMHS | idPT | jenisSurat | NOSurat | Done  | Hash   | timestamp |
+| ------------ | ----- | ---- | ---------- | ------- | ----- | ------ | --------- |
+| 1            | 201   | P01  | test1      | N0543   | true  | wefwad | unixtime  |
+| 2            | 201   | P02  | test1      | N0543   | false | null   | null      |
+| 3            | 202   | P01  | test2      | N0645   | false | null   | null      |
+| 4            | 201   | P03  | test1      | N0808   | false | null   | null      |
+
+
+
+
+### UI Penanda Tangan (login sebagai D03 == P01)
+#### yang perlu di TTD
+No Surat N0645 (201(Bob1))
+#### Semua TTD
+No Surat N0543 (Sudah TTD)
+No Surat N0645 (belum TTD)
+
+### UI Mahasiswa (login sebagai Bob1 == 201)
+#### yang surat yang belum di TTD
+Nomer surat N0543 (D04)
+Nomer surat N0808 (D05)
+#### yang sudah di TTD
+Nomer surat N0543 (D01)
+
+### UI Mahasiswa (login sebagai Bob2 == 202)
+#### yang surat yang belum di TTD
+Nomer surat N0645 (D03)
+#### yang sudah di TTD
+(Belum ada surat yang di TTD)
+
+
+
+
+### Apakah TTD Valid ? (untuk validasi ttd 1 1)
+key 2way NoSurat_UUID_idpengajaran_idMHS
+
+nomersurat untuk mendapatkan detail surat (idpengajaran,idmhs,unixtime)
+Idpengajaran untuk mendapatkan siapa nama penandatangan
+idmhs untuk mendapatkan nama mahasiswa
+unixtime untuk memberitahu kapan di ttd kan
+uuid dan RandomNumber untuk menambah total komplexsitas encripsi
+
+
+2wayhash = Nosurat_UUID-RandomNumber_Idpengajaran_idMHS_unixtime
+
+simpan 2wayhash di DB
+
+#### QRCode
+ambil 2wayhash dari db
+
+TTD-oleh_NamaDosen_2wayhash
+jadikan menjadi QRCode
+
+dengan nama file idsuratmasuk.png
+
+bila di scan akan menjadi
+TTD-oleh_NamaDosen_2wayhash
+
+pertama akan di expload "\_"
+pada array 0 TTD-oleh
+akan memberitahu bahwa ini adalah cek validasi TTD
+
+pada array 2 akan di dekripsi menjadi
+NoSurat_UUID-RandomNumber_Idpengajaran_idMHS_unixtime
+
+pertama akan di expload "\_"
+pada array 0 NoSurat akan mencari No Surat
+lalu menyusaikan 2wayhash dengan yang di db
+bila tidak sama
+pada array 2,3,4 akan di cocokan 1 1
+yang tidak cocok akan di beri tau kan
+
+
+---
+
+### DBSuratMasukDone
+| idDBSurat | idMHS | hashFilePDF | hashFilesebelum | done | jenisSurat        | NoSurat | timeStamp |
+| --------- | ----- | ----------- | --------------- | ---- | ----------------- | ------- | --------- |
+| 0         | 201   | 12333       | 0000            | done | keterlambatan-SKS | 234     | UnixTime  |
+| 1         | 201   | 346234      | 12333           | done | MOU               | 345     | UnixTime  |
+| 2         | 202   | 26347       | 346234          | done | MOU               | 663     | UnixTime  |
+| 3         | 201   | 143234      | 26347           | done | telat-bayar1      | 453     | UnixTime  |
+
+
+### DBSuratMasukNot
+| idDBSurat | idMHS | hash | done | jenisSurat   | NoSurat | lastHast |
+| --------- | ----- | ---- | ---- | ------------ | ------- | -------- |
+| 1         | 202   | NULL | not  | telat-bayar1 | 645     | 3        |
+| 2         | 201   | NULL | not  | telat-bayar2 | 453     | 3        |
+
+
+
+
+#### PDFDone
+0_Dummy_000_234 (12333)
+1_bob1_12333_345 (346234)
+2_bob2_346234_663 (26347)
+3_bob1_26347_453 (143234)
+
+#### PDFTemp (ttd belum lengkap)
+X1_bob2_3_143234_Temp_645 (1234345) (ttd 1)
+OverWrite ->
+X1_bob2_3_143234_Temp_645 (45567453) (ttd 2)
+
+X2_bob2_3_143234_Temp_453 (20839853) (ttd 0)
+
+
+key file enkripsi 2way (NoSurat_idMHS_hashFileTerakhir_)
+
+### file download
+bob2_Nime_JenisSurat_NoSurat
+
+
+### apakah pdf ini valid ? (untuk validasi banyak file dengan cepat)
+### real
+didalam PDF ada Enkripsi key yang memberitaukan apakah file valid
+
+##### input
+no surat
+key (NoSurat_hashFileTerakhir_idMHS)
+file (optional)
+
+
+### API untuk quick validasi chack (GStore)
+app android
+(link) jadi sekolah lain bisa di pakai di sekolah nya masing2
+api/v1/(:qr)

@@ -125,3 +125,12 @@ nb-configuration.xml
 /phpunit*.xml
 /.phpunit.*.cache
 
+# Obsidian
+.obsidian
+
+
+# public
+public/pdf/*
+public/qrcode/*
+public/qrtemp/*
+public/temp/*
