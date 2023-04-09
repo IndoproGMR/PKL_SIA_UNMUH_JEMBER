@@ -30,9 +30,16 @@ $routes->set404Override();
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
+// $routes->get('/api/v1/validasi/(:any)', 'Home::index');
+
 $routes->get('/suratmasuk', 'TestSuratmasuk::index');
-$routes->get('/suratmasuk/(:any)', 'TestSuratmasuk::testreture/$1');
-$routes->get('/suratmasuk2/(:any)', 'TestSuratmasuk::testreture2/$1/$2');
+$routes->get('/suratmasuk/validasi', 'TestSuratmasuk::validasi');
+// $routes->get('/suratmasuk/validasi/(:any)', 'TestSuratmasuk::validasi/$1/$2');
+$routes->get('/login', 'Login::index');
+$routes->get('/login/debuglogin/(:any)', 'Login::debuglogin/$1/$2');
+
+// $routes->get('/suratmasuk/(:any)', 'TestSuratmasuk::testreture/$1');
+// $routes->get('/suratmasuk2/(:any)', 'TestSuratmasuk::testreture2/$1/$2');
 
 /*
  * --------------------------------------------------------------------

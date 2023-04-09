@@ -36,9 +36,9 @@
 - [ ] UI Surat masuk
 - [ ] Backend Surat masuk
 - [ ] DB Surat masuk
-- [ ] Enckripsi qrcode
+- [x] Enckripsi qrcode
 - [ ] Quary Filter
-- [ ] menyimpan namafile
+- [x] menyimpan namafile
 
 - [ ] UI Archive
 - [ ] Backend Archive
@@ -55,7 +55,7 @@
 
 - [x] cara men encripsi TTD
 - [x] cara men decripsi TTD
-- [ ] cara men encripsi file PDF
+- [x] cara men encripsi file PDF
 - [ ] cara men decripsi file PDF
 - [x] membuat QrCode
 - [x] mensave pdf

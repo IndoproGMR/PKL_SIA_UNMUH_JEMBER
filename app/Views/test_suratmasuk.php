@@ -24,6 +24,7 @@
         left: 100px;
     }
 </style>
+<!-- <img src="qrcode/ini adalah nama qr.png" class="foto qr" alt=""> -->
 
 <body>
     ini adalah web surat arsip
@@ -34,7 +35,7 @@
 
     $Render = new Rendergambar;
 
-    // $Render->Render_gambar("qrcode/q392asd.png", "foto qr");
+    // $Render->Render_gambar("qrcode/ini adalah nama qr.png", "foto qr");
     // $Render->Render_gambar("logo/1513588325430.png", "foto qr");
     // echo $_ENV['TTDKEY'];
 

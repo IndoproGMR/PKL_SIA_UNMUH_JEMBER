@@ -1,4 +1,4 @@
-surat menyurat dimana mahasiswa bisa meminta surat dimana dekan bisa mencentang lalu menandatangini surat lalu surat sudah di setujui
+dassurat menyurat dimana mahasiswa bisa meminta surat dimana dekan bisa mencentang lalu menandatangini surat lalu surat sudah di setujui
 
 mahasiswa bisa mendownload surat menjadi pdf atau print
 ___
@@ -241,3 +241,63 @@ file (optional)
 app android
 (link) jadi sekolah lain bisa di pakai di sekolah nya masing2
 api/v1/(:qr)
+
+
+
+
+### cara kerja permintaan ttd
+mahasiswa meminta jenis surat
+
+server akan membuatkan tamplate
+server akan melihat siapa saja yang perlu ttd
+
+
+bila mahasiswa yakin mau membuat maka
+
+server akan menambahkan kedalam SuratMasukTemp karena surat belum di TTD
+server akan membuatkan NoSurat
+server akan save timestamp
+server akan Menyimpan siapa yang membuatSurat
+server akan akan Menyimpan jenissurat
+
+mahasiswa akan melihat di daskboard bahwa surat belum di TTD berada di dalam DB_SuratMasuk_Temp
+mahasiswa dapat menRefrash untuk melihat apakah semua TTD Sudah Di penuhi
+
+
+server akan melihat DB_TTDSurat dimana NoSurat apakah flag done sudah tidak ada yang false bila sudah tidak ada maka cek apakah twowaykeyhash ada yang masi null bisa semua sudah terisi maka 
+
+server akan membuat TTD qrcode dengan nama "NoSurat_IdPenandaTangan" dengan data twowakeyhash
+
+server akan membuat qrcode dengan nama "HashFile_NoSurat" dengan data sha256 file sebelum nya
+
+server akan menyimpan data2 di dalam DB_SuratMasuk
+server akan menyimpan data id baru
+server akan menyimpan siapa yang meminta
+server akan menyimpan NoSurat
+server akan jenisSurat
+
+setelah semua TTD sudah dipenuhi
+TTD qrcode akan di taruh di tempat nya
+hashFile qrcode akan di taruh di tempat nya
+makan file pdf akan disimpan dengan nama "JenisSurat_NoSurat_Mahasiswa"
+setelah file sudah disimpan server akan mengambil hash sha256 file dan mengupdate db
+
+
+**pada PenandaTangan (Dosen/Dekan/Pengajaran)**
+melihat bahwa ada NoSurat TTD yang belum di flag Done masi false
+
+pada detail TTD memberitau siapa yang meminta, jenisSurat, dan kapan
+
+bila dosen menTTD maka
+server akan menyimpan siapa yang meminta
+server akan menyimpan siapa yang menTTD
+server akan membuat UUID
+server akan menyimpan penadatanganTTD
+server akan menyimpan NoSurat
+server akan menyimpan JenisSurat
+server akan membuat dan Menyimpan twowaykeyhash
+dan mengubah flag done menjadi true
+server akan menyimpan waktu TTD
+
+
+

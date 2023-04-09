@@ -16,6 +16,8 @@ use Endroid\QrCode\Writer\PngWriter;
 use Dompdf\Dompdf;
 use Dompdf\Options;
 
+
+
 class Rendergambar
 {
     // lokasi public/{lokasi}
@@ -56,7 +58,7 @@ class Rendergambar
 
         // Create generic logo
         $logo = Logo::create($_ENV['logoqr'])
-            ->setResizeToWidth(100);
+            ->setResizeToWidth(50);
 
         $result = $writer->write($qrCode, $logo);
 
@@ -80,7 +82,7 @@ class Rendergambar
 
         // Create generic logo
         $logo = Logo::create($_ENV['logoqr'])
-            ->setResizeToWidth(100);
+            ->setResizeToWidth(50);
 
         $result = $writer->write($qrCode, $logo);
 
