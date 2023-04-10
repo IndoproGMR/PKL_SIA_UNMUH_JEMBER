@@ -20,8 +20,10 @@ class enkripsi
         return $textenkripsi;
     }
 
-    public function dekripsiTTD($text)
+    public function dekripsiTTD(String $text)
     {
+        $datadekripsi = $this->twowayhash_dekripsi($text);
+        return $this->pecahkan($datadekripsi);
     }
 
     public function twowayhash_enkripsi(String $msg)

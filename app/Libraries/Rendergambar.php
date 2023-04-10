@@ -24,17 +24,21 @@ class Rendergambar
     // class pada css
     public function Render_gambar(String $lokasi, String $class)
     {
-        $type = pathinfo($lokasi, PATHINFO_EXTENSION);
-        $data = file_get_contents($lokasi);
-        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
-        echo "<img src='" . $base64 . "' class='" . $class . "' alt=''>";
+        if (file_exists($lokasi)) {
+            $type = pathinfo($lokasi, PATHINFO_EXTENSION);
+            $data = file_get_contents($lokasi);
+            $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+            echo "<img src='" . $base64 . "' class='" . $class . "' alt='' loading='lazy'>";
+        } else {
+            echo "img not found: " . $lokasi;
+        }
     }
 
     // base64 code
     // class pada css
     public function Render_gambar_dari_base64(String $database64, String  $class)
     {
-        echo "<img src='" . $database64 . "' class='" . $class . "' alt=''>";
+        echo "<img src='" . $database64 . "' class='" . $class . "' alt='' loading='lazy'>";
     }
 
     // dataqr isi qr code
@@ -95,12 +99,16 @@ class Rendergambar
     // 10 = di save tapi tidak ada view
     // 11 = di save dan di view
     // nama file yang disimpan
-    public function Render_pdf(String $htmlpage, String $saveorview, String $namapdf)
+    public function Render_pdf(String $htmlpage, String $saveorview, String $namapdf, $data = null)
     {
+        // data tidak boleh kosong
+        $data['defaultdata'] = "data dummy";
+
         $lokasi = "pdf/$namapdf.pdf";
         // instantiate and use the dompdf class
         $dompdf = new Dompdf();
-        $dompdf->loadHtml(view($htmlpage));
+
+        $dompdf->loadHtml(view($htmlpage, $data));
 
         // (Optional) Setup the paper size and orientation
         $dompdf->setPaper('A4', 'portrait');

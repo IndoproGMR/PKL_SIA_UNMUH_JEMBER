@@ -29,14 +29,21 @@
 <body>
     ini adalah web surat arsip
     <br>
+    <!-- <img src="a" alt=""> -->
+
+    <?= esc($datadaricontroller) ?>
+    <br>
+    <?= esc($datake2) ?>
     <?php
 
     use App\Libraries\Rendergambar;
 
     $Render = new Rendergambar;
 
-    // $Render->Render_gambar("qrcode/ini adalah nama qr.png", "foto qr");
-    // $Render->Render_gambar("logo/1513588325430.png", "foto qr");
+
+    $Render->Render_gambar("$foto2", "foto qr");
+    $Render->Render_gambar("logo/$foto1.png", "foto qr");
+    $Render->Render_gambar("$foto3", "foto qr");
     // echo $_ENV['TTDKEY'];
 
     ?>
