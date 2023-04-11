@@ -18,28 +18,48 @@
 
 <body>
     <video id="preview"></video>
-    <form action="">
-
+    <form action="" method="post">
+        <input type="text" name="nosurat" id="nosurat" placeholder="NoSurat">
+        <br>
         <input type="text" name="qrcode" id="qrcode" placeholder="QRcode">
+        <input type="submit" value="cari">
     </form>
-    <script type="text/javascript">
+    <?php
+    if (!$nocam) {
+        echo '
+        <script type="text/javascript">
         let scanner = new Instascan.Scanner({
-            video: document.getElementById('preview')
+            video: document.getElementById("preview")
         });
-        scanner.addListener('scan', function(content) {
+        scanner.addListener("scan", function(content) {
             console.log(content);
-            document.getElementById('qrcode').value = content;
+            document.getElementById("qrcode").value = content;
         });
         Instascan.Camera.getCameras().then(function(cameras) {
             if (cameras.length > 0) {
                 scanner.start(cameras[0]);
             } else {
-                console.error('No cameras found.');
+                console.error("No cameras found.");
             }
         }).catch(function(e) {
             console.error(e);
         });
     </script>
+        ';
+    }
+    ?>
+    <?php
+
+    use App\Libraries\validasienkripsi;
+
+    if (isset($_POST["nosurat"]) && isset($_POST["qrcode"])) {
+        $nosurat = $_POST["nosurat"];
+        $datahash = $_POST["qrcode"];
+        $validasienkripsi = new validasienkripsi();
+        $validasienkripsi->validasiEnkrispsi($datahash, $nosurat);
+    }
+    ?>
+
 </body>
 
 </html>

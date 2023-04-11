@@ -47,7 +47,20 @@ class TestSuratmasuk extends BaseController
     }
     public function kameraQR()
     {
-        return view("validasienkripsi");
+        $data['nocam'] = false;
+
+        if (isset($_GET["nocam"])) {
+            $nocam = $_GET["nocam"];
+            if ($nocam == "true") {
+                $data['nocam'] = true;
+            } else {
+                $data['nocam'] = false;
+            }
+        }
+        return view("kamerascan", $data);
+    }
+    public function detailSurat()
+    {
     }
 
     public function testreture($id)

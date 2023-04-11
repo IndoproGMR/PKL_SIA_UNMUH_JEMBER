@@ -34,6 +34,11 @@ $routes->get('/', 'Home::index');
 
 $routes->get('/suratmasuk', 'TestSuratmasuk::index');
 $routes->get('/suratmasuk/validasi', 'TestSuratmasuk::validasi');
+$routes->get('/suratmasuk/kameraQR', 'TestSuratmasuk::kameraQR');
+$routes->post('/suratmasuk/kameraQR', 'TestSuratmasuk::kameraQR');
+
+// $routes->get('/suratmasuk/kameraQR/(:any)', 'TestSuratmasuk::kameraQR/$1');
+
 // $routes->get('/suratmasuk/validasi/(:any)', 'TestSuratmasuk::validasi/$1/$2');
 $routes->get('/login', 'Login::index');
 $routes->get('/login/debuglogin/(:any)', 'Login::debuglogin/$1/$2');
