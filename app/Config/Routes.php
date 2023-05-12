@@ -46,6 +46,8 @@ $routes->get('/login/debuglogin/(:any)', 'Login::debuglogin/$1/$2');
 // $routes->get('/suratmasuk/(:any)', 'TestSuratmasuk::testreture/$1');
 // $routes->get('/suratmasuk2/(:any)', 'TestSuratmasuk::testreture2/$1/$2');
 
+$routes->get('/api/v1/validasi/qr', 'apiv1::validasiqr');
+
 /*
  * --------------------------------------------------------------------
  * Additional Routing
