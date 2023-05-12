@@ -9,7 +9,7 @@ class validasienkripsi
     public function validasidariurl()
     {
         if (isset($_GET["validasi"]) && isset($_GET["noSurat"])) {
-            $data = $_GET["validasi"];
+            $data    = $_GET["validasi"];
             $noSurat = $_GET["noSurat"];
             echo $this->validasiEnkrispsi($data, $noSurat);
         } else {
@@ -20,14 +20,20 @@ class validasienkripsi
     {
         $enkripsi = new enkripsi;
         $type = $enkripsi->pecahkan($data);
+        if (count($type) < 3) {
+            echo "input error";
+            return "error";
+        }
 
-        $datahash = $type[2];
+        echo "bruhh";
         if ($type[0] == "DiTandaTanganiOleh") {
+            $datahash = $type[2];
             return $this->validasiTTD($datahash, $noSurat);
         } elseif ($type[0] == "PDF") {
             return $this->validasiPDF();
         } else {
-            return "error";
+            // echo "jenis validasi tidak di temukan";
+            return "jenis validasi tidak di temukan";
         }
     }
 
@@ -42,6 +48,10 @@ class validasienkripsi
         // TODO bila data dihash tidak ada di dalam DB maka dekripsikan hash nya
         $enkripsi = new enkripsi;
         $type = $enkripsi->dekripsiTTD($data);
+        if (count($type) < 5) {
+            echo "TTD tidak valid";
+            return "";
+        }
         echo "</br>";
         echo "NoSurat: " . $type[0]; // nosurat
         echo "</br>";

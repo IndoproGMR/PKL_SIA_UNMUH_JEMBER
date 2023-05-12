@@ -13,15 +13,53 @@
 <style>
     video {
         width: 300px;
+        z-index: 1;
+    }
+
+    .container {
+        position: relative;
+    }
+
+    .videogb {
+        width: 300px;
+        background-color: gray;
+        padding: 20px;
+        border-radius: 10px;
+        z-index: -1;
+    }
+
+    .container video {
+        position: relative;
+
+    }
+
+    .overlay {
+        position: absolute;
+        top: 50px;
+        left: 50px;
+        z-index: 0;
+        background-color: red;
+        border-radius: 20px;
+        padding: 20px;
+        font-size: larger;
     }
 </style>
 
 <body>
-    <video id="preview"></video>
+
+    <div class="container">
+        <div class="videogb">
+            <video id="preview"></video>
+        </div>
+
+        <div class="overlay">
+            <p>Kamera sedang mati</p>
+        </div>
+    </div>
     <form action="" method="post">
         <input type="text" name="nosurat" id="nosurat" placeholder="NoSurat">
         <br>
-        <input type="text" name="qrcode" id="qrcode" placeholder="QRcode">
+        <textarea name="qrcode" id="qrcode" cols="30" rows="10"></textarea>
         <input type="submit" value="cari">
     </form>
     <?php
@@ -46,6 +84,7 @@
         });
     </script>
         ';
+    } else {
     }
     ?>
     <?php
