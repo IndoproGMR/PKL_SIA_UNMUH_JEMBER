@@ -301,3 +301,120 @@ server akan menyimpan waktu TTD
 
 
 
+
+
+
+
+
+
+
+
+**pengajar**
+| id  | pengajar |
+| --- | -------- |
+| 1   | budi     |
+| 2   | bude     |
+| 3   | joni     |
+| 4   | jona     |
+
+
+**penandatangan**
+| id  | uuid     | pin_secure | diskripsi | id_pengajar |
+| --- | -------- | ---------- | --------- | ----------- |
+| 1   | {uuidv4} | {hash}     | baak      | 1           |
+| 2   | {uuidv4} | {hash}     | baak2     | 2           |
+| 3   | {uuidv4} | {hash}     | entah apa | 4           |
+
+
+**jenis-surat**
+| id  | nama_jenisSurat | diskripsi |
+| --- | --------------- | --------- |
+| 1   | MOU             | MOU       |
+| 2   | MOU2            | MOU2      |
+| 3   | joni            |           |
+| 4   | jona            |           |
+
+
+**isi surat**
+| id  | isi-surat                    | diskripsi |
+| --- | ---------------------------- | --------- |
+| 1   | ini adalah surat mao         | surat mou |
+| 2   | ini adalah surat cinta joini | surat     |
+
+
+**ttd_surat_penanda**
+| id_jenisSurat | id_PenandaTangan |
+| ------------- | ---------------- |
+| 1             | 1                |
+| 1             | 2                |
+| 2             | 3                |
+| 2             | 2                |
+| 1             | 3                |
+| 2             | 1                |
+
+
+**mahasiswa**
+| idMHS | namaMHS |
+| ----- | ------- |
+| 201   | bob1    |
+| 202   | bob2    |
+
+
+**ttd-Surat-Masuk**
+| id  | noSurat | timeStamp | id_mahasiswa | id_jenis-Surat |
+| --- | ------- | --------- | ------------ | -------------- |
+| 1   | 10021   | {waktu}   | 201          | 1              |
+| 2   | 1314    | {waktuk}  | 201          | 2              |
+
+
+**ttd**
+| id  | id_ttd-surat-masuk | hash   | status | timestamp | id_ttd |
+| --- | ------------------ | ------ | ------ | --------- | ------ |
+| 1   | 1                  | null   | belum  | null      | 3      |
+| 2   | 1                  | null   | bulum  | null      | 1      |
+| 3   | 1                  | null   | belum  | null      | 2      |
+| 4   | 2                  | {hash} | sudah  | {waktu}   | 1      |
+
+### cara kerja permintaan ttd
+
+**pengajar melihat siapa yang perlu ttd**
+-> mengambil id_pengajar (242)
+-> mengambil id_penandatangan (1)
+-> mengambil semua id_ttdSurat dari id_penandtagan yang berstatus belum (1)
+-> mengambil semua id_ttdSurat dari id_penandtagan yang berstatus sudah (2)
+
+**pengajar menandatangani**
+-> pengajar klik tandatanganin surat dengan id_ttdSurat
+-> server akan mangambil data2 dari penandatangan
+-> server akan mengambil id_mahasiswa
+-> server akan membuat hash
+-> server akan mengupdate di id_ttdSurat dengan hash,status,randomNumber,timestamp_ttd
+
+**mahasiswa melihat surat yang di ttd**
+-> mengambil id_mahasiswa (201)
+-> mengambil noSurat dari id_mahasiswa (10021,1314)
+-> mengambil 1 id_ttdSuratMasuk dari noSurat (10021)
+-> mencek 1 id_ttdSuratMasuk berapa jumlah yang perlu ttd
+-> mencek 1 id_ttdSuratMasuk berapa jumlah yang berstatus "sudah" (kurang 1)
+-> karena kurang 1 jadi belum ada tombol download
+
+-> bila sudah lengkap akan keluar tombol download
+-> dari noSurat akan mengambil semua id_ttdSurat menggunakan id_ttdSuratMasuk
+-> mengambil nama penandatangan dari id_penandatangan
+-> ngeloop ttd untuk dimasukan kedalam pdf
+-> dari id_jenis-Surat akan mengambil isi surat untuk dimasukan kedalam pdf
+
+**mahasiswa meminta surat**
+-> server akan mengambil pilihan jenis surat dari (db_jenis-surat)
+-> mahasiswa memilih jenis surat
+-> dari id_jenis-Surat akan mengambil isi surat untuk dimasukan kedalam pdf
+-> dari id_jenis-Surat akan mengambil id_penandaTangan untuk dimasukan kedalam pdf (ada 3 ttd) {forloop}
+-> bila mahasiswa klik minta surat
+
+-> server akan membuat queue db_ttd yang di ambil dari db_ttd-surat-penanda {forloop}
+-> server akan membuat noSurat dan di masukan ke db_surat-masuk
+
+
+id berdasarkan
+unixtime-randomnumber
+

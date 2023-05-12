@@ -55,7 +55,7 @@
 
 - [x] cara men encripsi TTD
 - [x] cara men decripsi TTD
-- [x] cara men encripsi file PDF
+- [ ] cara men encripsi file PDF
 - [ ] cara men decripsi file PDF
 - [x] membuat QrCode
 - [x] mensave pdf
