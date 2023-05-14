@@ -43,6 +43,10 @@
         padding: 20px;
         font-size: larger;
     }
+
+    .detailhide {
+        display: none;
+    }
 </style>
 
 <body>
@@ -56,48 +60,115 @@
             <p>Kamera sedang mati</p>
         </div>
     </div>
-    <form action="" method="post">
-        <input type="text" name="nosurat" id="nosurat" placeholder="NoSurat">
-        <br>
-        <textarea name="qrcode" id="qrcode" cols="30" rows="10"></textarea>
-        <input type="submit" value="cari">
-    </form>
-    <?php
-    if (!$nocam) {
-        echo '
-        <script type="text/javascript">
-        let scanner = new Instascan.Scanner({
-            video: document.getElementById("preview")
-        });
-        scanner.addListener("scan", function(content) {
-            console.log(content);
-            document.getElementById("qrcode").value = content;
-        });
-        Instascan.Camera.getCameras().then(function(cameras) {
-            if (cameras.length > 0) {
-                scanner.start(cameras[0]);
-            } else {
-                console.error("No cameras found.");
+    <h1 id="valid"></h1>
+
+    <input type="text" name="nosurat" id="nosurat" placeholder="NoSurat">
+    <br>
+    <textarea name="qrcode" id="qrcode" cols="30" rows="10"></textarea>
+    <br>
+    <input type="checkbox" name="autodetail" id="autodetail" value="autodetail"> auto detail
+    <br>
+    <input type="submit" value="detail" onclick=detail(url_apidetail)>
+
+    <br>
+
+    <p class="detailhide">No Surat: <span id="no-surat"></span></p>
+    <p class="detailhide">Mahasiswa: <span id="Mahasiswa"></span></p>
+    <p class="detailhide">Penandatangan: <span id="Penandatangan"></span></p>
+    <p class="detailhide">timestamp: <span id="timestamp"></span></p>
+    <p class="detailhide">UUID: <span id="UUID"></span></p>
+
+
+    <script type="text/javascript">
+        const url_api = "<?= getenv('urlapi') ?>";
+        const url_apidetail = "<?= getenv('urlapi') ?>" + "/detail";
+        <?php if (!$nocam) : ?>
+            let scanner = new Instascan.Scanner({
+                video: document.getElementById("preview")
+            });
+            scanner.addListener("scan", function(content) {
+                // console.log(content);
+                document.getElementById("qrcode").value = content;
+                cek(url_api)
+            });
+            Instascan.Camera.getCameras().then(function(cameras) {
+                if (cameras.length > 0) {
+                    scanner.start(cameras[0]);
+                } else {
+                    console.error("No cameras found.");
+                }
+            }).catch(function(e) {
+                console.error(e);
+            });
+        <?php endif ?>
+
+        async function cek(url) {
+            var nosurat = document.getElementById("nosurat").value
+            var qrcode = encodeURIComponent(document.getElementById("qrcode").value);
+            url = url + "?nosurat=" + nosurat + "&qrcode=" + qrcode
+            // console.log(url);
+            var x = document.querySelector('#autodetail:checked');
+            if (x) {
+                detail(url_apidetail);
             }
-        }).catch(function(e) {
-            console.error(e);
-        });
+
+            await fetch(url)
+                .then((response) => {
+                    return response.json();
+                })
+                .then((data) => {
+                    var valid = document.getElementById("valid").textContent = data.valid;
+                    console.log(data);
+                })
+        }
+
+        function detail(url) {
+            var nosurat = document.getElementById("nosurat").value
+            var qrcode = encodeURIComponent(document.getElementById("qrcode").value);
+            let countclass = document.getElementsByClassName("detailhide").length;
+
+            deleteclass("detailhide", countclass);
+
+
+            url = url + "?nosurat=" + nosurat + "&qrcode=" + qrcode
+
+            fetch(url)
+                .then((response) => {
+                    return response.json();
+                })
+                .then((data) => {
+                    var valid = data.valid;
+                    console.log(valid);
+                    document.getElementById("valid").textContent = data.valid;
+                    document.getElementById("no-surat").textContent = data.nosurat;
+                    document.getElementById("Mahasiswa").textContent = data.Mahasiswa;
+                    document.getElementById("Penandatangan").textContent = data.Penandatangan;
+                    document.getElementById("timestamp").textContent = data.timestamp;
+                    document.getElementById("UUID").textContent = data.UUID;
+                    // console.log(data);
+                })
+
+            if (!valid == "HashNotValid") {
+                document.getElementById("nosurat").textContent = "data.nosurat";
+                document.getElementById("valid").textContent = data.nosurat;
+                // document.getElementById("nosurat").textContent = data.nosurat;
+                document.getElementById("Mahasiswa").textContent = data.Mahasiswa;
+                document.getElementById("Penandatangan").textContent = data.Penandatangan;
+                document.getElementById("timestamp").textContent = data.timestamp;
+            }
+        }
+
+        function deleteclass(namaclass, count) {
+            if (!count == 0) {
+                for (let index = 0; index < count; index++) {
+                    document.getElementsByClassName(namaclass)[index].classList.remove(namaclass);
+                    count = count - 1;
+                }
+                deleteclass(namaclass, count);
+            }
+
+        }
     </script>
-        ';
-    } else {
-    }
-    ?>
-    <?php
-
-    use App\Libraries\validasienkripsi;
-
-    if (isset($_POST["nosurat"]) && isset($_POST["qrcode"])) {
-        $nosurat = $_POST["nosurat"];
-        $datahash = $_POST["qrcode"];
-        $validasienkripsi = new validasienkripsi();
-        $validasienkripsi->validasiEnkrispsi($datahash, $nosurat);
-    }
-    ?>
 
 </body>
 
