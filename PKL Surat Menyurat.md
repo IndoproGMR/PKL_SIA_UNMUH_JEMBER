@@ -375,6 +375,10 @@ server akan menyimpan waktu TTD
 | 3   | 1                  | null   | belum  | null      | 2      |
 | 4   | 2                  | {hash} | sudah  | {waktu}   | 1      |
 
+
+
+
+
 ### cara kerja permintaan ttd
 
 **pengajar melihat siapa yang perlu ttd**
@@ -407,8 +411,11 @@ server akan menyimpan waktu TTD
 **mahasiswa meminta surat**
 -> server akan mengambil pilihan jenis surat dari (db_jenis-surat)
 -> mahasiswa memilih jenis surat
+-> mahasiswa mengisi data tambahan {bila ada}
+-> bila mahasiswa klik preview
 -> dari id_jenis-Surat akan mengambil isi surat untuk dimasukan kedalam pdf
 -> dari id_jenis-Surat akan mengambil id_penandaTangan untuk dimasukan kedalam pdf (ada 3 ttd) {forloop}
+-> render pdf
 -> bila mahasiswa klik minta surat
 
 -> server akan membuat queue db_ttd yang di ambil dari db_ttd-surat-penanda {forloop}
