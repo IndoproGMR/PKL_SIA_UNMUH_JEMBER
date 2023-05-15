@@ -62,7 +62,7 @@ class TestSuratmasuk extends BaseController
 
         // for ($i = 0; $i < 100; $i++) {
 
-        echo $hasilhash = $enkripsi->enkripsiTTD("0912242", "035e29bb-c98e-40ec-b6a7-c5f1bc85aa20", "0312312", "nama", "23421232");
+        echo $hasilhash = $enkripsi->enkripsiTTD("0912242", "0312312", "nama", "23421232");
         echo "<br>";
         echo urlencode($hasilhash);
         echo "<br>";
@@ -85,6 +85,10 @@ class TestSuratmasuk extends BaseController
         // d($array2);
         // echo form_input($array2);
         // }
+
+
+
+
 
 
         // $enkripsi->dekripsiTTD($hasilhash);

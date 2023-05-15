@@ -39,7 +39,7 @@ class validasienkripsi
     public function validasiEnkrispsi(String $data, String $noSurat)
     {
         $enkripsi = new enkripsi;
-        $type = pecahkan($data);
+        $type = $this->pecahkan($data);
         if (count($type) < 3 && count($type) > 1) {
             echo "input error";
             return "error";
@@ -81,5 +81,11 @@ class validasienkripsi
 
     public function validasiPDF()
     {
+    }
+
+
+    function pecahkan(String $text)
+    {
+        return explode("_", $text);
     }
 }

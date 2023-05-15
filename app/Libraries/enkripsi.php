@@ -9,11 +9,11 @@ use App\Libraries\validasienkripsi;
 
 class enkripsi
 {
-    public function enkripsiTTD(String $noSurat, String $UUID, String $idsiapayangttd, String $NamaTTD, String $idmhs)
+    public function enkripsiTTD(String $noSurat, String $idsiapayangttd, String $NamaTTD, String $idmhs)
     {
         $RandomNumber = random_int(00000000, 9999999);
         $unixtime = time();
-        $text = $noSurat . "_" .  $RandomNumber . "-" . $UUID . "_" . $idsiapayangttd . "_" . $idmhs . "_" . $unixtime;
+        $text = $noSurat . "_" .  $RandomNumber  . "_" . $idsiapayangttd . "_" . $idmhs . "_" . $unixtime;
         $textenkripsi = "DiTandaTanganiOleh_$NamaTTD" . "_" . $this->twowayhash_enkripsi($text);
         // TODO panggil model untuk menyimpan data
 
@@ -23,7 +23,7 @@ class enkripsi
     public function dekripsiTTD(String $text)
     {
         $datadekripsi = $this->twowayhash_dekripsi($text);
-        return pecahkan($datadekripsi);
+        return $this->pecahkan($datadekripsi);
     }
 
     public function twowayhash_enkripsi(String $msg)
@@ -50,5 +50,11 @@ class enkripsi
         $namaPenandatangan = "nama dari model";
         $namaFile = $noSurat . "_" . $namaPenandatangan;
         Render_Qr($data, $namaFile);
+    }
+
+
+    function pecahkan(String $text)
+    {
+        return explode("_", $text);
     }
 }
