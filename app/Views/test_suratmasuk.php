@@ -12,7 +12,7 @@ ini adalah web surat arsip
 
 use App\Libraries\Rendergambar;
 
-$Render = new Rendergambar;
+// $Render = new Rendergambar;
 // echo esc($isi);
 // d($ttd);
 // foreach ($ttd as $ttdd) {
@@ -36,6 +36,7 @@ echo $this->include('surat/_ttd');
 ?>
 
 <br>
-<a href="<?= base_url('pdf/test.pdf') ?>" target="_blank" rel="noopener noreferrer">pdf</a>
+<a href="<?= base_url('pdf/test.pdf') ?>" target="_blank">pdf</a>
 <br>
+
 <?= $this->endSection() ?>

@@ -1,18 +1,13 @@
-<?php
-
-// use App\Libraries\Rendergambar;
-
-// $Render = new Rendergambar;
-
-// d($ttd);
-?>
-
-
 <?php foreach ($ttd as $ttdd) : ?>
-    <div>
-        <?= $ttdd['tanggal'] ?>
+    <div class="g-col-6">
+        <span class="tgl"><?= $ttdd['tanggal'] ?></span>
+
         <br>
         <?php Render_gambar($ttdd['lokasi'], "fotottd"); ?>
-        <?= $ttdd['nama'] ?>
+        <br>
+
+        <span class="nama"><?= $ttdd['nama'] ?></span>
+
     </div>
+    <br>
 <?php endforeach ?>
