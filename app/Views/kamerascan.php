@@ -147,15 +147,6 @@
                     document.getElementById("UUID").textContent = data.UUID;
                     // console.log(data);
                 })
-
-            if (!valid == "HashNotValid") {
-                document.getElementById("nosurat").textContent = "data.nosurat";
-                document.getElementById("valid").textContent = data.nosurat;
-                // document.getElementById("nosurat").textContent = data.nosurat;
-                document.getElementById("Mahasiswa").textContent = data.Mahasiswa;
-                document.getElementById("Penandatangan").textContent = data.Penandatangan;
-                document.getElementById("timestamp").textContent = data.timestamp;
-            }
         }
 
         function deleteclass(namaclass, count) {

@@ -19,7 +19,7 @@ class validasienkripsi
     public function jenisEnkripsi(String $data, String $noSurat)
     {
         $enkripsi = new enkripsi;
-        $type = $enkripsi->pecahkan($data);
+        $type = pecahkan($data);
         if (count($type) < 3) {
             echo "input error";
             return "error";
@@ -39,7 +39,7 @@ class validasienkripsi
     public function validasiEnkrispsi(String $data, String $noSurat)
     {
         $enkripsi = new enkripsi;
-        $type = $enkripsi->pecahkan($data);
+        $type = pecahkan($data);
         if (count($type) < 3 && count($type) > 1) {
             echo "input error";
             return "error";

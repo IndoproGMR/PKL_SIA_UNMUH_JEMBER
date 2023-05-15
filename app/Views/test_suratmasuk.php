@@ -1,53 +1,41 @@
-<!DOCTYPE html>
-<html lang="en">
+<?= $this->extend('surat/layout.php') ?>
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>test template</title>
-</head>
+<?= $this->section('main') ?>
+ini adalah web surat arsip
+<br>
+<!-- <img src="a" alt=""> -->
 
-<style>
-    /* body {
-        width: 21.59cm;
-        height: 27.94;
-    } */
+<?= esc($datadaricontroller) ?>
+<br>
+<?= esc($datake2) ?>
+<?php
 
-    .foto {
-        width: 300px;
-    }
+use App\Libraries\Rendergambar;
 
-    .qr {
-        /* z-index: -1; */
-        /* position: absolute; */
-        left: 100px;
-    }
-</style>
-<!-- <img src="qrcode/ini adalah nama qr.png" class="foto qr" alt=""> -->
-
-<body>
-    ini adalah web surat arsip
-    <br>
-    <!-- <img src="a" alt=""> -->
-
-    <?= esc($datadaricontroller) ?>
-    <br>
-    <?= esc($datake2) ?>
-    <?php
-
-    use App\Libraries\Rendergambar;
-
-    $Render = new Rendergambar;
+$Render = new Rendergambar;
+// echo esc($isi);
+// d($ttd);
+// foreach ($ttd as $ttdd) {
+// d($ttdd);
+// echo $ttdd['lokasi'];
+// $Render->Render_gambar("$ttd1", "foto qr");
+echo $this->include('surat/_ttd');
+// echo $this->include('surat/_ttd');
+// $Render->Render_TTD($ttdd['lokasi'], $ttdd);
+// }
 
 
-    $Render->Render_gambar("$foto2", "foto qr");
-    $Render->Render_gambar("logo/$foto1.png", "foto qr");
-    $Render->Render_gambar("$foto3", "foto qr");
-    // echo $_ENV['TTDKEY'];
 
-    ?>
-    <br>
-</body>
+// $Render->Render_gambar("$foto2", "foto qr");
+// $Render->Render_gambar("logo/$foto1.png", "foto qr");
+// $Render->Render_gambar("$foto3", "foto qr");
 
-</html>
+
+
+
+?>
+
+<br>
+<a href="<?= base_url('pdf/test.pdf') ?>" target="_blank" rel="noopener noreferrer">pdf</a>
+<br>
+<?= $this->endSection() ?>
