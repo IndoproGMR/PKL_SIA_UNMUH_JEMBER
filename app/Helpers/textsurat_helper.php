@@ -56,3 +56,12 @@ function UUIDv4()
     // Output the 36 character UUID.
     return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($uuidata), 4));
 }
+function SpaceToUnder($text)
+{
+    return str_replace(' ', '_', $text);
+}
+
+function UnderToSpace($text)
+{
+    return str_replace('_', ' ', $text);
+}

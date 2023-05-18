@@ -33,7 +33,10 @@ $routes->get('/', 'Home::index');
 // $routes->get('/api/v1/validasi/(:any)', 'Home::index');
 
 $routes->get('/suratmasuk', 'TestSuratmasuk::index');
-$routes->get('/suratmasuk/validasi', 'TestSuratmasuk::validasi');
+$routes->get('/suratmasuk/inputisisurat', 'TestSuratmasuk::InputisiSurat');
+$routes->post('/suratmasuk/inputisisurat', 'TestSuratmasuk::addisidata');
+
+
 $routes->get('/suratmasuk/kameraQR', 'TestSuratmasuk::kameraQR');
 $routes->post('/suratmasuk/kameraQR', 'TestSuratmasuk::kameraQR');
 

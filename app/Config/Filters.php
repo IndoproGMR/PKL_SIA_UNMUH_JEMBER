@@ -22,7 +22,8 @@ class Filters extends BaseConfig
         'invalidchars'  => InvalidChars::class,
         'secureheaders' => SecureHeaders::class,
         'throttle'      => \App\Filters\Throttle::class,
-        // 'throttle'      => \App\Filters\Throttle::class,
+        'loginlimiter'  => \App\Filters\Loginlimiter::class,
+
     ];
 
     /**
@@ -31,8 +32,8 @@ class Filters extends BaseConfig
      */
     public array $globals = [
         'before' => [
-            // 'honeypot',
-            // 'csrf',
+            'honeypot',
+            'csrf',
             // 'invalidchars',
         ],
         'after' => [
