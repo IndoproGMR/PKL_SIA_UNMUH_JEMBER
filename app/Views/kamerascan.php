@@ -3,7 +3,7 @@
 
 <head>
     <title>Instascan</title>
-    <!-- <script type="text/javascript" src="instascan.min.js"></script> -->
+    <!-- <script type="text/javascript" src=" <?= base_url() ?>js/instascan.min.js"></script> -->
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/3.3.3/adapter.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.10/vue.min.js"></script>
     <script type="text/javascript" src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
@@ -68,6 +68,17 @@
     <br>
     <input type="checkbox" name="autodetail" id="autodetail" value="autodetail"> auto detail
     <br>
+    <?php if (!$nocam) : ?>
+        <select name="kamera" id="kamera" onchange="jalankancamera()">
+        </select>
+    <?php else : ?>
+        <select name="kamera" id="kamera">
+            <option value="">camera has been disable</option>
+        </select>
+    <?php endif ?>
+
+
+    <br>
     <input type="submit" value="detail" onclick=detail(url_apidetail)>
 
     <br>
@@ -80,26 +91,54 @@
 
 
     <script type="text/javascript">
-        const url_api = "<?= getenv('urlapi') ?>";
-        const url_apidetail = "<?= getenv('urlapi') ?>" + "/detail";
+        const url_api = "<?= base_url(getenv('urlapi'))  ?>";
+        const url_apidetail = "<?= base_url(getenv('urlapi') . "/detail") ?>";
+
         <?php if (!$nocam) : ?>
-            let scanner = new Instascan.Scanner({
-                video: document.getElementById("preview")
-            });
-            scanner.addListener("scan", function(content) {
-                // console.log(content);
-                document.getElementById("qrcode").value = content;
-                cek(url_api)
-            });
             Instascan.Camera.getCameras().then(function(cameras) {
                 if (cameras.length > 0) {
-                    scanner.start(cameras[0]);
+                    var selectopt = document.getElementById('kamera')
+                    for (let index = 0; index < cameras.length; index++) {
+                        const opt = document.createElement('option');
+                        opt.value = index;
+                        opt.textContent = cameras[index].name;
+                        selectopt.appendChild(opt);
+                    }
+                    jalankancamera();
                 } else {
+                    const opt = document.createElement('option');
+                    opt.value = 0;
+                    opt.textContent = "No cameras found.";
+                    selectopt.appendChild(opt);
                     console.error("No cameras found.");
                 }
             }).catch(function(e) {
                 console.error(e);
             });
+
+
+            function jalankancamera() {
+                let scanner = new Instascan.Scanner({
+                    video: document.getElementById("preview")
+                });
+                scanner.addListener("scan", function(content) {
+                    // console.log(content);
+                    document.getElementById("qrcode").value = content;
+                    cek(url_api)
+                });
+
+
+                var idcamera = document.getElementById('kamera').value;
+                // console.log(idcamera);
+                Instascan.Camera.getCameras().then(function(cameras) {
+                    scanner.stop()
+                    scanner.start(cameras[idcamera]);
+                }).catch(function(e) {
+                    console.error(e);
+                });
+
+            };
+
         <?php endif ?>
 
         async function cek(url) {
@@ -120,7 +159,7 @@
                     var valid = document.getElementById("valid").textContent = data.valid;
                     console.log(data);
                 })
-        }
+        };
 
         function detail(url) {
             var nosurat = document.getElementById("nosurat").value
@@ -147,7 +186,7 @@
                     document.getElementById("UUID").textContent = data.UUID;
                     // console.log(data);
                 })
-        }
+        };
 
         function deleteclass(namaclass, count) {
             if (!count == 0) {
@@ -158,7 +197,7 @@
                 deleteclass(namaclass, count);
             }
 
-        }
+        };
     </script>
 
 </body>
