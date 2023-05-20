@@ -13,11 +13,9 @@ function replacetext(String $datatext, String $cariKata, String $denganKata, Str
         case '1':
             $cariKata = "{{{$cariKata}}}";
             break;
-
         case '0':
             $cariKata = $cariKata;
             break;
-
         default:
             $cariKata = $cariKata;
             break;
@@ -64,4 +62,40 @@ function SpaceToUnder($text)
 function UnderToSpace($text)
 {
     return str_replace('_', ' ', $text);
+}
+
+function array_search_partial($arr, $keyword)
+{
+    foreach ($arr as $index => $string) {
+        if (strpos($string, $keyword) !== FALSE)
+            return $index;
+    }
+}
+
+function cekquary($text)
+{
+    $data = [
+        'order' => 'id',
+        'in' => 'ASC'
+    ];
+    switch ($text) {
+
+        case '-order:waktu_ASC':
+            $data = [
+                'order' => 'timestamp',
+                'in' => 'ASC'
+            ];
+            break;
+        case '-order:waktu_DESC':
+            $data = [
+                'order' => 'timestamp',
+                'in' => 'DESC'
+            ];
+            break;
+
+        default:
+            # code...
+            break;
+    }
+    return $data;
 }

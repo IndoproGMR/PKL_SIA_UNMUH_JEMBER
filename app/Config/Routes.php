@@ -42,9 +42,13 @@ $routes->post('/suratmasuk/kameraQR', 'TestSuratmasuk::kameraQR');
 
 // $routes->get('/suratmasuk/kameraQR/(:any)', 'TestSuratmasuk::kameraQR/$1');
 
+$routes->get('/quary', 'TestQuary::index');
+$routes->post('/quary', 'TestQuary::caridata');
+
+
 // $routes->get('/suratmasuk/validasi/(:any)', 'TestSuratmasuk::validasi/$1/$2');
 $routes->get('/login', 'Login::index');
-$routes->get('/login/debuglogin/(:any)', 'Login::debuglogin/$1/$2');
+$routes->post('/login/', 'Login::debuglogin');
 
 // $routes->get('/suratmasuk/(:any)', 'TestSuratmasuk::testreture/$1');
 // $routes->get('/suratmasuk2/(:any)', 'TestSuratmasuk::testreture2/$1/$2');

@@ -84,6 +84,8 @@ class validasienkripsi
     }
 
 
+
+
     function pecahkan(String $text)
     {
         return explode("_", $text);
