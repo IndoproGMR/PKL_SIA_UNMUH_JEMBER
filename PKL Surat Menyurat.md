@@ -425,3 +425,19 @@ server akan menyimpan waktu TTD
 id berdasarkan
 unixtime-randomnumber
 
+
+isi Surat {{nama}} pada tgl {{tgl}}
+
+test 1 uji coba
+
+
+
+
+
+{{cop surat}}  
+{{Isi surat}}  
+{{Ttd1}}  
+{{Ttd2}}  
+Nanti ada tombol add ttd berubah select box  
+Ttd1:\[nama] 
+Cop surat juga berupa select box

@@ -16,14 +16,14 @@ class Filters extends BaseConfig
      * make reading things nicer and simpler.
      */
     public array $aliases = [
-        'csrf'          => CSRF::class,
-        'toolbar'       => DebugToolbar::class,
-        'honeypot'      => Honeypot::class,
-        'invalidchars'  => InvalidChars::class,
-        'secureheaders' => SecureHeaders::class,
-        'throttle'      => \App\Filters\Throttle::class,
-        'loginlimiter'  => \App\Filters\Loginlimiter::class,
-
+        'csrf'           => CSRF::class,
+        'toolbar'        => DebugToolbar::class,
+        'honeypot'       => Honeypot::class,
+        'invalidchars'   => InvalidChars::class,
+        'secureheaders'  => SecureHeaders::class,
+        'throttle'       => \App\Filters\Throttle::class,
+        'loginlimiter'   => \App\Filters\Loginlimiter::class,
+        'refreshlimiter' => \App\Filters\Refreshlimiter::class,
     ];
 
     /**
@@ -67,6 +67,8 @@ class Filters extends BaseConfig
      * 'isLoggedIn' => ['before' => ['account/*', 'profiles/*']]
      */
     public array $filters = [
-        'throttle'     => ['before' => ['/api/*']],
+        'throttle'       => ['before' => ['/api/*']],
+        'loginlimiter'   => ['before' => ['/login']],
+        'refreshlimiter' => ['before' => ['/*']],
     ];
 }

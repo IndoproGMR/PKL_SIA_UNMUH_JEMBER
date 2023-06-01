@@ -10,8 +10,8 @@ class Login extends BaseController
 {
     public function index()
     {
-        d(user_id());
-        d(in_group("Mahasiswa"));
+        // d(user_id());
+        // d(in_group("Mahasiswa"));
         $model = model(Testusers::class);
         $data['datalogin'] = $model->seeall();
         return view("login", $data);
@@ -24,15 +24,16 @@ class Login extends BaseController
             'logindengan'
         ]);
         $model = model(Testusers::class);
-        d($postdata['logindengan']);
         $id = $postdata['logindengan'];
         $data['userdata'] = [
             'id' => $id
         ];
         $session->set($data);
+        $hasil = $model->seebyID($postdata['logindengan']);
+
+        d($postdata['logindengan']);
         d($id);
         d($data);
-        $hasil = $model->seebyID($postdata['logindengan']);
         d($hasil[0]);
         d($session->get());
     }

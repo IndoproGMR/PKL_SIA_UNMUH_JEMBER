@@ -5,15 +5,32 @@ use App\Models\AuthUserGroup;
 function in_group(String $group)
 {
     $AuthUserGroup = model(AuthUserGroup::class);
-    $hasil = false;
     if ($group == $AuthUserGroup->cekgroupbyuserid(user_id())['name']) {
-        $hasil = true;
+        return true;
     }
-    return $hasil;
+    return false;
 }
 
 function user_id()
 {
     $session = \Config\Services::session();
-    return $session->get('userdata')['id'];
+    if ($session->get('userdata')) {
+        return $session->get('userdata')['id'];
+    }
+    return 0;
+}
+
+function PagePerm($group)
+{
+    $izin = false;
+    foreach ($group as $namagrup) {
+        if (in_group($namagrup)) {
+            $izin = true;
+            break;
+        }
+    }
+
+    if (!$izin) {
+        throw new \CodeIgniter\Router\Exceptions\RedirectException("error_perm");
+    }
 }

@@ -30,11 +30,20 @@ $routes->set404Override();
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
 $routes->get('/', 'Home::index');
+$routes->get('/error_perm', 'Home::error_perm');
 // $routes->get('/api/v1/validasi/(:any)', 'Home::index');
 
 $routes->get('/suratmasuk', 'TestSuratmasuk::index');
 $routes->get('/suratmasuk/inputisisurat', 'TestSuratmasuk::InputisiSurat');
 $routes->post('/suratmasuk/inputisisurat', 'TestSuratmasuk::addisidata');
+
+
+$routes->get('/suratmasuk/mintasurat', 'TestSuratmasuk::mintasuratindex');
+$routes->get('/suratmasuk/mintasurat/(:num)', 'TestSuratmasuk::mintasurat/$1');
+$routes->post('/suratmasuk/mintasurat/(:num)', 'TestSuratmasuk::addsuratmasuk/$1');
+
+// $routes->post('/suratmasuk/mintasurat', 'TestSuratmasuk::addsuratmasuk');
+
 
 
 $routes->get('/suratmasuk/kameraQR', 'TestSuratmasuk::kameraQR');

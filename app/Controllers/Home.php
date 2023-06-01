@@ -11,4 +11,8 @@ class Home extends BaseController
         // return view('auth/Auth_login');
         // return view('auth/Auth_register');
     }
+    public function error_perm()
+    {
+        return view("auth/Auth_noPerm");
+    }
 }

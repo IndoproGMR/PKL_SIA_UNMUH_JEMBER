@@ -12,6 +12,10 @@ class TestSuratmasuk extends BaseController
 {
     public function index()
     {
+        // $auth = ['Mahasiswa', 'Dosen'];
+        // PagePerm($auth);
+        PagePerm(['Mahasiswa', 'Dosen']);
+        // PagePerm([]);
         helper('form');
         $enkripsi = new enkripsi;
 
@@ -57,7 +61,7 @@ class TestSuratmasuk extends BaseController
 
 
 
-        Render_pdf("test_suratmasuk", "01", "ini nama", $data);
+        Render_pdf("test_suratmasuk", "00", "ini nama", $data);
         echo "<br>";
 
 
@@ -129,7 +133,8 @@ class TestSuratmasuk extends BaseController
         $postdata = $this->request->getPost([
             'isiDariSurat',
             'jenisSurat',
-            'diskripsi'
+            'diskripsi',
+            'csrf_test_name'
         ]);
         // $data['jumlah'] = $postdata['total'];
 
@@ -143,6 +148,7 @@ class TestSuratmasuk extends BaseController
         unset($dataformarray['isiDariSurat']);
         unset($dataformarray['jenisSurat']);
         unset($dataformarray['diskripsi']);
+        unset($dataformarray['csrf_test_name']);
 
         $data['json_data'] = json_encode($dataformarray, true);
 
@@ -169,5 +175,60 @@ class TestSuratmasuk extends BaseController
         //     );
         //     echo "<br>";
         // }
+    }
+
+    public function mintasuratindex()
+    {
+        $model = model(Jenissurat::class);
+        $data['jenissurat'] = $model->seeall();
+        return view('suratmasuk/mintasurat', $data);
+
+        // d($model->seeall());
+    }
+
+    public function mintasurat(int $idsurat)
+    {
+        $model = model(Isisurat::class);
+        echo $idsurat;
+        $data['datasurat'] = $model->seebyjenis($idsurat);
+        if (count($data) !== 1) {
+            return redirect()->to('suratmasuk/mintasurat');
+        }
+        d(count($data));
+        $data['dataform'] = json_decode($data['datasurat'][0]['form'], true);
+        // if ($data['dataform']['foto']) {
+        //     echo "ada foto";
+        // }
+        if (in_array("foto", $data['dataform'])) {
+            unset($data['dataform']['foto']);
+            $data['foto'] = 'foto';
+        } else {
+            echo "tidak ada foto";
+        }
+        d($data);
+
+
+        // TODO membuat form input untuk meminta ttd
+        // d($dataformarray);
+        return view('suratmasuk/mintattd', $data);
+    }
+
+    public function addsuratmasuk($idsurat)
+    {
+        $model = model(Isisurat::class);
+        echo $idsurat;
+        $data['isisurat'] = $model->seebyjenis($idsurat)[0]['isiSurat'];
+        $postdata = $this->request->getPost();
+
+        $data['isi'] = replacetextarray($data['isisurat'], ubaharray($postdata), '1');
+
+
+
+
+
+
+        d($postdata);
+        d($data);
+        d(ubaharray($postdata));
     }
 }

@@ -37,7 +37,8 @@
 - [ ] Backend Surat masuk
 - [ ] DB Surat masuk
 - [x] Enckripsi qrcode
-- [ ] Quary Filter
+- [x] Quary Filter
+- [x] Quary Search
 - [x] menyimpan namafile
 
 - [ ] UI Archive
@@ -58,8 +59,9 @@
 - [ ] cara men encripsi file PDF
 - [ ] cara men decripsi file PDF
 - [x] membuat QrCode
-- [x] mensave pdf
+- [ ] mensave pdf
 
+- [x] Membuat API
 
 
 
@@ -80,4 +82,4 @@
 - Prettier - Code formatter
 ___
 ### Link
-[Desain UI/UX/Database](https://www.figma.com/file/PSqK3nQi24n6Y7p7NvwzGQ/UI-SURAT-MENYURAT?type=design&node-id=0-1&t=ItdAVOX8ike9HtGa-0)
+[Desain UI/UX](https://www.figma.com/file/PSqK3nQi24n6Y7p7NvwzGQ/UI-SURAT-MENYURAT?type=design&node-id=0-1&t=ItdAVOX8ike9HtGa-0)

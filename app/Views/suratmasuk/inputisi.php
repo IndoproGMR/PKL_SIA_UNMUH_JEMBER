@@ -20,7 +20,9 @@
     <button onClick="add()">
         add input
     </button>
-
+    <button onClick="addfoto()">
+        add foto
+    </button>
 
 
     <form action="" method="post" name="inputisi" id="inputisi">
@@ -28,6 +30,8 @@
         <textarea name="isiDariSurat" id="isiDariSurat"></textarea>
         <br>
         <input type="text" name="diskripsi" id="diskripsi">
+        <br>
+        <!-- <input readonly type="text" name="jenisSurat" id="jenisSurat" > -->
         <br>
         <select name="jenisSurat" id="jenisSurat">
             <?php foreach ($jenissurat as $datajenissurat) : ?>
@@ -52,12 +56,28 @@
             newField.setAttribute('name', id);
             newField.setAttribute('class', 'inputclass');
             id++
-            newField.setAttribute("placeholder", "{{yang akan di ubah}}");
+            newField.setAttribute("placeholder", "{{yang_akan_di_ubah}}");
             formfield.insertBefore(newField, button);
             formfield.insertBefore(br, button);
-            // formfield.appendChild(br);
+        }
 
-            // formfield.appendChild(newField);
+        function addfoto() {
+            var jumlahfoto = document.getElementsByName('foto').length
+            if (jumlahfoto > 0) {
+                return
+            }
+            // console.log(jumlahfoto);
+            var br = document.createElement("br");
+            var newField = document.createElement('input');
+            newField.setAttribute("readonly", "");
+            newField.setAttribute("id", id);
+            newField.setAttribute('type', 'text');
+            newField.setAttribute('name', 'foto');
+            newField.setAttribute('class', 'inputclass');
+            newField.setAttribute('value', 'foto');
+            id++
+            formfield.insertBefore(newField, button);
+            formfield.insertBefore(br, button);
         }
 
         function remove() {

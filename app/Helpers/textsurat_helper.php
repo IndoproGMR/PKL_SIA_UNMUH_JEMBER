@@ -99,3 +99,28 @@ function cekquary($text)
     }
     return $data;
 }
+
+function inputform($dataformarray)
+{
+    foreach ($dataformarray as $array) {
+        echo form_input(
+            esc($array),
+            "",
+            "placeholder=$array class=''"
+        );
+        echo "<br>";
+    }
+}
+
+function ubaharray($array)
+{
+    $newArray = [];
+
+    foreach ($array as $key => $value) {
+        $newArray[] = [
+            'carikata' => $key,
+            'dengankata' => $value
+        ];
+    }
+    return $newArray;
+}

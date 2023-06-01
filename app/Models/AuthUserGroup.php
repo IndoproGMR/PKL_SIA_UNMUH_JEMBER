@@ -21,8 +21,10 @@ class AuthUserGroup extends Model
     public function cekgroupbyuserid(int $iduser)
     {
         $hasil = $this->select('sysauth_Group.name')->where('user_id', $iduser)->join('sysauth_Group', 'sysauth_Group.id=sysauth_UserGroup.group_id')->find();
-        if ($hasil > 0) {
+        if (count($hasil) > 0) {
             return $hasil[0];
         }
+        $hasil['name'] = 'aiHo3OiK'; // random string untuk mamastikan return false
+        return $hasil;
     }
 }

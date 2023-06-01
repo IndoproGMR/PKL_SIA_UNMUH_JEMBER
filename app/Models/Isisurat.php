@@ -34,6 +34,10 @@ class Isisurat extends Model
     {
         return $this->where('id', $id)->find();
     }
+    public function seebyjenis(int $id)
+    {
+        return $this->where('JenisSurat_id', $id)->find();
+    }
 
     public function addisiSurat(String $description, String $isiSurat, String $form, int $JenisSurat_id)
     {
