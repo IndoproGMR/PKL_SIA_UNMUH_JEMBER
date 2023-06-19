@@ -30,10 +30,13 @@ echo $this->include('surat/_ttd');
 // $Render->Render_gambar("logo/$foto1.png", "foto qr");
 // $Render->Render_gambar("$foto3", "foto qr");
 
-
+// Render_gambar("$foto2", 'rounded mx-auto d-block')
 
 
 ?>
+
+
+
 
 <br>
 <a href="<?= base_url('pdf/test.pdf') ?>" target="_blank">pdf</a>

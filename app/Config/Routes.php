@@ -34,6 +34,7 @@ $routes->get('/error_perm', 'Home::error_perm');
 // $routes->get('/api/v1/validasi/(:any)', 'Home::index');
 
 $routes->get('/suratmasuk', 'TestSuratmasuk::index');
+$routes->get('/suratmasuk/pdf', 'TestSuratmasuk::pdf');
 $routes->get('/suratmasuk/inputisisurat', 'TestSuratmasuk::InputisiSurat');
 $routes->post('/suratmasuk/inputisisurat', 'TestSuratmasuk::addisidata');
 

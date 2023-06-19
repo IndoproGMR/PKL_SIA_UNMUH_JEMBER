@@ -15,7 +15,7 @@ class TestSuratmasuk extends BaseController
         // $auth = ['Mahasiswa', 'Dosen'];
         // PagePerm($auth);
         PagePerm(['Mahasiswa', 'Dosen']);
-        // PagePerm([]);
+        // PagePerm(['' ]);
         helper('form');
         $enkripsi = new enkripsi;
 
@@ -61,7 +61,7 @@ class TestSuratmasuk extends BaseController
 
 
 
-        Render_pdf("test_suratmasuk", "00", "ini nama", $data);
+        // Render_pdf("test_suratmasuk", "00", "ini nama", $data);
         echo "<br>";
 
 
@@ -101,6 +101,51 @@ class TestSuratmasuk extends BaseController
         return view('test_suratmasuk', $data);
     }
 
+    public function pdf()
+    {
+
+        $data['datadaricontroller'] = "controller";
+        $data['datake2'] = "ini nomer 2";
+        $data['foto1'] = "1513588325430";
+        $data['foto2'] = "qrcode/ini adalah nama qr.png";
+        $data['foto3'] = "qrcode/nama.png";
+
+        $data['ttd'] = [
+            [
+                'tanggal' => "desember, 5 43 0201",
+                'nama'    => "budi man 2",
+                "lokasi"  => "qrcode/nama.png",
+            ],
+            [
+                'tanggal' => "januari, 5 43 0201",
+                'nama'    => "budi 2",
+                "lokasi"  => "qrcode/ini adalah nama qr.png"
+            ]
+        ];
+
+        $kata = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim {{veniam}}, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. {{data2}} aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. {{data1}} sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.';
+
+        $katayangberubah = [
+            [
+                'carikata' => 'data1',
+                'dengankata' => 'data satu berubah '
+            ],
+            [
+                'carikata' => 'data2',
+                'dengankata' => 'data dua berubah '
+            ],
+            [
+                'carikata' => 'veniam',
+                'dengankata' => 'ini juga berubah'
+            ]
+        ];
+        $data['isi'] = replacetextarray($kata, $katayangberubah, '1');
+
+        // return view("test_suratmasuk", $data);
+        // Render_pdf("test2_suratmasuk", "01", "ini nama", $data);
+        Render_mpdf("test2_suratmasuk", "11", "ini nama", $data);
+    }
+
 
     public function kameraQR()
     {
@@ -114,12 +159,14 @@ class TestSuratmasuk extends BaseController
                 $data['nocam'] = false;
             }
         }
-        return view("kamerascan", $data);
+        // return view("suratmasuk/kameraqr", $data);
+        return view("html5qrscanner", $data);
     }
 
 
     public function InputisiSurat()
     {
+        PagePerm(['Mahasiswa', 'Dosen']);
 
         $jenissurat = model(Jenissurat::class);
         $data['jenissurat'] = $jenissurat->seeall();
@@ -128,8 +175,11 @@ class TestSuratmasuk extends BaseController
 
         return view('suratmasuk/inputisi', $data);
     }
+
     public function addisidata()
     {
+        // PagePerm(['Mahasiswa', 'Dosen']);
+        PagePerm(['']);
         $postdata = $this->request->getPost([
             'isiDariSurat',
             'jenisSurat',
