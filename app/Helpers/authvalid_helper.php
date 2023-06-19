@@ -2,11 +2,14 @@
 
 use App\Models\AuthUserGroup;
 
-function in_group(String $group)
+function in_group($group)
 {
     $AuthUserGroup = model(AuthUserGroup::class);
-    if ($group == $AuthUserGroup->cekgroupbyuserid(user_id())['name']) {
-        return true;
+    foreach ($group as $namagrup) {
+        if ($namagrup == $AuthUserGroup->cekgroupbyuserid(user_id())['name']) {
+            return true;
+            break;
+        }
     }
     return false;
 }
@@ -22,15 +25,7 @@ function user_id()
 
 function PagePerm($group)
 {
-    $izin = false;
-    foreach ($group as $namagrup) {
-        if (in_group($namagrup)) {
-            $izin = true;
-            break;
-        }
-    }
-
-    if (!$izin) {
+    if (!in_group($group)) {
         throw new \CodeIgniter\Router\Exceptions\RedirectException("error_perm");
     }
 }

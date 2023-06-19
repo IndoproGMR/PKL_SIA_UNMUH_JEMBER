@@ -47,14 +47,9 @@
         <input type="submit" value="cari">
     </form>
     <script>
-        var data = [
-            "-order:waktu_ASC",
-            "-order:waktu_DESC",
-            "-order:nama_ASC",
-            "-order:nama_DESC",
-            "-order:harga_ASC",
-            "-order:harga_DESC"
-        ];
+        <?php helper('datacall'); ?>
+
+        <?= datacallorder(1); ?>
 
         // Mendapatkan elemen-elemen yang diperlukan
         var input = document.getElementById("myInput");
