@@ -1,48 +1,22 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark" style="font-size: 20px;">
+    <!-- Navbar -->
 
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
+    <header>
+        <div class="logo">
+            <img src="<?= base_url('/'); ?>asset/Gambar1.png" alt="" class="image">
+        </div>
 
-    <div class="collapse navbar-collapse" id="navbarsExampleDefault">
-        <ul class="navbar-nav mr-auto">
+        <div class="wrapper">
+            <div class="navbar">
+                <h1 class="title-one">Web Surat</h1>
+                <h1 class="title-two">Universitas Muhammadiyah Jember</h1>
+            </div>
+            <div class="desc">
+                <h1>Nanda</h1>
+                <p>Dosen</p>
+            </div>
+        </div>
+        <!-- <img src="asset/user-4-fill (3).svg" alt="" class="user"> -->
+        <img src="https://sia.unmuhjember.ac.id/foto/2010651166.jpeg" alt="" class="user">
+    </header>
 
-            <li class="nav-item active">
-                <a class="nav-link" href="home.php">Home <span class="sr-only">(current)</span></a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="#">Menu 1</a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="#">Menu 2</a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="#">Menu 3</a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="#">Menu 4</a>
-            </li>
-
-            <li class="nav-item dropdown">
-                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Menu Dropdown</a>
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="#">Menu Dropdown 1</a></li>
-                    <li><a class="dropdown-item" href="#">Menu Dropdown 2</a></li>
-                    <li><a class="dropdown-item" href="#">Menu Dropdown 3</a></li>
-                    <li>
-                        <hr class="dropdown-divider">
-                    </li>
-                    <li><a class="dropdown-item" href="#">Lainnya</a></li>
-                </ul>
-            </li>
-
-        </ul>
-
-        <a href="../login/index.php" class="btn btn-outline-light">Log Out</a>
-
-    </div>
-</nav>
+    <!-- End Navbar -->

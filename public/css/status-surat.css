@@ -1,0 +1,120 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+header{
+    width: 100%;
+    background-color:  #699BF7;
+    display: flex;
+}
+
+.logo{
+    display: flex;
+}
+
+.logo .image{
+    width: 70px;
+    margin-left: 25px;
+}
+
+.wrapper{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.navbar{
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+.desc{
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+.desc h1{
+    font-size: 20px;
+    font-weight: 700;
+}
+
+.desc p{
+    font-size: 16px;
+    text-align: right;
+}
+
+.user{
+    margin-right: 25px;
+    width : 70px
+}
+
+.title-one{
+    font-size: 24px;
+    font-weight: 500;
+}
+
+.title-two{
+    font-size: 24px;
+    font-weight: 500;
+}
+
+.fluid{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.fluid-two{
+    width: 762px;
+    height: 528px;
+    background-color: #D9D9D9;
+}
+
+.fluid-two h1{
+    text-align: center;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.text{
+    margin-top: 48px;
+    margin-left: 102px;
+    line-height: 50px;
+}
+
+.text p{
+    font-size: 24px;
+    font-weight: 500;
+}
+
+.fluid-two .see{
+    text-align: center;
+    margin-top: 65px;
+}
+
+.fluid-two .see .look{
+    background-color: #06577A;
+    color: white;
+    font-size: 16px;
+    text-decoration: none;
+    padding: 5px 50px;
+    border-radius: 20px;
+}
+
+.flex-end{
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.flex-end .end{
+    background-color: #06577A;
+    color: white;
+    font-size: 16px;
+    text-decoration: none;
+    padding: 5px 50px;
+    border-radius: 20px;
+}
