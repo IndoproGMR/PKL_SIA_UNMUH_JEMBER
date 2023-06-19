@@ -1,56 +1,28 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-    <title>Instascan</title>
-    <script type="text/javascript" src=" <?= base_url('/js/instascan.min.js') ?>"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/3.3.3/adapter.min.js"></script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.10/vue.min.js"></script>
-    <!-- <script type="text/javascript" src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script> -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="<?= base_url('/js/html5-qrcode.min.js'); ?>"></script>
+    <title>html5qrscanner</title>
 </head>
 
 <style>
-    video {
+    #reader {
         width: 300px;
-        z-index: 1;
-    }
-
-    .container {
-        position: relative;
-    }
-
-    .videogb {
-        width: 300px;
-        background-color: gray;
-        padding: 20px;
-        border-radius: 10px;
-        z-index: -1;
-    }
-
-    .container video {
-        position: relative;
-
-    }
-
-    .overlay {
-        position: absolute;
-        top: 50px;
-        left: 50px;
-        z-index: 0;
-        background-color: red;
-        border-radius: 20px;
-        padding: 20px;
-        font-size: larger;
-    }
-
-    .detailhide {
-        display: none;
+        height: 300px;
     }
 </style>
 
 <body>
+    <div id="reader"></div>
 
-    <div class="container">
+
+
+
+
+    <div class="vidcontainer">
         <div class="videogb">
             <video id="preview"></video>
         </div>
@@ -67,14 +39,6 @@
     <br>
     <input type="checkbox" name="autodetail" id="autodetail" value="autodetail"> auto detail
     <br>
-    <?php if (!$nocam) : ?>
-        <select name="kamera" id="kamera" onchange="jalankancamera()">
-        </select>
-    <?php else : ?>
-        <select name="kamera" id="kamera">
-            <option value="">camera has been disable</option>
-        </select>
-    <?php endif ?>
 
 
     <br>
@@ -89,56 +53,57 @@
     <p class="detailhide">UUID: <span id="UUID"></span></p>
 
 
-    <script type="text/javascript">
+
+
+    <script>
         const url_api = "<?= base_url(getenv('urlapi'))  ?>";
         const url_apidetail = "<?= base_url(getenv('urlapi') . "/detail") ?>";
-
         <?php if (!$nocam) : ?>
-            Instascan.Camera.getCameras().then(function(cameras) {
-                if (cameras.length > 0) {
-                    var selectopt = document.getElementById('kamera')
-                    for (let index = 0; index < cameras.length; index++) {
-                        const opt = document.createElement('option');
-                        opt.value = index;
-                        opt.textContent = cameras[index].name;
-                        selectopt.appendChild(opt);
+
+            function onScanSuccess(decodedText) {
+                // handle the scanned code as you like, for example:
+                // console.log(`Code matched = ${decodedText}`, decodedResult);
+                document.getElementById("qrcode").value = decodedText;
+
+            }
+
+            let html5QrcodeScanner = new Html5QrcodeScanner(
+                "reader", {
+                    fps: 10,
+                    qrbox: {
+                        width: 150,
+                        height: 150
                     }
-                    jalankancamera();
-                } else {
-                    const opt = document.createElement('option');
-                    opt.value = 0;
-                    opt.textContent = "No cameras found.";
-                    selectopt.appendChild(opt);
-                    console.error("No cameras found.");
-                }
-            }).catch(function(e) {
-                console.error(e);
-            });
+                },
+                /* verbose= */
+                false);
 
 
-            function jalankancamera() {
-                let scanner = new Instascan.Scanner({
-                    video: document.getElementById("preview")
-                });
-                scanner.addListener("scan", function(content) {
-                    // console.log(content);
-                    document.getElementById("qrcode").value = content;
-                    cek(url_api)
-                });
-
-
-                var idcamera = document.getElementById('kamera').value;
-                // console.log(idcamera);
-                Instascan.Camera.getCameras().then(function(cameras) {
-                    scanner.stop()
-                    scanner.start(cameras[idcamera]);
-                }).catch(function(e) {
-                    console.error(e);
+            // This method will trigger user permissions
+            Html5Qrcode.getCameras()
+                .then(devices => {
+                    /**
+                     * devices would be an array of objects of type:
+                     * { id: "id", label: "label" }
+                     */
+                    if (devices && devices.length) {
+                        var cameraId = devices[0].id;
+                        // .. use this to start scanning.
+                        console.log(devices);
+                        console.log(cameraId);
+                    }
+                }).catch(err => {
+                    // handle err
                 });
 
-            };
+            html5QrcodeScanner.render(onScanSuccess);
 
         <?php endif ?>
+
+
+
+
+
 
         async function cek(url) {
             var nosurat = document.getElementById("nosurat").value
@@ -198,7 +163,6 @@
 
         };
     </script>
-
 </body>
 
 </html>

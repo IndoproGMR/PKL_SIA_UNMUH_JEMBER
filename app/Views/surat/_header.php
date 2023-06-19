@@ -19,12 +19,17 @@
         height: 27.94;
     } */
     .fotottd {
-        text-align: center;
+        position: fixed;
+
+        /* text-align: center; */
+        right: 100px;
 
         width: 100px;
     }
 
     .foto {
+        left: 100px;
+
         width: 300px;
     }
 
