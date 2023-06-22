@@ -2,30 +2,120 @@
 
 use App\Models\AuthUserGroup;
 
-function in_group($group)
+/**
+ * $group array
+ * $secure
+ * 0 = cek dari session user
+ * 1 = cek daro database
+ */
+function in_group($group, int $secure = 0)
 {
     $AuthUserGroup = model(AuthUserGroup::class);
-    foreach ($group as $namagrup) {
-        if ($namagrup == $AuthUserGroup->cekgroupbyuserid(user_id())['name']) {
-            return true;
+    switch ($secure) {
+        case '0':
+            foreach ($group as $namagrup) {
+                if ($namagrup == userInfo()['namaLVL']) {
+                    return true;
+                    break;
+                }
+            }
             break;
-        }
+        case '1':
+            $lvluser = $AuthUserGroup->cekuserinfo(userInfo()['id'])['namaLVL'];
+            foreach ($group as $namagrup) {
+                if ($namagrup == $lvluser) {
+                    return true;
+                    break;
+                }
+            }
+            break;
+        default:
+            echo "terjadi masalah pada perm";
+            break;
     }
     return false;
 }
 
-function user_id()
+/**
+ * output
+ * ['id']
+ * ['FotoUser']
+ * ['NamaUser']
+ * ['namaLVL']
+ */
+function userInfo()
 {
     $session = \Config\Services::session();
-    if ($session->get('userdata')) {
-        return $session->get('userdata')['id'];
+    if (!$session->has('userdata')) {
+        return  [
+            'id'       => 'error',
+            'FotoUser' => 'img/level/personal.png',
+            'NamaUser' => 'mohon login',
+            'namaLVL'  => 'mohon login'
+        ];
     }
-    return 0;
+    return $session->get('userdata');
 }
 
-function PagePerm($group)
+/**
+ * $group = [
+ *   "Superuser",
+ *   "Administrator",
+ *   "Aplikan",
+ *   "Staf PMB",
+ *   "Ka PMB",
+ *   "Presenter",
+ *   "Calon Mahasiswa",
+ *   "Administrasi Akademik",
+ *   "Pengajaran Fakultas",
+ *   "Kepala Akademik",
+ *   "Administrasi Keuangan",
+ *   "Kepala Keuangan",
+ *   "Fakultas",
+ *   "Biro Umum",
+ *   "Dosen",
+ *   "Kaprodi / Kajur",
+ *   "Mahasiswa",
+ *   "Executive Information System",
+ *   "Rektorat"
+ *   ];
+ * $redirect kirim laman bila tidak memiliki perm
+ * $login bila true user harus login tidak memandang level group
+ * $secure
+ * 0 = cek dari session user
+ * 1 = cek daro database
+ */
+function PagePerm($group, $redirect = 'error_perm', $login = false, $secure = 0)
 {
-    if (!in_group($group)) {
-        throw new \CodeIgniter\Router\Exceptions\RedirectException("error_perm");
+    if ($login) {
+        if (userInfo()['id'] == 'error') {
+            throw new \CodeIgniter\Router\Exceptions\RedirectException("$redirect");
+        }
+        return;
     }
+
+    if (!in_group($group, $secure)) {
+        throw new \CodeIgniter\Router\Exceptions\RedirectException("$redirect");
+    }
+    // $Perm = [
+    //     "Superuser",
+    //     "Administrator",
+    //     "Aplikan",
+    //     "Staf PMB",
+    //     "Ka PMB",
+    //     "Presenter",
+    //     "Calon Mahasiswa",
+    //     "Administrasi Akademik",
+    //     "Pengajaran Fakultas",
+    //     "Kepala Akademik",
+    //     "Administrasi Keuangan",
+    //     "Kepala Keuangan",
+    //     "Fakultas",
+    //     "Biro Umum",
+    //     "Dosen",
+    //     "Kaprodi / Kajur",
+    //     "Mahasiswa",
+    //     "Executive Information System",
+    //     "Rektorat"
+    // ];
 }

@@ -9,23 +9,46 @@
     a:hover {
         background-color: #aaa;
     }
+
+    table {
+        border-collapse: collapse;
+        border-spacing: 0;
+        width: 100%;
+        border: 1px solid #ddd;
+    }
+
+    th,
+    td {
+        text-align: left;
+        padding: 16px;
+    }
+
+    tr:nth-child(even) {
+        background-color: #f2f2f2;
+    }
 </style>
 
 <h3>Login Sebagai</h3>
-<!-- <a href="debuglogin/Mahasiswa/Budi">Mahasiswa Budi</a>
-<a href="debuglogin/Mahasiswa/Septian">Mahasiswa Septian</a>
-<a href="debuglogin/Dosen/Dedi">Dosen Dedi</a>
-<a href="debuglogin/Dosen/Yulianto">Dosen Yulianto</a>
-<a href="debuglogin/Pengajaran/Hassan">Pengajaran Hassan</a>
-<a href="debuglogin/Pengajaran/Oliver">Pengajaran Oliver</a>
-<a href="debuglogin/Dekan/Kevin">Dekan Kevin</a>
-<a href="debuglogin/Dekan/Lukas">Dekan Lukas</a> -->
+<table>
+    <tr>
+        <th>login</th>
+        <th>password</th>
+    </tr>
+    <?php
+    foreach ($datacoba as $key => $value) {
+        echo "<tr>";
+        foreach ($value as $key2) {
+            echo "<td>" . $key2 . "</td>";
+        }
+        echo "</tr>";
+    }
+    ?>
+
+
+</table>
 
 <form action="" method="post">
-    <select name="logindengan" id="logindengan">
-        <?php foreach ($datalogin as $login) : ?>
-            <option value="<?= esc($login['id']) ?>"><?= esc($login['name']) ?></option>
-        <?php endforeach ?>
-    </select>
+    <input type="text" name="dataLogin" placeholder="login">
+    <input type="text" name="dataPassword" placeholder="password">
     <input type="submit" value="login">
 </form>
