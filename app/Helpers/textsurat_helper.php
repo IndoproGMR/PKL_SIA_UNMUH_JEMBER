@@ -22,6 +22,9 @@ function replacetext(String $datatext, String $cariKata, String $denganKata, Str
     }
     return str_replace($cariKata, $denganKata, $datatext);
 }
+
+
+
 function replacetextarray($datatext, $cariKatadenganKata, String $options)
 {
     foreach ($cariKatadenganKata as $kata) {

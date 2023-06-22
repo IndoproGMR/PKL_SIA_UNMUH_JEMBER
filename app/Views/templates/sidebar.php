@@ -5,8 +5,8 @@
         <div class="header">
             <div class="list-item">
                 <a href="">
-                    <img src="https://sia.unmuhjember.ac.id/foto/2010651166.jpeg" alt="" class="icon">
-                    <p class="description-header">Nanda</p>
+                    <img src="https://sia.unmuhjember.ac.id/<?= esc(userInfo()['FotoUser']) ?>" alt="" class="icon">
+                    <p class="description-header"><?= esc(userInfo()['NamaUser']) ?></p>
                 </a>
             </div>
         </div>

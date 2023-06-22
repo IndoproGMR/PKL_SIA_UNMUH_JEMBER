@@ -59,6 +59,8 @@ $routes->post('/quary', 'TestQuary::caridata');
 // $routes->get('/suratmasuk/validasi/(:any)', 'TestSuratmasuk::validasi/$1/$2');
 $routes->get('/login', 'Login::index');
 $routes->post('/login/', 'Login::debuglogin');
+$routes->get('/logout', 'Login::logout');
+
 
 // $routes->get('/suratmasuk/(:any)', 'TestSuratmasuk::testreture/$1');
 // $routes->get('/suratmasuk2/(:any)', 'TestSuratmasuk::testreture2/$1/$2');

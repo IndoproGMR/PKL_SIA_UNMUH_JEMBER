@@ -6,6 +6,7 @@ class Home extends BaseController
 {
     public function index()
     {
+        PagePerm([''], '/login', true);
         // return view('welcome_message');
         // return view('suratmasuk/status_surat');
         return view('home/index');

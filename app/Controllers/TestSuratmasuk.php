@@ -14,7 +14,7 @@ class TestSuratmasuk extends BaseController
     {
         // $auth = ['Mahasiswa', 'Dosen'];
         // PagePerm($auth);
-        PagePerm(['Mahasiswa', 'Dosen']);
+        PagePerm(['Mahasiswa', 'Dosen', 'Kepala Keuangan'], '/');
         // PagePerm(['' ]);
         helper('form');
         $enkripsi = new enkripsi;
