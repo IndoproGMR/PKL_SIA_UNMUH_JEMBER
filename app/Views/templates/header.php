@@ -23,10 +23,11 @@
 
     <!-- global style -->
     <link rel="stylesheet" href="<?= base_url('/'); ?>css/style.css">
+    <script async src="<?= base_url('/'); ?>js/sidebarjs.js"></script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
-    <script async src="<?= base_url('/'); ?>js/sidebarjs.js"></script>
 
 
     <!-- spesifik style -->

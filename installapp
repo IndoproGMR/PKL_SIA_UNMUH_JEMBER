@@ -1,0 +1,9 @@
+#!/bin/bash
+echo "instaling dependency"
+echo " "
+composer install
+sleep 5s
+echo " "
+echo "Updateting dependency"
+echo " "
+composer update

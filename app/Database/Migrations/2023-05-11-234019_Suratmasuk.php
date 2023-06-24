@@ -45,17 +45,16 @@ class Suratmasuk extends Migration
         $tablee = "ttd";
         $fields = [
             'id'            => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'auto_increment' => true],
+            'NoSurat'       => ['type' => 'varchar', 'constraint' => 8, 'default' => 0],
             'Status'        => ['type' => 'tinyint', 'constraint' => 1, 'null' => 0, 'default' => 0],
-            'hash'          => ['type' => 'text'],
-            'RandomStr'     => ['type' => 'varchar', 'constraint' => 8],
-            'TimeStamp'     => ['type' => 'int', 'constraint' => 12],
-            'SuratMasuk_id' => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0],
+            'hash'          => ['type' => 'text', 'default' => NULL],
+            'RandomStr'     => ['type' => 'varchar', 'constraint' => 8, 'default' => NULL],
+            'TimeStamp'     => ['type' => 'int', 'constraint' => 64],
             'jenisttd'      => ['type' => 'varchar', 'constraint' => 12],              // group apa perorangan
-            'pendattg_id'   => ['type' => 'int', 'constraint' => 11, 'unsigned' => true, 'default' => 0],
+            'pendattg_id'   => ['type' => 'varchar', 'constraint' => 20, 'default' => NULL],
         ];
         $this->forge->addField($fields);
         $this->forge->addKey('id', true);
-        $this->forge->addForeignKey('SuratMasuk_id', "$dbprefix" . 'ttd_SuratMasuk', 'id', '', 'CASCADE');
         $this->forge->createTable("$dbprefix" . "$tablee", true);
     }
 

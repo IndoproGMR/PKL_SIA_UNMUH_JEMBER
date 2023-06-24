@@ -16,7 +16,7 @@
         </div>
     </div>
     <!-- <img src="asset/user-4-fill (3).svg" alt="" class="user"> -->
-    <img src="https://sia.unmuhjember.ac.id/<?= esc(userInfo()['FotoUser']) ?>" alt="Foto Profile" class="user">
+    <img src="https://sia.unmuhjember.ac.id/<?= esc(userInfo()['FotoUser']) ?>" alt="Foto Profile" class="user" loading='lazy'>
 </header>
 
 <!-- End Navbar -->

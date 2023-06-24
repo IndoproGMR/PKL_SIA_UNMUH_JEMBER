@@ -24,8 +24,11 @@ class AuthUserGroup extends Model
     function proseslogin($datalogin, $datapassword)
     {
         $db = \Config\Database::connect("siautama", false);
-
-        $sql = "SELECT `level`.`Nama` as namaLVL FROM `level` LEFT JOIN `mhsw` ON `level`.`LevelID`=`mhsw`.`LevelID` LEFT JOIN `dosen` on `level`.`LevelID`=`dosen`.`LevelID` LEFT JOIN `karyawan` ON `level`.`LevelID`=`karyawan`.`LevelID` LEFT JOIN `aplikan` ON `level`.`LevelID`= `aplikan`.`LevelID` 
+        $sql = "SELECT `level`.`Nama` as namaLVL 
+        FROM `level` 
+        LEFT JOIN `mhsw` ON `level`.`LevelID`=`mhsw`.`LevelID` 
+        LEFT JOIN `dosen` on `level`.`LevelID`=`dosen`.`LevelID` 
+        LEFT JOIN `karyawan` ON `level`.`LevelID`=`karyawan`.`LevelID` 
         WHERE (`mhsw`.`Login` = '" .
             $db->escapeLikeString($datalogin) .
             "' AND `mhsw`.`Password`='" .
@@ -37,14 +40,8 @@ class AuthUserGroup extends Model
         OR (`karyawan`.`Login`='" .
             $db->escapeLikeString($datalogin) .
             "' AND `karyawan`.`Password`='" .
-            $db->escapeLikeString($datapassword) . "') 
-        OR (`aplikan`.`Login`='" .
-            $db->escapeLikeString($datalogin) .
-            "' AND `aplikan`.`Password`='" .
             $db->escapeLikeString($datapassword) . "');";
-        echo $sql;
         $hasil = $db->query($sql)->getResultArray();
-        d($hasil);
         if (count($hasil) == 1) {
             return true;
         }
@@ -54,11 +51,18 @@ class AuthUserGroup extends Model
     function cekuserinfo($iduser)
     {
         $db = \Config\Database::connect("siautama", false);
-        $sql = "SELECT `level`.`Nama` AS namaLVL, COALESCE(`mhsw`.`Nama`, `dosen`.`Nama`, `karyawan`.`Nama`, `aplikan`.`Nama`) AS NamaUser, COALESCE(`mhsw`.`Login`, `dosen`.`Login`, `karyawan`.`Login`, `aplikan`.`Login`) AS LoginUser, COALESCE(`mhsw`.`Foto`, `aplikan`.`Foto`,`level`.`Simbol`) AS FotoUser FROM `level` LEFT JOIN `mhsw` ON `level`.`LevelID` = `mhsw`.`LevelID` LEFT JOIN `dosen` ON `level`.`LevelID` = `dosen`.`LevelID` LEFT JOIN `karyawan` ON `level`.`LevelID` = `karyawan`.`LevelID` LEFT JOIN `aplikan` ON `level`.`LevelID` = `aplikan`.`LevelID` WHERE 
+        $sql = "SELECT `level`.`Nama` AS namaLVL, 
+        COALESCE(`mhsw`.`Nama`, `dosen`.`Nama`, `karyawan`.`Nama`) AS NamaUser, 
+        COALESCE(`mhsw`.`Login`, `dosen`.`Login`, `karyawan`.`Login`) AS LoginUser, 
+        COALESCE(`mhsw`.`Foto`,`level`.`Simbol`) AS FotoUser 
+        FROM `level` 
+        LEFT JOIN `mhsw` ON `level`.`LevelID` = `mhsw`.`LevelID` 
+        LEFT JOIN `dosen` ON `level`.`LevelID` = `dosen`.`LevelID` 
+        LEFT JOIN `karyawan` ON `level`.`LevelID` = `karyawan`.`LevelID` 
+        WHERE 
         (`mhsw`.`Login` = '" . $db->escapeLikeString($iduser) . "' 
         OR `dosen`.`Login` = '" . $db->escapeLikeString($iduser) . "' 
-        OR `karyawan`.`Login` = '" . $db->escapeLikeString($iduser) . "' 
-        OR `aplikan`.`Login` = '" . $db->escapeLikeString($iduser) . "');";
+        OR `karyawan`.`Login` = '" . $db->escapeLikeString($iduser) . "');";
         return $db->query($sql)->getResultArray()[0];
     }
 }

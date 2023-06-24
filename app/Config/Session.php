@@ -31,7 +31,7 @@ class Session extends BaseConfig
      * The session cookie name, must contain only [0-9a-z_-] characters
      */
     // public string $cookieName = 'ci_session';
-    public string $cookieName = 'suratmasukkeluar';
+    public string $cookieName = 'aib3ieM5ooxanet3AeBei6ChChaikeb2';
 
     /**
      * --------------------------------------------------------------------------

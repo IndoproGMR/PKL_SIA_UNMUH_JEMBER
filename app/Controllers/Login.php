@@ -19,13 +19,27 @@ class Login extends BaseController
                 'password' => '*FDF3D0567'
             ],
             '2' => [
-                'login' => 'yeni_s',
-                'password' => '*C3048C09A'
+                'login' => '99111084',
+                'password' => '*6947C77DB'
             ],
             '3' => [
                 'login' => 'yasin',
                 'password' => '*30C2AA2CF'
-            ]
+            ],
+            '4' => [
+                'login' => '0000001',
+                'password' => '*638F025EF'
+            ],
+            '5' => [
+                'login' => '0001016602',
+                'password' => '*3FB29F57B'
+            ],
+            '6' => [
+                'login' => '1210652011',
+                'password' => '*3E5287812'
+            ],
+
+
         ];
 
         // d(user_id());

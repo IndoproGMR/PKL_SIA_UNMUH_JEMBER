@@ -5,7 +5,7 @@
         <div class="header">
             <div class="list-item">
                 <a href="">
-                    <img src="https://sia.unmuhjember.ac.id/<?= esc(userInfo()['FotoUser']) ?>" alt="" class="icon">
+                    <img src="https://sia.unmuhjember.ac.id/<?= esc(userInfo()['FotoUser']) ?>" alt="Foto Profile" class="icon" loading='lazy'>
                     <p class="description-header"><?= esc(userInfo()['NamaUser']) ?></p>
                 </a>
             </div>
@@ -16,15 +16,15 @@
             <!-- Cek QR -->
             <div class="list-item">
                 <a href="<?= base_url(''); ?>">
-                    <img src="<?= base_url('/'); ?>asset/home.svg" alt="" class="icon">
+                    <img src="<?= base_url('/'); ?>asset/home.svg" alt="" class="icon" loading='lazy'>
                     <span class="description">Dashboard</span>
                 </a>
             </div>
 
             <!-- Cek QR -->
             <div class="list-item">
-                <a href="<?= base_url(''); ?>">
-                    <img src="<?= base_url('/'); ?>asset/list-status.svg" alt="" class="icon">
+                <a href="<?= base_url('/StatusSurat'); ?>">
+                    <img src="<?= base_url('/'); ?>asset/list-status.svg" alt="" class="icon" loading='lazy'>
                     <span class="description">Status</span>
                 </a>
             </div>
@@ -32,7 +32,7 @@
             <!-- Cek QR -->
             <div class="list-item">
                 <a href="<?= base_url(''); ?>">
-                    <img src="<?= base_url('/'); ?>asset/history.svg" alt="" class="icon">
+                    <img src="<?= base_url('/'); ?>asset/history.svg" alt="" class="icon" loading='lazy'>
                     <span class="description">Riwayat</span>
                 </a>
             </div>
@@ -40,7 +40,7 @@
             <!-- Cek QR -->
             <div class="list-item">
                 <a href="<?= base_url('/suratmasuk/kameraQR'); ?>">
-                    <img src="<?= base_url('/'); ?>asset/outline-qrcode.svg" alt="" class="icon">
+                    <img src="<?= base_url('/'); ?>asset/outline-qrcode.svg" alt="" class="icon" loading='lazy'>
                     <span class="description">Cek Surat</span>
                 </a>
             </div>
