@@ -7,6 +7,8 @@ use App\Libraries\enkripsi;
 use App\Libraries\validasienkripsi;
 use App\Models\Isisurat;
 use App\Models\Jenissurat;
+use App\Models\Suratmasuk;
+use App\Models\TandaTangan;
 
 class TestSuratmasuk extends BaseController
 {
@@ -166,12 +168,14 @@ class TestSuratmasuk extends BaseController
 
     public function InputisiSurat()
     {
-        PagePerm(['Mahasiswa', 'Dosen']);
+        // PagePerm(['Mahasiswa', 'Dosen']);
 
         $jenissurat = model(Jenissurat::class);
         $data['jenissurat'] = $jenissurat->seeall();
+        $data['level'] = $jenissurat->seegrouplvl();
+        $data['ttd'] = $jenissurat->seeNamaPettd();
 
-
+        // d($data);
 
         return view('suratmasuk/inputisi', $data);
     }
@@ -179,7 +183,7 @@ class TestSuratmasuk extends BaseController
     public function addisidata()
     {
         // PagePerm(['Mahasiswa', 'Dosen']);
-        PagePerm(['']);
+        // PagePerm(['']);
         $postdata = $this->request->getPost([
             'isiDariSurat',
             'jenisSurat',
@@ -188,43 +192,30 @@ class TestSuratmasuk extends BaseController
         ]);
         // $data['jumlah'] = $postdata['total'];
 
-
+        d($postdata);
         $fielddata = $this->request->getPost();
-        $json_data = SpaceToUnder(json_encode($fielddata));
+        $json_data = json_encode($fielddata);
         $dataformarray = json_decode($json_data, true);
 
-        // d($data['json_data']);
+        d($fielddata);
 
         unset($dataformarray['isiDariSurat']);
         unset($dataformarray['jenisSurat']);
         unset($dataformarray['diskripsi']);
         unset($dataformarray['csrf_test_name']);
 
-        $data['json_data'] = json_encode($dataformarray, true);
+        $data['json_data'] = ubahJSONkeSimpelJSON(json_encode($dataformarray, true));
 
-        $model = model(Isisurat::class);
+        d($data);
+
+        $model = model(Jenissurat::class);
         echo "inputing data";
 
-        if ($model->addisiSurat($postdata['diskripsi'], $postdata['isiDariSurat'], $data['json_data'], $postdata['jenisSurat'])) {
+
+
+        if ($model->addJenisSurat($postdata['jenisSurat'], $postdata['diskripsi'], $postdata['isiDariSurat'], $data['json_data'])) {
             return redirect()->to('suratmasuk/inputisisurat');
         }
-
-        // d($data['jsondata']);
-        // d($data['json_data']);
-        // d($dataformarray);
-        // d($postdata);
-        // d($fielddata);
-        // d($data);
-        // foreach ($dataformarray as $array) {
-        //     // d($array2);
-
-        //     echo form_input(
-        //         esc($array),
-        //         "",
-        //         "placeholder=$array"
-        //     );
-        //     echo "<br>";
-        // }
     }
 
     public function mintasuratindex()
@@ -238,14 +229,12 @@ class TestSuratmasuk extends BaseController
 
     public function mintasurat(int $idsurat)
     {
-        $model = model(Isisurat::class);
-        echo $idsurat;
-        $data['datasurat'] = $model->seebyjenis($idsurat);
+        $model = model(Jenissurat::class);
+        $data['datasurat'] = $model->seebyID($idsurat);
         if (count($data) !== 1) {
             return redirect()->to('suratmasuk/mintasurat');
         }
-        d(count($data));
-        $data['dataform'] = json_decode($data['datasurat'][0]['form'], true);
+        $data['dataform'] = json_decode($data['datasurat']['form'], true);
         // if ($data['dataform']['foto']) {
         //     echo "ada foto";
         // }
@@ -257,28 +246,56 @@ class TestSuratmasuk extends BaseController
         }
         d($data);
 
+        foreach ($data['dataform']['TTD'] as $ii => $i) {
+            echo $data['dataform']['TTD'][$ii];
+            echo '<br>';
+        }
+
 
         // TODO membuat form input untuk meminta ttd
         // d($dataformarray);
         return view('suratmasuk/mintattd', $data);
     }
 
-    public function addsuratmasuk($idsurat)
+
+
+
+    public function addmintasurat($idsurat)
     {
-        $model = model(Isisurat::class);
-        echo $idsurat;
-        $data['isisurat'] = $model->seebyjenis($idsurat)[0]['isiSurat'];
+        helper(['text', 'date']);
+        $model  = model(Suratmasuk::class);
+        $model2 = model(TandaTangan::class);
+        $model3 = model(Jenissurat::class);
+
+
         $postdata = $this->request->getPost();
-
-        $data['isi'] = replacetextarray($data['isisurat'], ubaharray($postdata), '1');
-
-
-
+        $json_data = json_encode($postdata);
+        $dataformarray = json_decode($json_data, true);
+        unset($dataformarray['csrf_test_name']);
 
 
 
-        d($postdata);
-        d($data);
-        d(ubaharray($postdata));
+
+
+
+
+
+        $data['NoSurat'] = random_string();
+        $data['TimeStamp'] = now();
+        $data['DataTambahan'] = base64_encode(json_encode($dataformarray));
+        $data['JenisSurat_id'] = $idsurat;
+        $data['mshw_id'] = userInfo()['id'];
+
+
+
+        $TTDdata['TTD'] = json_decode($model3->seebyID($data['JenisSurat_id'])['form'], true)['TTD'];
+        $TTDdata['NoSurat'] = $data['NoSurat'];
+        $ttdArray = transformData($TTDdata);
+
+
+        if ($model->addSuratMasuk($data)) {
+            if ($model2->addTTD($ttdArray)) {
+            }
+        }
     }
 }

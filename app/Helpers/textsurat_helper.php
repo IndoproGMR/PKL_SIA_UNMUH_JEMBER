@@ -1,5 +1,7 @@
 <?php
 
+use CodeIgniter\I18n\Time;
+
 /**
  * masukan string text
  * cari kalimat yang ingin di ubah
@@ -32,6 +34,57 @@ function replacetextarray($datatext, $cariKatadenganKata, String $options)
     }
     return $datatext;
 }
+
+function ubahJSONkeSimpelJSON($json)
+{
+    $data = json_decode($json, true);
+
+    $result = [];
+
+    foreach ($data as $key => $value) {
+        $prefix = substr($key, 0, strpos($key, '_'));
+
+        if (!isset($result[$prefix])) {
+            $result[$prefix] = [];
+        }
+
+        $result[$prefix][] = $value;
+    }
+
+    return json_encode($result);
+}
+
+function transformData($data)
+{
+    // $data = json_decode($jsonData, true);
+
+    $ttd = [];
+
+    foreach ($data['TTD'] as $value) {
+        $ttdData = [
+            'Status' => 0,
+            'hash' => NULL,
+            'RandomStr' => NULL,
+            'TimeStamp' => NULL,
+            'NoSurat' => $data['NoSurat'],
+            'jenisttd' => '', // Jenis TTD: Group atau Perorangan
+            'pendattg_id' => '' // Nilai pendattg_id berdasarkan jenis TTD
+        ];
+
+        if (strpos($value, 'Group_') === 0) {
+            $ttdData['jenisttd'] = 'Group';
+            $ttdData['pendattg_id'] = substr($value, strlen('Group_'));
+        } else if (strpos($value, 'Perorangan_') === 0) {
+            $ttdData['jenisttd'] = 'Perorangan';
+            $ttdData['pendattg_id'] = substr($value, strlen('Perorangan_'));
+        }
+
+        $ttd[] = $ttdData;
+    }
+
+    return $ttd;
+}
+
 
 function pecahkan(String $text)
 {
@@ -75,41 +128,13 @@ function array_search_partial($arr, $keyword)
     }
 }
 
-function cekquary($text)
+function inputform($dataformarray, $class = '')
 {
-    $data = [
-        'order' => 'id',
-        'in' => 'ASC'
-    ];
-    switch ($text) {
-
-        case '-order:waktu_ASC':
-            $data = [
-                'order' => 'timestamp',
-                'in' => 'ASC'
-            ];
-            break;
-        case '-order:waktu_DESC':
-            $data = [
-                'order' => 'timestamp',
-                'in' => 'DESC'
-            ];
-            break;
-
-        default:
-            # code...
-            break;
-    }
-    return $data;
-}
-
-function inputform($dataformarray)
-{
-    foreach ($dataformarray as $array) {
+    foreach ($dataformarray['input'] as $array) {
         echo form_input(
             esc($array),
             "",
-            "placeholder=$array class=''"
+            "placeholder=$array class='$class'"
         );
         echo "<br>";
     }
@@ -126,4 +151,9 @@ function ubaharray($array)
         ];
     }
     return $newArray;
+}
+
+function timeconverter($timestamp = null)
+{
+    return Time::createFromTimestamp($timestamp, 'America/Chicago', 'en_US');
 }

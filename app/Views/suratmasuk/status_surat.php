@@ -29,26 +29,18 @@
         </thead>
 
         <tbody>
-            <tr>
-                <th>PKL</th>
-                <td>2-06-2023</td>
-                <td>23457689</td>
-                <td>(0/1)<a href="status-surat.html" class="signature">TANDA TANGAN</a></td>
-            </tr>
+            <?php foreach ($datasurat as $key) : ?>
+                <tr>
+                    <th><?= esc($key['JenisSurat_id']) ?></th>
+                    <td><?= esc(timeconverter($key['TimeStamp'])) ?></td>
+                    <td><?= esc($key['NoSurat']) ?></td>
+                    <td>(<?= esc($key['status']['sudah']) ?>/<?= esc($key['status']['totalTTD']) ?>)</td>
+                </tr>
+            <?php endforeach ?>
 
-            <tr>
-                <th>PKL</th>
-                <td>2-06-2023</td>
-                <td>23457689</td>
-                <td>(0/1)<a href="" class="signature">TANDA TANGAN</a></td>
-            </tr>
 
-            <tr>
-                <th>PKL</th>
-                <td>2-06-2023</td>
-                <td>23457689</td>
-                <td>(0/1)<a href="" class="signature">TANDA TANGAN</a></td>
-            </tr>
+
+
 
         </tbody>
     </table>
