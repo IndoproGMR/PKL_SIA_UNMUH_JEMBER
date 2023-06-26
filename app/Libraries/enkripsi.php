@@ -57,4 +57,12 @@ class enkripsi
     {
         return explode("_", $text);
     }
+
+    function enkripsiPass()
+    {
+    }
+
+    function enkripsiToken()
+    {
+    }
 }

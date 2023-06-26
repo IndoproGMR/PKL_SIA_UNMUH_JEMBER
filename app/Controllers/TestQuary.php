@@ -9,6 +9,8 @@ class TestQuary extends BaseController
 {
     public function index()
     {
+        $model = model(Quary::class);
+        d($model->test2db());
         return view('quary/test_quary');
     }
 

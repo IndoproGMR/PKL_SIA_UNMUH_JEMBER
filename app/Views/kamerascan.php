@@ -68,7 +68,7 @@
     <input type="checkbox" name="autodetail" id="autodetail" value="autodetail"> auto detail
     <br>
     <?php if (!$nocam) : ?>
-        <select name="kamera" id="kamera" onchange="jalankancamera()">
+        <select name="kamera" id="kamera" onchange="jalankancamera(this.value)">
         </select>
     <?php else : ?>
         <select name="kamera" id="kamera">
@@ -116,7 +116,7 @@
             });
 
 
-            function jalankancamera() {
+            function jalankancamera(kameraid) {
                 let scanner = new Instascan.Scanner({
                     video: document.getElementById("preview")
                 });
@@ -127,11 +127,11 @@
                 });
 
 
-                var idcamera = document.getElementById('kamera').value;
+                // var idcamera = document.getElementById('kamera').value;
                 // console.log(idcamera);
                 Instascan.Camera.getCameras().then(function(cameras) {
                     scanner.stop()
-                    scanner.start(cameras[idcamera]);
+                    scanner.start(cameras[kameraid]);
                 }).catch(function(e) {
                     console.error(e);
                 });
