@@ -135,4 +135,5 @@ public/qrcode/*
 public/qrtemp/*
 public/temp/*
 
-/app/Libraries/enkripsi.php
+/app/Libraries/enkripsi_library.php
+

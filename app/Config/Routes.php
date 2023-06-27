@@ -44,7 +44,9 @@ $routes->get('/suratmasuk/mintasurat/(:num)', 'TestSuratmasuk::mintasurat/$1');
 $routes->post('/suratmasuk/mintasurat/(:num)', 'TestSuratmasuk::addmintasurat/$1');
 
 // $routes->post('/suratmasuk/mintasurat', 'TestSuratmasuk::addsuratmasuk');
-$routes->get('/StatusSurat', 'StatuSurat::index');
+$routes->get('/StatusSurat', 'StatuSurat::statusSurat');
+$routes->get('/StatusTTD', 'StatuSurat::statusTTD');
+$routes->post('/StatusTTD/proses', 'StatuSurat::prosesTTD');
 
 
 $routes->get('/suratmasuk/kameraQR', 'TestSuratmasuk::kameraQR');

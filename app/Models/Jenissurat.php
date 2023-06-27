@@ -15,6 +15,8 @@ class Jenissurat extends Model
     protected $protectFields    = true;
     protected $allowedFields    = [
         'name',
+        'isiSurat',
+        'form',
         'description'
     ];
 

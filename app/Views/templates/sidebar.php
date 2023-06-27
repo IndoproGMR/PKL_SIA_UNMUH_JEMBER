@@ -21,13 +21,31 @@
                 </a>
             </div>
 
-            <!-- Cek QR -->
-            <div class="list-item">
-                <a href="<?= base_url('/StatusSurat'); ?>">
-                    <img src="<?= base_url('/'); ?>asset/list-status.svg" alt="" class="icon" loading='lazy'>
-                    <span class="description">Status</span>
-                </a>
-            </div>
+            <?php if (in_group(['Mahasiswa'])) : ?>
+
+                <!-- Cek QR -->
+                <div class="list-item">
+                    <a href="<?= base_url('/StatusSurat'); ?>">
+                        <img src="<?= base_url('/'); ?>asset/list-status.svg" alt="" class="icon" loading='lazy'>
+                        <span class="description">Status</span>
+                    </a>
+                </div>
+
+            <?php endif ?>
+
+
+            <?php if (in_group(['Dosen'])) : ?>
+
+                <!-- Cek QR -->
+                <div class="list-item">
+                    <a href="<?= base_url('/StatusTTD'); ?>">
+                        <img src="<?= base_url('/'); ?>asset/list-status.svg" alt="" class="icon" loading='lazy'>
+                        <span class="description">Status TandaTangan</span>
+                    </a>
+                </div>
+
+            <?php endif ?>
+
 
             <!-- Cek QR -->
             <div class="list-item">

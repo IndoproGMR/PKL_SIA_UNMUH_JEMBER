@@ -155,5 +155,6 @@ function ubaharray($array)
 
 function timeconverter($timestamp = null)
 {
-    return Time::createFromTimestamp($timestamp, 'America/Chicago', 'en_US');
+
+    return json_decode(json_encode(Time::createFromTimestamp($timestamp)), 'array');
 }

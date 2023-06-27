@@ -29,6 +29,10 @@ class Suratmasuk extends Model
 
     function cekNoSurat(string $iduser)
     {
-        return $this->where('mshw_id', $iduser)->find();
+        return $this
+            ->select('SM_JenisSurat.name as namaJenisSurat,SM_ttd_SuratMasuk.NoSurat,SM_ttd_SuratMasuk.TimeStamp')
+            ->where('mshw_id', $iduser)
+            ->join('SM_JenisSurat', 'SM_JenisSurat.id=SM_ttd_SuratMasuk.JenisSurat_id')
+            ->find();
     }
 }
