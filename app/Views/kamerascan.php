@@ -161,6 +161,9 @@
         };
 
         function detail(url) {
+            console.log(url);
+
+
             var nosurat = document.getElementById("nosurat").value
             var qrcode = encodeURIComponent(document.getElementById("qrcode").value);
             let countclass = document.getElementsByClassName("detailhide").length;
@@ -169,7 +172,6 @@
 
 
             url = url + "?nosurat=" + nosurat + "&qrcode=" + qrcode
-
             fetch(url)
                 .then((response) => {
                     return response.json();

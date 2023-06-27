@@ -1,4 +1,104 @@
 <?php
+function datacallRespond($id)
+{
+    /**
+     * validasi = v
+     * Database conn = db
+     * db query = dbq
+     * Simpan = s
+     * Error = e
+     */
+    switch ($id) {
+            // TTD
+        case 'TTD':
+            $data = 'Tanda Tangan';
+            break;
+        case 'TTD0':
+            $data = 'Tanda Tangan Tidak ada Didalam Database!!!';
+            break;
+        case 'TTD1':
+            $data = 'Tanda Tangan Berada Didalam Database';
+            break;
+
+        case 'TTD2':
+            $data = 'Tanda Tangan Valid';
+            break;
+        case 'TTD3':
+            $data = 'Tanda Tangan Tidak Valid';
+            break;
+
+        case 'TTD20':
+            $data = 'Tanda Tangan Valid tapi tidak ada di dalam Database!!!';
+            break;
+        case 'TTD21':
+            $data = 'Tanda Tangan Valid dan ada di dalam Database';
+            break;
+
+
+            // validasi
+        case 'v':
+            $data = 'validasi';
+            break;
+        case 'v0':
+            $data = 'validasi gagal';
+            break;
+        case 'v1':
+            $data = 'validasi Berhasil';
+            break;
+
+
+            // Database conn
+        case 'db':
+            $data = 'database';
+            break;
+        case 'db0':
+            $data = 'database tidak Terhubung';
+            break;
+        case 'db1':
+            $data = 'database Terhubung';
+            break;
+
+
+            // db query
+        case 'dbq1':
+            $data = 'data Ada Di Database';
+            break;
+        case 'dbq2':
+            $data = 'data Tidak ada di Database';
+            break;
+
+
+            // Simpan
+        case 's':
+            $data = 'Simpan';
+            break;
+        case 's1':
+            $data = 'Sukses DiSimpan';
+            break;
+        case 's2':
+            $data = 'gagal DiSimpan';
+            break;
+
+
+            // Error
+        case '0':
+            $data = 'parameter datacallRespond tidak ada';
+            break;
+        case 'e':
+            $data = 'Error';
+            break;
+        case 'e1':
+            $data = 'Error parameter tidak di temukan';
+            break;
+
+
+        default:
+            $data = 'Error Kode 0';
+            break;
+    }
+    return $data;
+}
+
 function datacallorder($pilihan)
 {
     $isi = [

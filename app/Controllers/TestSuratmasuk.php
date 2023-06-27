@@ -161,8 +161,8 @@ class TestSuratmasuk extends BaseController
                 $data['nocam'] = false;
             }
         }
-        // return view("suratmasuk/kameraqr", $data);
-        return view("html5qrscanner", $data);
+        return view("suratmasuk/kameraqr", $data);
+        // return view("html5qrscanner", $data);
     }
 
 
@@ -262,40 +262,42 @@ class TestSuratmasuk extends BaseController
 
     public function addmintasurat($idsurat)
     {
+        PagePerm(['Mahasiswa', 'Calon Mahasiswa'], '/', false, 1);
         helper(['text', 'date']);
         $model  = model(Suratmasuk::class);
         $model2 = model(TandaTangan::class);
         $model3 = model(Jenissurat::class);
-
 
         $postdata = $this->request->getPost();
         $json_data = json_encode($postdata);
         $dataformarray = json_decode($json_data, true);
         unset($dataformarray['csrf_test_name']);
 
-
-
-
-
-
-
-
+        // !untuk menyimpan suratmasuk
         $data['NoSurat'] = random_string();
         $data['TimeStamp'] = now();
         $data['DataTambahan'] = base64_encode(json_encode($dataformarray));
         $data['JenisSurat_id'] = $idsurat;
         $data['mshw_id'] = userInfo()['id'];
 
-
-
+        // !untuk menyimpan TTD
         $TTDdata['TTD'] = json_decode($model3->seebyID($data['JenisSurat_id'])['form'], true)['TTD'];
         $TTDdata['NoSurat'] = $data['NoSurat'];
+        /**
+         * unutk TTDdata['status','hash','randomStr','Timestamp']
+         * berada di fungsi transformData(data);
+         */
         $ttdArray = transformData($TTDdata);
 
 
-        if ($model->addSuratMasuk($data)) {
-            if ($model2->addTTD($ttdArray)) {
-            }
+        // set ke dalam
+        if (!$model->addSuratMasuk($data)) {
+            return "error meminta surat";
         }
+        if (!$model2->addTTD($ttdArray)) {
+            return "error meminta ttd";
+        }
+
+        return "Berhasil";
     }
 }

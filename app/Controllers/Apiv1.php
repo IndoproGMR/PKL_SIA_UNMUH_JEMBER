@@ -2,52 +2,80 @@
 
 namespace App\Controllers;
 
-use App\Controllers\BaseController;
-use App\Libraries\validasienkripsi;
+use App\Libraries\enkripsi_library;
+use App\Models\AuthUserGroup;
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\RESTful\ResourceController;
 
-//http://localhost:8080/api/v1/validasi/qr?nosurat=123&qrcode=DiTandaTanganiOleh_nama_pQghxNEWWn4D0%2B7tpnnP2fB7wOuk57vPU9R2dzeHp%2BwHHqJrRgvTkSrZ53ukx7doQP7kSL2oHeN17NBJoD13S79DfAyDd078dXNXULMzxh2TNi9njW6Ftd6MgnoG5MU9
 
-// class Apiv1 extends BaseController
+// http://localhost:8080/api/v1/validasi/qr?nosurat=8Ne8V2aU&qrcode=DiTandaTanganiOleh_MUHAMMAD%20NAELY%20AZHAD_eitSNE9JTzg3K2MxYkFVemc4OExINGdqeW5hQ0VxZ29UOHZOQkxNcVl6YmJzUFB4dkZJdHVWODNLbnpSdkpoWkRMWmN6dmdFYy9FYTdzditqcVpMclE9PQ%3D%3D
+
 class Apiv1 extends ResourceController
 {
     use ResponseTrait;
     public function validasiqr()
     {
-        $validasienkripsi = new validasienkripsi();
+        // test data
+        // $data['nosurat'] = '8Ne8V2aU';
+        // $data['hashraw'] = 'DiTandaTanganiOleh_MUHAMMAD NAELY AZHAD_eitSNE9JTzg3K2MxYkFVemc4OExINGdqeW5hQ0VxZ29UOHZOQkxNcVl6YmJzUFB4dkZJdHVWODNLbnpSdkpoWkRMWmN6dmdFYy9FYTdzditqcVpMclE9PQ==';
+
         if (isset($_GET["nosurat"]) && isset($_GET["qrcode"])) {
-            $nosurat = $_GET["nosurat"];
-            $datahash = $_GET["qrcode"];
-            $validasienkripsi = new validasienkripsi();
-            $data = $validasienkripsi->validasiEnkrispsi($datahash, $nosurat);
-            $datahash = $validasienkripsi->validasiTTD($data[2], $nosurat);
-            $datajson['valid'] = $datahash[5];
-            return $this->respond($datajson);
+            helper('datacall');
+
+            $data['nosurat']  = $_GET["nosurat"];
+            $data['hashraw']  = $_GET["qrcode"];
+            $validasienkripsi = new enkripsi_library;
+            $data['dataJson'] = $validasienkripsi->validasiTTD($data['hashraw'], $data['nosurat']);
+
+            $data['respond'] = [
+                'valid' => datacallRespond($data['dataJson']['valid'])
+            ];
+            return $this->respond($data['respond']);
         }
+
+        $data['respond'] = [
+            'valid' => datacallRespond('e1')
+        ];
+        return $this->respond($data['respond']);
     }
+
+    // http://localhost:8080/api/v1/validasi/qr/detail?nosurat=8Ne8V2aU&qrcode=DiTandaTanganiOleh_MUHAMMAD%20NAELY%20AZHAD_eitSNE9JTzg3K2MxYkFVemc4OExINGdqeW5hQ0VxZ29UOHZOQkxNcVl6YmJzUFB4dkZJdHVWODNLbnpSdkpoWkRMWmN6dmdFYy9FYTdzditqcVpMclE9PQ%3D%3D
 
     public function validasiqrdetail()
     {
-        $validasienkripsi = new validasienkripsi();
-        if (isset($_GET["nosurat"]) && isset($_GET["qrcode"])) {
-            $nosurat = $_GET["nosurat"];
-            $datahash = $_GET["qrcode"];
-            $validasienkripsi = new validasienkripsi();
-            $data = $validasienkripsi->validasiEnkrispsi($datahash, $nosurat);
-            $datahash = $validasienkripsi->validasiTTD($data[2], $nosurat);
+        // Test data
+        // $data['nosurat'] = '8Ne8V2aU';
+        // $data['hashraw'] = 'DiTandaTanganiOleh_MUHAMMAD NAELY AZHAD_eitSNE9JTzg3K2MxYkFVemc4OExINGdqeW5hQ0VxZ29UOHZOQkxNcVl6YmJzUFB4dkZJdHVWODNLbnpSdkpoWkRMWmN6dmdFYy9FYTdzditqcVpMclE9PQ==';
 
-            if ($datahash[5] == "HashNotValid") {
-                $datajson['valid'] = $datahash[5];
-                return $this->respond($datajson);
-            }
-            $datajson['valid'] = $datahash[5];
-            $datajson['nosurat'] = $datahash[0];
-            $datajson['UUID'] = $datahash[1];
-            $datajson['Penandatangan'] = $datahash[2];
-            $datajson['Mahasiswa'] = $datahash[3];
-            $datajson['timestamp'] = $datahash[4];
-            return $this->respond($datajson);
+        if (isset($_GET["nosurat"]) && isset($_GET["qrcode"])) {
+            helper('textsurat');
+
+            $data['nosurat'] = $_GET["nosurat"];
+            $data['hashraw'] = $_GET["qrcode"];
+
+            $validasienkripsi = new enkripsi_library;
+
+            $model = model(AuthUserGroup::class);
+            $data['dataJson'] = $validasienkripsi->validasiTTD($data['hashraw'], $data['nosurat']);
+
+            $data['respond']['nosurat']       = $data['dataJson']['NoSurat'];
+            $data['respond']['JenisSurat']    = $data['dataJson']['jenisSurat'];
+            $data['respond']['Mahasiswa']     = $model->cekuserinfo($data['dataJson']['mshw_id'])['NamaUser'];
+            $data['respond']['penandatangan'] = $model->cekuserinfo($data['dataJson']['pendattg_id'])['NamaUser'];
+            $data['respond']['TimeStamp']     = timeconverter($data['dataJson']['TimeStamp'])['date'];
+
+            return $this->respond($data['respond']);
         }
+        helper('datacall');
+
+        $data['respond'] = [
+            'nosurat'       =>  datacallRespond('e'),
+            'JenisSurat'    =>  datacallRespond('e'),
+            'Mahasiswa'     =>  datacallRespond('e'),
+            'penandatangan' =>  datacallRespond('e'),
+            'TimeStamp'     => datacallRespond('e'),
+            'valid'         => datacallRespond('e1'),
+        ];
+        return $this->respond($data['respond']);
     }
 }

@@ -84,7 +84,7 @@
 <p class="detailhide">Mahasiswa: <span id="Mahasiswa"></span></p>
 <p class="detailhide">Penandatangan: <span id="Penandatangan"></span></p>
 <p class="detailhide">timestamp: <span id="timestamp"></span></p>
-<p class="detailhide">UUID: <span id="UUID"></span></p>
+<p class="detailhide">JenisSurat: <span id="JenisSurat"></span></p>
 
 
 
@@ -162,11 +162,14 @@
             })
             .then((data) => {
                 var valid = document.getElementById("valid").textContent = data.valid;
-                console.log(data);
+                console.log(data.valid);
+                // return data.valid;
             })
     };
 
     function detail(url) {
+        // console.log(url_api);
+        cek(url_api);
         var nosurat = document.getElementById("nosurat").value
         var qrcode = encodeURIComponent(document.getElementById("qrcode").value);
         let countclass = document.getElementsByClassName("detailhide").length;
@@ -175,6 +178,7 @@
 
 
         url = url + "?nosurat=" + nosurat + "&qrcode=" + qrcode
+        console.log(url);
 
         fetch(url)
             .then((response) => {
@@ -183,12 +187,13 @@
             .then((data) => {
                 var valid = data.valid;
                 console.log(valid);
-                document.getElementById("valid").textContent = data.valid;
+                // document.getElementById("valid").textContent = data.valid;
+                // document.getElementById("valid").textContent = cek(url_api);
                 document.getElementById("no-surat").textContent = data.nosurat;
                 document.getElementById("Mahasiswa").textContent = data.Mahasiswa;
-                document.getElementById("Penandatangan").textContent = data.Penandatangan;
-                document.getElementById("timestamp").textContent = data.timestamp;
-                document.getElementById("UUID").textContent = data.UUID;
+                document.getElementById("Penandatangan").textContent = data.penandatangan;
+                document.getElementById("timestamp").textContent = data.TimeStamp;
+                document.getElementById("JenisSurat").textContent = data.JenisSurat;
                 // console.log(data);
             })
     };
