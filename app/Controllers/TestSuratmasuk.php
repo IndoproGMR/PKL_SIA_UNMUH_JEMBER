@@ -76,7 +76,7 @@ class TestSuratmasuk extends BaseController
         echo "<br>";
         // }
 
-        $enkripsi->generate_enkripsiQR("asd", "asd");
+        // $enkripsi->generate_enkripsiQR("asd", "asd");
         Render_Qr($hasilhash, "nama");
         echo "<br>";
 
@@ -101,6 +101,33 @@ class TestSuratmasuk extends BaseController
 
         // $enkripsi->dekripsiTTD($hasilhash);
         return view('test_suratmasuk', $data);
+    }
+
+
+    public function inputIsitinymce()
+    {
+        $jenissurat = model(Jenissurat::class);
+        $data['jenissurat'] = $jenissurat->seeall();
+        $data['level'] = $jenissurat->seegrouplvl();
+        $data['ttd'] = $jenissurat->seeNamaPettd();
+        return view('testtinymce', $data);
+    }
+
+    public function inputIsitinymce2()
+    {
+        $postdata = $this->request->getPost();
+        $data['isi'] = $postdata['inputisi'];
+        $data['kop'] = 1;
+        // $data['kop'] = 2;
+        d($postdata);
+        // return view('testtinymce');
+        // return view('surat/layout', $data);
+        echo esc($data['isi']);
+
+        // Render_mpdf("surat/layout", "11", "ini nama test", $data); // save dan view
+        // Render_mpdf("surat/layout", "01", "ini nama test", $data); //  no save dan view
+        // Render_mpdf("surat/layout", "00", "ini nama test", $data); // no save dan no view
+        Render_mpdf("surat/layout", "10", "ini nama test", $data); // save dan no view 
     }
 
     public function pdf()
@@ -256,9 +283,6 @@ class TestSuratmasuk extends BaseController
         // d($dataformarray);
         return view('suratmasuk/mintattd', $data);
     }
-
-
-
 
     public function addmintasurat($idsurat)
     {
