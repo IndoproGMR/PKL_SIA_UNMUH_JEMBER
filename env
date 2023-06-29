@@ -38,10 +38,10 @@
 
 #superKey = '16lengkey'
 #twoWAYKEY = '24lengkey'
-#logoqr = 'logo/yourLogo.png'
 #ALGO = 'aes256'
+#logoqr = 'asset/logo/yourLogo.png'
 
-#urlapi = 'api/v1/validasi/qr'
+#urlapi = 'api/v1'
 
 #--------------------------------------------------------------------
 

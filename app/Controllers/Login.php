@@ -3,9 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use App\Libraries\validasienkripsi;
 use App\Models\AuthUserGroup;
-use App\Models\Testusers;
 
 class Login extends BaseController
 {
@@ -38,8 +36,6 @@ class Login extends BaseController
                 'login' => '1210652011',
                 'password' => '*3E5287812'
             ],
-
-
         ];
 
         // d(user_id());
@@ -71,14 +67,18 @@ class Login extends BaseController
             'namaLVL' => $datauser['namaLVL']
         ];
         $session->set($data);
-        // $hasil = $model->seebyID($postdata['logindengan']);
 
         return redirect()->to('/');
         // d($postdata);
         // d($data);
         // d($session->get());
     }
-    function logout()
+
+    public function loginproses()
+    {
+    }
+
+    public function logout()
     {
         $session = \Config\Services::session();
         $session->destroy();

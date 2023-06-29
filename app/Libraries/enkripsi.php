@@ -6,23 +6,34 @@ namespace App\Libraries;
 use App\Libraries\Rendergambar;
 // validasi
 use App\Libraries\validasienkripsi;
+use App\Models\Jenissurat;
+use App\Models\TandaTangan;
+
+// full enkripsi berada di enkripsi_library
 
 class enkripsi
 {
-    public function enkripsiTTD(String $noSurat, String $idsiapayangttd, String $NamaTTD, String $idmhs)
+    public function enkripsiTTD($noSurat, $idmhs)
     {
-        $RandomNumber = random_int(00000000, 9999999);
-        $unixtime = time();
-        $text = $noSurat . "_" .  $RandomNumber  . "_" . $idsiapayangttd . "_" . $idmhs . "_" . $unixtime;
-        $textenkripsi = "DiTandaTanganiOleh_$NamaTTD" . "_" . $this->twowayhash_enkripsi($text);
-        // TODO panggil model untuk menyimpan data
+        $idPenandaTangan = userInfo()['id'];
+        $NamaTTD         = userInfo()['NamaUser'];
+        $RandomNumber    = random_int(00000000, 9999999);
+        $unixtime        = time();
+
+        $text = $noSurat     . "_" .
+            $RandomNumber    . "-" .
+            $unixtime        . "_" .
+            $idPenandaTangan . "_" .
+            $idmhs;
+        $hasilhash = base64_encode($this->twowayhash_enkripsi($text));
+        $textenkripsi = "DiTandaTanganiOleh_$NamaTTD" . "_" . $hasilhash;
 
         return $textenkripsi;
     }
 
     public function dekripsiTTD(String $text)
     {
-        $datadekripsi = $this->twowayhash_dekripsi($text);
+        $datadekripsi = $this->twowayhash_dekripsi(base64_decode($text));
         return $this->pecahkan($datadekripsi);
     }
 
@@ -43,26 +54,20 @@ class enkripsi
     }
 
 
-    public function generate_enkripsiQR(String $noSurat, String $idPenandaTangan)
-    {
-        // TODO ambil Hash Dari NoSurat dan nama PenandaTangan
-        $data = "dataHashDariTTDSuratMasuk";
-        $namaPenandatangan = "nama dari model";
-        $namaFile = $noSurat . "_" . $namaPenandatangan;
-        Render_Qr($data, $namaFile);
-    }
-
-
-    function pecahkan(String $text)
-    {
-        return explode("_", $text);
-    }
-
+    ///
     function enkripsiPass()
     {
+        //
     }
 
     function enkripsiToken()
     {
+        //
+    }
+
+    ///
+    function pecahkan(String $text)
+    {
+        return explode("_", $text);
     }
 }

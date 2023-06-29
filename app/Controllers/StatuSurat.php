@@ -77,7 +77,11 @@ class StatuSurat extends BaseController
         return redirect()->to('/StatusTTD');
     }
 
-    public function riwatTTD()
+    public function riwayatTTD()
+    {
+    }
+
+    public function riwayatSurat()
     {
     }
 }

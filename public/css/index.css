@@ -1,14 +1,14 @@
-.desc h1{
-    font-size: 20px;
-    font-weight: 700;
+.desc h1 {
+  font-size: 20px;
+  font-weight: 700;
 }
 
-.desc p{
-    font-size: 16px;
-    text-align: right;
+.desc p {
+  font-size: 16px;
+  text-align: right;
 }
 
-.user{
-    margin-right: 25px;
-    width : 70px
+.user {
+  margin-right: 25px;
+  width: 70px;
 }

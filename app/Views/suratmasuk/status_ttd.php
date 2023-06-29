@@ -33,7 +33,7 @@
             <?php foreach ($datasurat as $key) : ?>
                 <tr>
                     <th><?= esc($key['namaJenisSurat']) ?></th>
-                    <td><?= esc(timeconverter($key['TimeStamp'])) ?></td>
+                    <td><?= esc(timeconverter($key['TimeStamp'])['date']) ?></td>
                     <td><?= esc($key['NoSurat']) ?></td>
                     <td>(<?= esc($key['status']['sudah']) ?>/<?= esc($key['status']['totalTTD']) ?>)
                         <?= TombolID('/StatusTTD/proses', $key['idttd'], 'signature', 'TandaTangan') ?>

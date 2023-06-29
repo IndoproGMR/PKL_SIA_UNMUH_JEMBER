@@ -9,16 +9,15 @@ class Home extends BaseController
     public function index()
     {
         PagePerm([''], '/login', true);
-        // return view('welcome_message');
-        // return view('suratmasuk/status_surat');
-        // $model = model(TandaTangan::class);
-        // d($model->cekStatusSuratTTD('DveUCIo1', userInfo()));
 
         // d(userInfo());
 
-        return view('home/index');
+
+        // return view('suratmasuk/status_surat');
+        // return view('welcome_message');
         // return view('auth/Auth_login');
         // return view('auth/Auth_register');
+        return view('home/index');
     }
 
     public function error_perm()

@@ -53,9 +53,9 @@ class Apiv1 extends ResourceController
             $data['nosurat'] = $_GET["nosurat"];
             $data['hashraw'] = $_GET["qrcode"];
 
+            $model = model(AuthUserGroup::class);
             $validasienkripsi = new enkripsi_library;
 
-            $model = model(AuthUserGroup::class);
             $data['dataJson'] = $validasienkripsi->validasiTTD($data['hashraw'], $data['nosurat']);
 
             $data['respond']['nosurat']       = $data['dataJson']['NoSurat'];
@@ -69,10 +69,10 @@ class Apiv1 extends ResourceController
         helper('datacall');
 
         $data['respond'] = [
-            'nosurat'       =>  datacallRespond('e'),
-            'JenisSurat'    =>  datacallRespond('e'),
-            'Mahasiswa'     =>  datacallRespond('e'),
-            'penandatangan' =>  datacallRespond('e'),
+            'nosurat'       => datacallRespond('e'),
+            'JenisSurat'    => datacallRespond('e'),
+            'Mahasiswa'     => datacallRespond('e'),
+            'penandatangan' => datacallRespond('e'),
             'TimeStamp'     => datacallRespond('e'),
             'valid'         => datacallRespond('e1'),
         ];

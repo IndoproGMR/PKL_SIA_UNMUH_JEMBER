@@ -48,6 +48,7 @@
 </table>
 
 <form action="" method="post">
+    <?= csrf_field() ?>
     <input type="text" name="dataLogin" placeholder="login">
     <input type="text" name="dataPassword" placeholder="password">
     <input type="submit" value="login">

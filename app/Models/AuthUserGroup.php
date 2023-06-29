@@ -52,9 +52,9 @@ class AuthUserGroup extends Model
     {
         $db = \Config\Database::connect("siautama", false);
         $sql = "SELECT `level`.`Nama` AS namaLVL, 
-        COALESCE(`mhsw`.`Nama`, `dosen`.`Nama`, `karyawan`.`Nama`) AS NamaUser, 
+        COALESCE(`mhsw`.`Nama` , `dosen`.`Nama`, `karyawan`.`Nama`) AS NamaUser, 
         COALESCE(`mhsw`.`Login`, `dosen`.`Login`, `karyawan`.`Login`) AS LoginUser, 
-        COALESCE(`mhsw`.`Foto`,`level`.`Simbol`) AS FotoUser 
+        COALESCE(`mhsw`.`Foto` ,`level`.`Simbol`) AS FotoUser 
         FROM `level` 
         LEFT JOIN `mhsw` ON `level`.`LevelID` = `mhsw`.`LevelID` 
         LEFT JOIN `dosen` ON `level`.`LevelID` = `dosen`.`LevelID` 

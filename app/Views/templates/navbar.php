@@ -2,7 +2,7 @@
 
 <header>
     <div class="logo">
-        <img src="<?= base_url('/'); ?>asset/Gambar1.png" alt="logo" class="image">
+        <img src="<?= base_url('/'); ?>asset/logo/unmuh.png" alt="logo" class="image">
     </div>
 
     <div class="wrapper">

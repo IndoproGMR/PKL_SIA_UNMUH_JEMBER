@@ -68,30 +68,6 @@ function Render_Qr(String $dataqr, String $savefile)
     $result->saveToFile(FCPATH . $lokasi);
 }
 
-function Render_Qr_temp(String $dataqr, String $savefile)
-{
-    $lokasi = "qrtemp/$savefile.png";
-    $writer = new PngWriter();
-
-    // Create QR code
-    $qrCode = QrCode::create($dataqr)
-        ->setEncoding(new Encoding('UTF-8'))
-        ->setSize(300)
-        ->setMargin(10)
-        ->setErrorCorrectionLevel(new ErrorCorrectionLevelLow());
-    // ->setRoundBlockSizeMode(new RoundBlockSizeModeMargin())
-    // ->setForegroundColor(new Color(0, 0, 0))
-    // ->setBackgroundColor(new Color(255, 255, 255));
-
-
-    // Create generic logo
-    $logo = Logo::create($_ENV['logoqr'])
-        ->setResizeToWidth(50);
-
-    $result = $writer->write($qrCode, $logo);
-
-    $result->saveToFile(FCPATH . $lokasi);
-}
 
 
 
@@ -125,7 +101,8 @@ function Render_mpdf(String $htmlpage, String $saveorview, String $namapdf, $dat
     switch ($saveorview) {
         case '00':
             // no save no view
-            echo "no view";
+            // echo "no view";
+            echo "no view no save";
             break;
 
         case '01':
@@ -215,4 +192,30 @@ function Render_pdf(String $htmlpage, String $saveorview, String $namapdf, $data
             echo "no view";
             break;
     }
+}
+
+
+function Render_Qr_temp(String $dataqr, String $savefile)
+{
+    $lokasi = "qrtemp/$savefile.png";
+    $writer = new PngWriter();
+
+    // Create QR code
+    $qrCode = QrCode::create($dataqr)
+        ->setEncoding(new Encoding('UTF-8'))
+        ->setSize(300)
+        ->setMargin(10)
+        ->setErrorCorrectionLevel(new ErrorCorrectionLevelLow());
+    // ->setRoundBlockSizeMode(new RoundBlockSizeModeMargin())
+    // ->setForegroundColor(new Color(0, 0, 0))
+    // ->setBackgroundColor(new Color(255, 255, 255));
+
+
+    // Create generic logo
+    $logo = Logo::create($_ENV['logoqr'])
+        ->setResizeToWidth(50);
+
+    $result = $writer->write($qrCode, $logo);
+
+    $result->saveToFile(FCPATH . $lokasi);
 }

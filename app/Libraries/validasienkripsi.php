@@ -3,89 +3,57 @@
 namespace App\Libraries;
 
 use App\Libraries\enkripsi;
+use App\Models\TandaTangan;
 
 class validasienkripsi
 {
-    public function validasidariurl()
-    {
-        if (isset($_GET["validasi"]) && isset($_GET["noSurat"])) {
-            $data    = $_GET["validasi"];
-            $noSurat = $_GET["noSurat"];
-            echo $this->validasiEnkrispsi($data, $noSurat);
-        } else {
-            echo "input error";
-        }
-    }
-    public function jenisEnkripsi(String $data, String $noSurat)
-    {
-        $enkripsi = new enkripsi;
-        $type = pecahkan($data);
-        if (count($type) < 3) {
-            echo "input error";
-            return "error";
-        }
-
-        if ($type[0] == "DiTandaTanganiOleh") {
-            return "Tanda Tangan";
-            // return $this->validasiTTD($type[2], $noSurat);
-        } elseif ($type[0] == "PDF") {
-            return "File PDF";
-            // return $this->validasiPDF();
-        } else {
-            return "error";
-            // return "jenis validasi tidak di temukan";
-        }
-    }
-    public function validasiEnkrispsi(String $data, String $noSurat)
-    {
-        $enkripsi = new enkripsi;
-        $type = $this->pecahkan($data);
-        if (count($type) < 3 && count($type) > 1) {
-            echo "input error";
-            return "error";
-        }
-
-
-        if ($type[0] == "DiTandaTanganiOleh") {
-            // return $this->validasiTTD($type[2], $noSurat);
-            return $type;
-        } elseif ($type[0] == "PDF") {
-            // return $this->validasiPDF();
-            return $type;
-        } else {
-            $type[0] = 'error';
-            return  $type;
-        }
-    }
-
     public function validasiTTD(String $data, String $noSurat)
     {
-        // TODO panggil Model yang memiliki datahash dengan noSurat yang sama
-        if ($data) {
-            $type[5] = "Valid";
-            // return $type;
+        helper('datacall');
+
+        // !panggil Model yang memiliki datahash dengan noSurat yang sama
+        $model = model(TandaTangan::class);
+        $dataa['validasi'] = $model->cekvalidasi($noSurat, $data);
+
+        // d($dataa['validasi']);
+        if ($dataa['validasi']['NoSurat'] == $noSurat) {
+            $dataa['validasi']['valid'] = 'TTD1';
+            return $dataa['validasi'];
         }
 
-        // TODO bila data dihash tidak ada di dalam DB maka dekripsikan hash nya
-        $enkripsi = new enkripsi;
-
-        $type = $enkripsi->dekripsiTTD($data);
-        $type[5] = 'NotValid';
-
-        if (count($type) < 5) {
-            $type[5] = 'HashNotValid';
+        // !bila data dihash tidak ada di dalam DB maka dekripsikan hash nya
+        $enkripsi_lib = new enkripsi_library;
+        $dataa['hashraw'] = $this->pecahkan($data);
+        $dataa['hash'] = $enkripsi_lib->dekripsiTTD($dataa['hashraw'][2]);
+        if (count($dataa['hash']) > 2) {
+            $dataa['validasi'] = [
+                'NoSurat'     => $dataa['hash'][0],
+                'TimeStamp'   => explode('-', $dataa['hash'][1])[1],
+                'pendattg_id' => $dataa['hash'][2],
+                'mshw_id'     => $dataa['hash'][3],
+                'jenisSurat'  => datacallRespond('e'),
+                'valid'       => 'TTD20'
+            ];
+            return $dataa['validasi'];
         }
-        return $type;
+
+
+        $dataa['validasi'] = [
+            'NoSurat'     => datacallRespond('e'),
+            'TimeStamp'   => datacallRespond('e'),
+            'pendattg_id' => datacallRespond('e'),
+            'mshw_id'     => datacallRespond('e'),
+            'jenisSurat'  => datacallRespond('e'),
+            'valid'       => 'TTD3'
+        ];
+        return $dataa['validasi'];
     }
-
 
     public function validasiPDF()
     {
     }
 
-
-
-
+    ///
     function pecahkan(String $text)
     {
         return explode("_", $text);

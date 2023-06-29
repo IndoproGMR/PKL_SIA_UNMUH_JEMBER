@@ -96,8 +96,8 @@
 <?= $this->section('jsF') ?>
 <!-- Js Script untuk Footer -->
 <script type="text/javascript">
-    const url_api = "<?= base_url(getenv('urlapi'))  ?>";
-    const url_apidetail = "<?= base_url(getenv('urlapi') . "/detail") ?>";
+    const url_api = "<?= base_url(getenv('urlapi') . '/validasi/qr')  ?>";
+    const url_apidetail = "<?= base_url(getenv('urlapi') . "/validasi/qr/detail") ?>";
 
     <?php if (!$nocam) : ?>
         Instascan.Camera.getCameras().then(function(cameras) {
