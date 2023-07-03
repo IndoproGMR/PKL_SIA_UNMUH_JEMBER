@@ -382,44 +382,44 @@ server akan menyimpan waktu TTD
 ### cara kerja permintaan ttd
 
 **pengajar melihat siapa yang perlu ttd**
--> mengambil id_pengajar (242)
--> mengambil id_penandatangan (1)
--> mengambil semua id_ttdSurat dari id_penandtagan yang berstatus belum (1)
--> mengambil semua id_ttdSurat dari id_penandtagan yang berstatus sudah (2)
+-> mengambil id_pengajar (242)\
+-> mengambil id_penandatangan (1)\
+-> mengambil semua id_ttdSurat dari id_penandtagan yang berstatus belum (1)\
+-> mengambil semua id_ttdSurat dari id_penandtagan yang berstatus sudah (2)\
 
 **pengajar menandatangani**
--> pengajar klik tandatanganin surat dengan id_ttdSurat
--> server akan mangambil data2 dari penandatangan
--> server akan mengambil id_mahasiswa
--> server akan membuat hash
--> server akan mengupdate di id_ttdSurat dengan hash,status,randomNumber,timestamp_ttd
+-> pengajar klik tandatanganin surat dengan id_ttdSurat\
+-> server akan mangambil data2 dari penandatangan\
+-> server akan mengambil id_mahasiswa\
+-> server akan membuat hash\
+-> server akan mengupdate di id_ttdSurat dengan hash,status,randomNumber,timestamp_ttd\
 
 **mahasiswa melihat surat yang di ttd**
--> mengambil id_mahasiswa (201)
--> mengambil noSurat dari id_mahasiswa (10021,1314)
--> mengambil 1 id_ttdSuratMasuk dari noSurat (10021)
--> mencek 1 id_ttdSuratMasuk berapa jumlah yang perlu ttd
--> mencek 1 id_ttdSuratMasuk berapa jumlah yang berstatus "sudah" (kurang 1)
--> karena kurang 1 jadi belum ada tombol download
+-> mengambil id_mahasiswa (201)\
+-> mengambil noSurat dari id_mahasiswa (10021,1314)\
+-> mengambil 1 id_ttdSuratMasuk dari noSurat (10021)\
+-> mencek 1 id_ttdSuratMasuk berapa jumlah yang perlu ttd\
+-> mencek 1 id_ttdSuratMasuk berapa jumlah yang berstatus "sudah" (kurang 1)\
+-> karena kurang 1 jadi belum ada tombol download\
 
--> bila sudah lengkap akan keluar tombol download
--> dari noSurat akan mengambil semua id_ttdSurat menggunakan id_ttdSuratMasuk
--> mengambil nama penandatangan dari id_penandatangan
--> ngeloop ttd untuk dimasukan kedalam pdf
--> dari id_jenis-Surat akan mengambil isi surat untuk dimasukan kedalam pdf
+-> bila sudah lengkap akan keluar tombol download\
+-> dari noSurat akan mengambil semua id_ttdSurat menggunakan id_ttdSuratMasuk\
+-> mengambil nama penandatangan dari id_penandatangan\
+-> ngeloop ttd untuk dimasukan kedalam pdf\
+-> dari id_jenis-Surat akan mengambil isi surat untuk dimasukan kedalam pdf\
 
 **mahasiswa meminta surat**
--> server akan mengambil pilihan jenis surat dari (db_jenis-surat)
--> mahasiswa memilih jenis surat
--> mahasiswa mengisi data tambahan {bila ada}
--> bila mahasiswa klik preview
--> dari id_jenis-Surat akan mengambil isi surat untuk dimasukan kedalam pdf
--> dari id_jenis-Surat akan mengambil id_penandaTangan untuk dimasukan kedalam pdf (ada 3 ttd) {forloop}
--> render pdf
--> bila mahasiswa klik minta surat
+-> server akan mengambil pilihan jenis surat dari (db_jenis-surat)\
+-> mahasiswa memilih jenis surat\
+-> mahasiswa mengisi data tambahan {bila ada}\
+-> bila mahasiswa klik preview\
+-> dari id_jenis-Surat akan mengambil isi surat untuk dimasukan kedalam pdf\
+-> dari id_jenis-Surat akan mengambil id_penandaTangan untuk dimasukan kedalam pdf (ada 3 ttd) {forloop}\
+-> render pdf\
+-> bila mahasiswa klik minta surat\
 
--> server akan membuat queue db_ttd yang di ambil dari db_ttd-surat-penanda {forloop}
--> server akan membuat noSurat dan di masukan ke db_surat-masuk
+-> server akan membuat queue db_ttd yang di ambil dari db_ttd-surat-penanda {forloop}\
+-> server akan membuat noSurat dan di masukan ke db_surat-masuk\
 
 
 id berdasarkan
@@ -441,3 +441,31 @@ test 1 uji coba
 Nanti ada tombol add ttd berubah select box  
 Ttd1:\[nama] 
 Cop surat juga berupa select box
+
+
+# pertanyaan
+1. siapa saja yang tanda tangan? (nama) 
+	1. semua nya dapat
+2. apakah tanda tangan base dari tingkatan? (dosen,dekan)
+	1. Berdasarkan Pangkat
+3. quary
+	1. -order:name_ASC-waktu>1066915027000
+	2. -order:waktu_ASC-id>100
+4. Cop surat berbeda2?
+	1. iyes
+5. ada support tabel
+	1. insyallah
+	2. tabel custom
+6. Pengajaran upload html ?
+	1. tidak cara sekarang sudah bagus
+
+
+
+bikin tombol preview untuk penandatangan
+bikin tombol preview untuk mahasiswa
+cari cara kalo mahasiswa itu membuat surat yang benar
+
+
+buat tanggal formater hijriah 
+
+optimasi database

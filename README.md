@@ -26,6 +26,17 @@
 6. install composer
 
 ---
+## Version: (terakhir update)
+- codeigniter = 4.3.6
+- dompdf = 2.0.3
+- endroid/qr-code = 4.8.2
+- khaled.alshamaa/ar-php = 6.3.4
+- mpdf/mpdf = 8.1.6
+- instascan = 1.0.0
+- html5-qrcode = 2.3.8
+- php = +8.0
+___
+
 ## TODO:
 
 - [ ] framework
@@ -33,13 +44,15 @@
 - [ ] Database
 - [ ] Backend Login dan auth
 
-- [ ] UI Surat masuk
+- [x] UI Surat masuk
 - [ ] Backend Surat masuk
-- [ ] DB Surat masuk
+- [x] DB Surat masuk
 - [x] Enckripsi qrcode
 - [x] Quary Filter
 - [x] Quary Search
 - [x] menyimpan namafile
+- [ ] render pdf
+- [ ] format nomersurat
 
 - [ ] UI Archive
 - [ ] Backend Archive
@@ -50,6 +63,7 @@
 - [ ] Backend Quary archive
 
 - [ ] UI Quary Mahasiswa
+- [x] Backend Quary
 - [ ] Backend Quary Mahasiswa
 
 - [ ] Dokumentasi PHP
@@ -59,9 +73,9 @@
 - [ ] cara men encripsi file PDF
 - [ ] cara men decripsi file PDF
 - [x] membuat QrCode
-- [ ] mensave pdf
+- [x] mensave pdf
 
-- [x] Membuat API
+- [x] Membuat API validasi TTD dengan qrcode
 
 
 
@@ -83,3 +97,16 @@
 ___
 ### Link
 [Desain UI/UX](https://www.figma.com/file/PSqK3nQi24n6Y7p7NvwzGQ/UI-SURAT-MENYURAT?type=design&node-id=0-1&t=ItdAVOX8ike9HtGa-0)
+
+
+Format Pemesanan Customer:
+Nama Penerima : Achmad Naji
+Alamat : Jl. KH Shiddiq gang 1
+No HP : 08179115451
+Item Pemesanan :
+- Delmonte Saus sambal besar (1kg) x1
+- Delmonte Saus tomat besar (1kg) x1
+- Finna kecap ikan x2
+- Roti burger bernardi besar isi 6 wijen x1
+Pembayaran : COD
+Share loc :
