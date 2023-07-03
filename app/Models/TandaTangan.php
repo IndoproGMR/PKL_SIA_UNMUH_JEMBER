@@ -72,6 +72,9 @@ class TandaTangan extends Model
         return $this->update($id, $data);
     }
 
+
+
+
     // untuk melihat berapa banyak yang sudah ttd dan belum // (2/10)
     function cekStatusSurat($nosurat)
     {
@@ -92,16 +95,16 @@ class TandaTangan extends Model
         return $data;
     }
 
-    // untuk melihat semua ttd yang sudah dan belum di TTD kan 
-    function cekStatusSuratTTD($pendattg_id)
+    // untuk melihat semua ttd yang sudah dan belum di TTD kan untuk penandatangan
+    function cekStatusSuratTTD($pendattg_id, $status = 0)
     {
         $db = \Config\Database::connect();
 
-        $sql = "SELECT `SM_ttd`.`id` AS idttd,`SM_ttd`.`Status`,`SM_ttd`.`NoSurat`,`SM_ttd`.`pendattg_id`,`SM_JenisSurat`.`name` as namaJenisSurat,`SM_ttd_SuratMasuk`.`TimeStamp`,`SM_ttd`.`jenisttd` 
+        $sql = "SELECT `SM_ttd`.`id` AS idttd,`SM_ttd`.`Status`,`SM_ttd`.`NoSurat`,`SM_ttd`.`pendattg_id`,`SM_JenisSurat`.`name` as namaJenisSurat,`SM_ttd_SuratMasuk`.`TimeStamp`,`SM_ttd`.`jenisttd` ,`SM_ttd`.`TimeStamp` as `TimeStamp_ttd`
         FROM `SM_ttd` 
         LEFT JOIN `SM_ttd_SuratMasuk` ON `SM_ttd_SuratMasuk`.`NoSurat` = `SM_ttd`.`NoSurat` 
         LEFT JOIN `SM_JenisSurat` ON `SM_JenisSurat`.`id`=`SM_ttd_SuratMasuk`.`JenisSurat_id` 
-        WHERE `SM_ttd`.`Status` = '0' and (`SM_ttd`.`pendattg_id` = '" .
+        WHERE `SM_ttd`.`Status` = '" . $status . "' and (`SM_ttd`.`pendattg_id` = '" .
             $db->escapeLikeString($pendattg_id['id']) . "' OR `SM_ttd`.`pendattg_id` = '" .
             $db->escapeLikeString($pendattg_id['namaLVL']) . "' );";
 

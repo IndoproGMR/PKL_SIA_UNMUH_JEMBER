@@ -17,7 +17,9 @@ class Jenissurat extends Model
         'name',
         'isiSurat',
         'form',
-        'description'
+        'description',
+        'show',
+        'delete'
     ];
 
 
@@ -26,20 +28,29 @@ class Jenissurat extends Model
         return $this->countAllResults();
     }
 
-    public function seeall()
+    public function seeall($showall = false, $onlyshow = 1)
     {
-        return $this->findAll();
+        if ($showall) {
+            return $this->findAll();
+        }
+        return $this->where('show', $onlyshow)->findAll();
     }
+
 
     public function seebyID(int $id)
     {
-        $data = $this->where('id', $id)->find()[0];
+        $data['error'] = 'y';
 
-        // helper('text');
-        // $data['isiSurat'] = strip_slashes(base64_decode($data['isiSurat']));
-        // $data['form'] = strip_slashes(base64_decode($data['form']));
-        $data['isiSurat'] = base64_decode($data['isiSurat']);
-        $data['form'] = base64_decode($data['form']);
+        $datasurat = $this->where('id', $id)->where('show', '1')->find();
+
+        if (count($datasurat) > 0) {
+            $data['id']          = $datasurat[0]['id'];
+            $data['name']        = $datasurat[0]['name'];
+            $data['description'] = $datasurat[0]['description'];
+            $data['isiSurat']    = base64_decode($datasurat[0]['isiSurat']);
+            $data['form']        = base64_decode($datasurat[0]['form']);
+            $data['error']       = 'n';
+        }
         return $data;
     }
 
@@ -50,17 +61,52 @@ class Jenissurat extends Model
             'description'   => $description,
             'isiSurat'      => base64_encode($isiSurat),
             'form'          => base64_encode($form),
+            'show'          => 0,
         ]);
     }
 
-    function updateJenisSurat(int $id, String $jenissurat, String $description, String $isiSurat, String $form)
+    function updateJenisSurat(int $id, String $jenissurat, String $description, String $isiSurat)
     {
-        return $this->update($id, [
-            'name'          => $jenissurat,
-            'description'   => $description,
-            'isiSurat'      => base64_encode($isiSurat),
-            'form'          => base64_encode($form),
-        ]);
+        return $this->update(
+            $id,
+            [
+                'name'        => $jenissurat,
+                'description' => $description,
+                'isiSurat'    => base64_encode($isiSurat),
+            ]
+        );
+    }
+
+    function deleteJenisSurat(int $id)
+    {
+        return $this->update(
+            $id,
+            [
+                'show'   => 0,
+                'delete' => time()
+            ]
+        );
+    }
+
+    function toggleshow($id)
+    {
+        $cek = $this->where('id', $id)->find();
+        d($cek);
+        if (!(count($cek) > 0)) {
+            return false;
+        }
+
+        if ($cek[0]['show'] == 1) {
+            return $this->update($id, [
+                'show' => 0
+            ]);
+        }
+
+        if ($cek[0]['show'] == 0) {
+            return $this->update($id, [
+                'show' => 1
+            ]);
+        }
     }
 
     function seegrouplvl()
@@ -73,9 +119,12 @@ class Jenissurat extends Model
     function seeNamaPettd()
     {
         $db = \Config\Database::connect("siautama", false);
-        $sql = "SELECT `dosen`.`Nama` as namattd, `dosen`.`Login` as login, `level`.`Nama` as lvl FROM dosen LEFT JOIN `level` ON `level`.`LevelID`=`dosen`.`LevelID` UNION SELECT `karyawan`.`Nama` as namattd, `karyawan`.`Login` as login, `level`.`Nama` as lvl FROM karyawan LEFT JOIN `level` ON `level`.`LevelID`=`karyawan`.`LevelID` ORDER by namattd;";
-        // $sql = "SELECT `dosen`.`Nama` as namattd, `dosen`.`Login` as login, `level`.`Nama` as lvl FROM dosen LEFT JOIN `level` ON `level`.`LevelID`=`dosen`.`LevelID` UNION SELECT `karyawan`.`Nama` as namattd, `karyawan`.`Login` as login, `level`.`Nama` as lvl FROM karyawan LEFT JOIN `level` ON `level`.`LevelID`=`karyawan`.`LevelID` WHERE `level`.`Nama` = 'Dosen' or `level`.`Nama` = 'Pengajaran Fakultas' ORDER by namattd;";
+        $sql = "SELECT `dosen`.`Nama` as namattd, `dosen`.`Login` as login, `level`.`Nama` as lvl 
+        FROM dosen LEFT JOIN `level` ON `level`.`LevelID`=`dosen`.`LevelID` UNION SELECT `karyawan`.`Nama` as namattd, `karyawan`.`Login` as login, `level`.`Nama` as lvl FROM karyawan LEFT JOIN `level` ON `level`.`LevelID`=`karyawan`.`LevelID` ORDER by namattd;";
         return $db->query($sql)->getResultArray();
+
+
+        // $sql = "SELECT `dosen`.`Nama` as namattd, `dosen`.`Login` as login, `level`.`Nama` as lvl FROM dosen LEFT JOIN `level` ON `level`.`LevelID`=`dosen`.`LevelID` UNION SELECT `karyawan`.`Nama` as namattd, `karyawan`.`Login` as login, `level`.`Nama` as lvl FROM karyawan LEFT JOIN `level` ON `level`.`LevelID`=`karyawan`.`LevelID` WHERE `level`.`Nama` = 'Dosen' or `level`.`Nama` = 'Pengajaran Fakultas' ORDER by namattd;";
     }
 }
 

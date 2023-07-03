@@ -3,10 +3,13 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Libraries\enkripsi_library;
 use App\Models\AuthUserGroup;
 
 class Login extends BaseController
 {
+
+    // harus mahasiswa aktif
     public function index()
     {
         $session = \Config\Services::session();
@@ -44,6 +47,7 @@ class Login extends BaseController
         // $data['datalogin'] = $model->seeall();
         $data['defaultdata'] = '';
         return view("login", $data);
+        // return view("auth/Auth_login", $data);
     }
 
     public function debuglogin()
@@ -69,19 +73,21 @@ class Login extends BaseController
         $session->set($data);
 
         return redirect()->to('/');
+        // $postdata = $this->request->getPost();
         // d($postdata);
         // d($data);
         // d($session->get());
     }
 
-    public function loginproses()
+    public function loginProses()
     {
+        // $auth = new enkripsi_library;
     }
 
     public function logout()
     {
         $session = \Config\Services::session();
         $session->destroy();
-        return redirect()->to('/');
+        return redirect()->to('/login');
     }
 }

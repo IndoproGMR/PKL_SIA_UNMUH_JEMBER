@@ -29,44 +29,83 @@ $routes->set404Override();
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
+// !home all user
 $routes->get('/', 'Home::index');
 $routes->get('/error_perm', 'Home::error_perm');
-// $routes->get('/api/v1/validasi/(:any)', 'Home::index');
-
-$routes->get('/suratmasuk', 'TestSuratmasuk::index');
-$routes->get('/suratmasuk/pdf', 'TestSuratmasuk::pdf');
-$routes->get('/suratmasuk/inputisisurat', 'TestSuratmasuk::InputisiSurat');
-$routes->post('/suratmasuk/inputisisurat', 'TestSuratmasuk::addisidata');
+$routes->get('/qr-validasi', 'SuratMasukController::kameraQR');
 
 
-$routes->get('/suratmasuk/mintasurat', 'TestSuratmasuk::mintasuratindex');
-$routes->get('/suratmasuk/mintasurat/(:num)', 'TestSuratmasuk::mintasurat/$1');
-$routes->post('/suratmasuk/mintasurat/(:num)', 'TestSuratmasuk::addmintasurat/$1');
+// !surat Mahasiswa
+$routes->get('/status-surat', 'SuratMasukController::indexStatusSurat');
+$routes->get('/riwayat-surat', 'SuratMasukController::indexRiwayatSurat');
+$routes->get('/minta-surat', 'SuratMasukController::indexMintaSurat');
 
+$routes->get('/minta-surat/(:num)', 'SuratMasukController::indexMintaSurat/$1');
+$routes->post('/minta-surat/(:num)', 'SuratMasukController::addmintaSuratProses/$1');
+
+
+
+// !PenandaTangan
+$routes->get('/status-TTD', 'SuratMasukController::indexStatusTTD');
+$routes->post('/status-TTD', 'SuratMasukController::TTDProses');
+
+$routes->get('/riwayat-TTD', 'SuratMasukController::indexRiwayatTTD');
+
+// !untuk pengajaran
+$routes->get('/semua-surat', 'SuratMasukController::indexJenisSurat');
+
+$routes->post('/toggleshow-surat', 'SuratMasukController::updateJenisSuratToggleProses');
+
+$routes->get('/detail-surat/(:num)', 'SuratMasukController::detailJenisSurat/$1');
+$routes->post('/detail-surat', 'SuratMasukController::updateJenisSuratProses');
+
+$routes->get('/bikin-surat', 'SuratMasukController::addJenisSurat');
+$routes->post('/bikin-surat', 'SuratMasukController::addJenisSuratProses');
+
+
+
+// !WIP
+// $routes->get('/suratmasuk/pdf', 'TestSuratmasuk::pdf');
+
+
+// !done
+// $routes->get('/suratmasuk/kameraQR', 'TestSuratmasuk::kameraQR');
+// $routes->get('/suratmasuk', 'TestSuratmasuk::index');
+// $routes->get('/suratmasuk/mintasurat', 'TestSuratmasuk::mintasuratindex');
+// $routes->get('/suratmasuk/mintasurat/(:num)', 'TestSuratmasuk::mintasurat/$1');
+// $routes->post('/suratmasuk/mintasurat/(:num)', 'TestSuratmasuk::addmintasurat/$1');
 // $routes->post('/suratmasuk/mintasurat', 'TestSuratmasuk::addsuratmasuk');
-$routes->get('/StatusSurat', 'StatuSurat::statusSurat');
-$routes->get('/StatusTTD', 'StatuSurat::statusTTD');
-$routes->post('/StatusTTD/proses', 'StatuSurat::prosesTTD');
+// $routes->get('/StatusSurat', 'StatuSurat::statusSurat');
+// $routes->get('/StatusTTD', 'StatuSurat::statusTTD');
+// $routes->post('/StatusTTD/proses', 'StatuSurat::prosesTTD');
+// $routes->get('/suratmasuk/validasi/(:any)', 'TestSuratmasuk::validasi/$1/$2');
+// $routes->get('/suratmasuk/(:any)', 'TestSuratmasuk::testreture/$1');
+// $routes->get('/suratmasuk2/(:any)', 'TestSuratmasuk::testreture2/$1/$2');
 
 
-$routes->get('/suratmasuk/kameraQR', 'TestSuratmasuk::kameraQR');
-$routes->post('/suratmasuk/kameraQR', 'TestSuratmasuk::kameraQR');
 
-// $routes->get('/suratmasuk/kameraQR/(:any)', 'TestSuratmasuk::kameraQR/$1');
 
+
+
+
+
+
+
+
+
+// !quary
 $routes->get('/quary', 'TestQuary::index');
 $routes->post('/quary', 'TestQuary::caridata');
 
 
-// $routes->get('/suratmasuk/validasi/(:any)', 'TestSuratmasuk::validasi/$1/$2');
+// !AUTH
 $routes->get('/login', 'Login::index');
-$routes->post('/login/', 'Login::debuglogin');
 $routes->get('/logout', 'Login::logout');
+$routes->post('/login', 'Login::debuglogin');
+// $routes->post('/login', 'Login::loginProses');
 
 
-// $routes->get('/suratmasuk/(:any)', 'TestSuratmasuk::testreture/$1');
-// $routes->get('/suratmasuk2/(:any)', 'TestSuratmasuk::testreture2/$1/$2');
-
+// !API
 $routes->get('/api/v1/validasi/qr', 'apiv1::validasiqr');
 $routes->get('/api/v1/validasi/qr/detail', 'apiv1::validasiqrdetail');
 

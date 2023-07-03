@@ -11,6 +11,10 @@ header {
   display: flex;
 }
 
+.pointer {
+  cursor: pointer;
+}
+
 .logo {
   display: flex;
 }
@@ -294,4 +298,19 @@ header {
   100% {
     transform: rotateZ(0);
   }
+}
+
+.notification {
+  position: relative;
+  /* display: inline-block; */
+}
+
+.notification .badge {
+  position: absolute;
+  top: -15px;
+  right: -15px;
+  padding: 5px 10px;
+  border-radius: 50%;
+  background: red;
+  color: white;
 }

@@ -1,7 +1,5 @@
 <?php
 
-use CodeIgniter\I18n\Time;
-
 /**
  * masukan string text
  * cari kalimat yang ingin di ubah
@@ -25,7 +23,15 @@ function replacetext(String $datatext, String $cariKata, String $denganKata, Str
     return str_replace($cariKata, $denganKata, $datatext);
 }
 
-
+function potongString($inputString, $substring)
+{
+    $index = strpos($inputString, $substring);
+    if ($index !== false) {
+        return substr($inputString, $index + strlen($substring));
+    } else {
+        return $inputString;
+    }
+}
 
 function replacetextarray($datatext, $cariKatadenganKata, String $options)
 {
@@ -85,6 +91,27 @@ function transformData($data)
     return $ttd;
 }
 
+function removeGroups($ttd)
+{
+    // Cari indeks elemen yang ingin dihapus
+    $indexesToRemove = [];
+    foreach ($ttd as $index => $value) {
+        if ($value === 'Group_Mahasiswa' || $value === 'Group_Calon Mahasiswa') {
+            $indexesToRemove[] = $index;
+        }
+    }
+
+    // Hapus elemen dari array
+    foreach ($indexesToRemove as $index) {
+        unset($ttd[$index]);
+    }
+
+    // Reindex array setelah penghapusan elemen
+    $ttd = array_values($ttd);
+
+
+    return $ttd;
+}
 
 function pecahkan(String $text)
 {
@@ -110,6 +137,8 @@ function UUIDv4()
     // Output the 36 character UUID.
     return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($uuidata), 4));
 }
+
+
 function SpaceToUnder($text)
 {
     return str_replace(' ', '_', $text);
@@ -119,6 +148,7 @@ function UnderToSpace($text)
 {
     return str_replace('_', ' ', $text);
 }
+
 
 function array_search_partial($arr, $keyword)
 {
@@ -130,7 +160,7 @@ function array_search_partial($arr, $keyword)
 
 function inputform($dataformarray, $class = '')
 {
-    foreach ($dataformarray['input'] as $array) {
+    foreach ($dataformarray as $array) {
         echo form_input(
             esc($array),
             "",
@@ -153,8 +183,54 @@ function ubaharray($array)
     return $newArray;
 }
 
-function timeconverter($timestamp = null)
-{
+/**
+ * $timestamp = unixTime
+ * 
+ * $jenis = default 'yunani'
+ * yunani     = Monday, 03 July 2023 22:51:34
+ * yunanitgl  = Monday, 03 July 2023
+ * 
+ * hijriah    = Monday, 14 Dhu al-Hijjah 1444 22:53:43
+ * hijriahrgl = Monday, 14 Dhu al-Hijjah 1444
+ */
 
-    return json_decode(json_encode(Time::createFromTimestamp($timestamp)), 'array');
+function timeconverter(int $timestamp = 0, $jenis = 'yunani')
+{
+    // tgl hijriah
+    date_default_timezone_set('Asia/Jakarta');
+    $Arabic = new \ArPHP\I18N\Arabic();
+
+    // tgl yunani
+    $date = new DateTime("@$timestamp");
+    $date->setTimezone(new DateTimeZone('GMT+7'));
+
+    $Arabic->setDateMode(8);
+    $correction = $Arabic->dateCorrection($timestamp);
+
+
+    switch ($jenis) {
+            // ! tanggal yunani
+        case 'yunani':
+            $data = $date->format('l, d F Y H:i:s');
+            break;
+        case 'yunanitgl':
+            $data = $date->format('l, d F Y');
+            break;
+
+            // ! tanggal hijriah
+        case 'hijriah':
+            $data = $Arabic->date('l, j F Y H:i:s', $timestamp, $correction);
+            break;
+        case 'hijriahtgl':
+            $data = $Arabic->date('l, j F Y', $timestamp, $correction);
+            break;
+
+            // ! error
+        default:
+            $data = 'jenis tanggal tidak ditemukan';
+            break;
+    }
+
+
+    return $data;
 }

@@ -48,7 +48,7 @@ class Quary extends Model
             $db->escapeLikeString($order); //tambah limit
         // return $query->getResult();
         // echo "cariquary";
-        echo $sql;
+        // echo $sql;
         return $db->query($sql)->getResult('array');
 
         // $data = $this->like('name', $cari)->find();

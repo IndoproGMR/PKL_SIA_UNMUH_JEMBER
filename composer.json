@@ -9,6 +9,7 @@
         "codeigniter4/framework": "^4.0",
         "dompdf/dompdf": "^2.0",
         "endroid/qr-code": "^4.8",
+        "khaled.alshamaa/ar-php": "^6.3",
         "mpdf/mpdf": "^8.1"
     },
     "require-dev": {

@@ -22,7 +22,6 @@ class StatuSurat extends BaseController
             $data['datasurat'][$key]['status'] = $model2->cekStatusSurat($data['surat'][$key]);
         }
 
-        // d($data);
 
         return view('suratmasuk/status_surat', $data);
     }

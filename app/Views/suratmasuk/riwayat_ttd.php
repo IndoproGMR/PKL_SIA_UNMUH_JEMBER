@@ -7,14 +7,22 @@
 
 <div class="filter">
     <p class="first">Filter:</p>
-    <p class="third">Tanggal: <span><?= esc(timeconverter(time())) ?></span></p>
+    <p class="second">Jenis Surat</p>
+    <form>
+        <select>
+            <option>PKL</option>
+            <option>Surat Mahasiswa Aktif</option>
+            <option>Surat Dispen</option>
+        </select>
+    </form>
+    <p class="third">Tanggal</p>
 </div>
 <div class="table-rown">
     <table>
         <thead>
             <tr>
                 <th>Jenis Surat</th>
-                <th>Tanggal</th>
+                <th>Tanggal di TandaTangani</th>
                 <th>Nomer</th>
                 <th>Status TTD</th>
             </tr>
@@ -24,9 +32,11 @@
             <?php foreach ($datasurat as $key) : ?>
                 <tr>
                     <th><?= esc($key['namaJenisSurat']) ?></th>
-                    <td><?= esc(timeconverter($key['TimeStamp'])) ?></td>
+                    <td><?= esc(timeconverter($key['TimeStamp_ttd'])) ?></td>
                     <td><?= esc($key['NoSurat']) ?></td>
-                    <td>(<?= esc($key['status']['sudah']) ?>/<?= esc($key['status']['totalTTD']) ?>)</td>
+                    <td>
+                        Sudah Di Tanda Tangani
+                    </td>
                 </tr>
             <?php endforeach ?>
         </tbody>

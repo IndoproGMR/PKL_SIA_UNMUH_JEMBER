@@ -4,8 +4,6 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Libraries\enkripsi;
-use App\Libraries\validasienkripsi;
-use App\Models\Isisurat;
 use App\Models\Jenissurat;
 use App\Models\Suratmasuk;
 use App\Models\TandaTangan;
@@ -104,32 +102,6 @@ class TestSuratmasuk extends BaseController
     }
 
 
-    public function inputIsitinymce()
-    {
-        $jenissurat = model(Jenissurat::class);
-        $data['jenissurat'] = $jenissurat->seeall();
-        $data['level'] = $jenissurat->seegrouplvl();
-        $data['ttd'] = $jenissurat->seeNamaPettd();
-        return view('testtinymce', $data);
-    }
-
-    public function inputIsitinymce2()
-    {
-        $postdata = $this->request->getPost();
-        $data['isi'] = $postdata['inputisi'];
-        $data['kop'] = 1;
-        // $data['kop'] = 2;
-        d($postdata);
-        // return view('testtinymce');
-        // return view('surat/layout', $data);
-        echo esc($data['isi']);
-
-        // Render_mpdf("surat/layout", "11", "ini nama test", $data); // save dan view
-        // Render_mpdf("surat/layout", "01", "ini nama test", $data); //  no save dan view
-        // Render_mpdf("surat/layout", "00", "ini nama test", $data); // no save dan no view
-        Render_mpdf("surat/layout", "10", "ini nama test", $data); // save dan no view 
-    }
-
     public function pdf()
     {
 
@@ -193,56 +165,49 @@ class TestSuratmasuk extends BaseController
     }
 
 
-    public function InputisiSurat()
+
+
+
+    // ! sudah ke update
+    public function addmintasurat($idsurat)
     {
-        // PagePerm(['Mahasiswa', 'Dosen']);
+        PagePerm(['Mahasiswa', 'Calon Mahasiswa'], '/', false, 1);
+        helper(['text', 'date']);
+        $model  = model(Suratmasuk::class);
+        $model2 = model(TandaTangan::class);
+        $model3 = model(Jenissurat::class);
 
-        $jenissurat = model(Jenissurat::class);
-        $data['jenissurat'] = $jenissurat->seeall();
-        $data['level'] = $jenissurat->seegrouplvl();
-        $data['ttd'] = $jenissurat->seeNamaPettd();
-
-        // d($data);
-
-        return view('suratmasuk/inputisi', $data);
-    }
-
-    public function addisidata()
-    {
-        // PagePerm(['Mahasiswa', 'Dosen']);
-        // PagePerm(['']);
-        $postdata = $this->request->getPost([
-            'isiDariSurat',
-            'jenisSurat',
-            'diskripsi',
-            'csrf_test_name'
-        ]);
-        // $data['jumlah'] = $postdata['total'];
-
-        d($postdata);
-        $fielddata = $this->request->getPost();
-        $json_data = json_encode($fielddata);
+        $postdata = $this->request->getPost();
+        $json_data = json_encode($postdata);
         $dataformarray = json_decode($json_data, true);
-
-        d($fielddata);
-
-        unset($dataformarray['isiDariSurat']);
-        unset($dataformarray['jenisSurat']);
-        unset($dataformarray['diskripsi']);
         unset($dataformarray['csrf_test_name']);
 
-        $data['json_data'] = ubahJSONkeSimpelJSON(json_encode($dataformarray, true));
+        // !untuk menyimpan suratmasuk
+        $data['NoSurat'] = random_string();
+        $data['TimeStamp'] = now();
+        $data['DataTambahan'] = base64_encode(json_encode($dataformarray));
+        $data['JenisSurat_id'] = $idsurat;
+        $data['mshw_id'] = userInfo()['id'];
 
-        d($data);
+        // !untuk menyimpan TTD
+        $TTDdata['TTD'] = json_decode($model3->seebyID($data['JenisSurat_id'])['form'], true)['TTD'];
+        $TTDdata['NoSurat'] = $data['NoSurat'];
+        /**
+         * unutk TTDdata['status','hash','randomStr','Timestamp']
+         * berada di fungsi transformData(data);
+         */
+        $ttdArray = transformData($TTDdata);
 
-        $model = model(Jenissurat::class);
-        echo "inputing data";
 
-
-
-        if ($model->addJenisSurat($postdata['jenisSurat'], $postdata['diskripsi'], $postdata['isiDariSurat'], $data['json_data'])) {
-            return redirect()->to('suratmasuk/inputisisurat');
+        // set ke dalam
+        if (!$model->addSuratMasuk($data)) {
+            return "error meminta surat";
         }
+        if (!$model2->addTTD($ttdArray)) {
+            return "error meminta ttd";
+        }
+
+        return "Berhasil";
     }
 
     public function mintasuratindex()
@@ -284,44 +249,85 @@ class TestSuratmasuk extends BaseController
         return view('suratmasuk/mintattd', $data);
     }
 
-    public function addmintasurat($idsurat)
+    public function addisidata()
     {
-        PagePerm(['Mahasiswa', 'Calon Mahasiswa'], '/', false, 1);
-        helper(['text', 'date']);
-        $model  = model(Suratmasuk::class);
-        $model2 = model(TandaTangan::class);
-        $model3 = model(Jenissurat::class);
+        // PagePerm(['Mahasiswa', 'Dosen']);
+        // PagePerm(['']);
+        $postdata = $this->request->getPost([
+            'isiDariSurat',
+            'jenisSurat',
+            'diskripsi',
+            'csrf_test_name'
+        ]);
+        // $data['jumlah'] = $postdata['total'];
 
-        $postdata = $this->request->getPost();
-        $json_data = json_encode($postdata);
+        d($postdata);
+        $fielddata = $this->request->getPost();
+        $json_data = json_encode($fielddata);
         $dataformarray = json_decode($json_data, true);
+
+        d($fielddata);
+
+        unset($dataformarray['isiDariSurat']);
+        unset($dataformarray['jenisSurat']);
+        unset($dataformarray['diskripsi']);
         unset($dataformarray['csrf_test_name']);
 
-        // !untuk menyimpan suratmasuk
-        $data['NoSurat'] = random_string();
-        $data['TimeStamp'] = now();
-        $data['DataTambahan'] = base64_encode(json_encode($dataformarray));
-        $data['JenisSurat_id'] = $idsurat;
-        $data['mshw_id'] = userInfo()['id'];
+        $data['json_data'] = ubahJSONkeSimpelJSON(json_encode($dataformarray, true));
 
-        // !untuk menyimpan TTD
-        $TTDdata['TTD'] = json_decode($model3->seebyID($data['JenisSurat_id'])['form'], true)['TTD'];
-        $TTDdata['NoSurat'] = $data['NoSurat'];
-        /**
-         * unutk TTDdata['status','hash','randomStr','Timestamp']
-         * berada di fungsi transformData(data);
-         */
-        $ttdArray = transformData($TTDdata);
+        d($data);
+
+        $model = model(Jenissurat::class);
+        echo "inputing data";
 
 
-        // set ke dalam
-        if (!$model->addSuratMasuk($data)) {
-            return "error meminta surat";
+
+        if ($model->addJenisSurat($postdata['jenisSurat'], $postdata['diskripsi'], $postdata['isiDariSurat'], $data['json_data'])) {
+            return redirect()->to('suratmasuk/inputisisurat');
         }
-        if (!$model2->addTTD($ttdArray)) {
-            return "error meminta ttd";
-        }
+    }
 
-        return "Berhasil";
+
+
+    // ! deprecated
+    public function InputisiSurat()
+    {
+        // PagePerm(['Mahasiswa', 'Dosen']);
+
+        $jenissurat = model(Jenissurat::class);
+        $data['jenissurat'] = $jenissurat->seeall();
+        $data['level'] = $jenissurat->seegrouplvl();
+        $data['ttd'] = $jenissurat->seeNamaPettd();
+
+        // d($data);
+
+        return view('suratmasuk/inputjenissurat', $data);
+        // return view('suratmasuk/inputisi', $data);
+    }
+
+    public function inputIsitinymce()
+    {
+        $jenissurat = model(Jenissurat::class);
+        $data['jenissurat'] = $jenissurat->seeall();
+        $data['level'] = $jenissurat->seegrouplvl();
+        $data['ttd'] = $jenissurat->seeNamaPettd();
+        return view('testtinymce', $data);
+    }
+
+    public function inputIsitinymce2()
+    {
+        $postdata = $this->request->getPost();
+        $data['isi'] = $postdata['inputisi'];
+        $data['kop'] = 1;
+        // $data['kop'] = 2;
+        d($postdata);
+        // return view('testtinymce');
+        // return view('surat/layout', $data);
+        echo esc($data['isi']);
+
+        // Render_mpdf("surat/layout", "11", "ini nama test", $data); // save dan view
+        // Render_mpdf("surat/layout", "01", "ini nama test", $data); //  no save dan view
+        // Render_mpdf("surat/layout", "00", "ini nama test", $data); // no save dan no view
+        Render_mpdf("surat/layout", "10", "ini nama test", $data); // save dan no view 
     }
 }
