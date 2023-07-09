@@ -26,7 +26,7 @@ class SuratMasukController extends BaseController
         }
 
         foreach ($data['datasurat'] as $key => $value) {
-            if ($value['status']['belum'] == 0) {
+            if ($value['status']['belum'] == '0') {
                 unset($data['datasurat'][$key]);
             }
         }
@@ -62,7 +62,7 @@ class SuratMasukController extends BaseController
     // proses data untuk meminta
     public function addmintaSuratProses($idsurat)
     {
-        PagePerm(['Mahasiswa', 'Calon Mahasiswa'], '/', false, 1);
+        PagePerm(['Mahasiswa', 'Calon Mahasiswa'], 'error_perm', false, 1);
         helper(['text']);
         $model  = model(Suratmasuk::class);
         $model2 = model(TandaTangan::class);
@@ -71,8 +71,6 @@ class SuratMasukController extends BaseController
         $postdata = $this->request->getPost();
 
         $dataform = json_decode($model3->seebyID($idsurat)['form'], 'array');
-
-        // $dataformarray['foto'] = '';
 
         if (isset($dataform['tambahan'])) {
             if (in_array('foto', $dataform['tambahan'])) {
@@ -83,31 +81,35 @@ class SuratMasukController extends BaseController
                             'uploaded[foto]',
                             'is_image[foto]',
                             'mime_in[foto,image/jpg,image/jpeg,image/gif,image/png,image/webp]',
-                            'max_size[foto,100]',
-                            'max_dims[foto,1024,768]',
+                            'max_size[foto,1024]',
+                            // 'max_dims[foto,1024,768]',
                         ],
                     ],
                 ];
 
                 if (!$this->validate($validationRule)) {
                     $data = ['errors' => $this->validator->getErrors()];
-                    return 'error';
+                    return FlashException('Tidak Dapat Menambahkan Foto');
                 }
 
                 $img = $this->request->getFile('foto');
                 if (!$img->hasMoved()) {
-                    $filepath = WRITEPATH . 'uploads/' . $img->store('dataSurat/' . userInfo()['id']);
+                    $filepath = 'uploads/' . $img->store('dataSurat/' . userInfo()['id'], null, 'public');
+                    // $filepath = $img->store('../../public/uploads/dataSurat/' . userInfo()['id']);
+                    // $filepath = WRITEPATH . 'uploads/' . $img->store('dataSurat/' . userInfo()['id']);
                     $data = ['uploaded_fileinfo' => new File($filepath)];
                 }
-                $lokasifoto = potongString($filepath, WRITEPATH);
-                $postdata['foto'] = $lokasifoto;
+                // $lokasifoto = potongString($filepath, '');
+                // $lokasifoto = potongString($filepath, WRITEPATH);
+                // d($filepath);
+                // d($lokasifoto);
+                $postdata['foto'] = $filepath;
             }
         }
 
 
         $dataformarray = json_decode(json_encode($postdata), true);
         unset($dataformarray['LaB7Thol']);
-        unset($dataformarray['honeypot']);
 
 
         // !untuk menyimpan suratmasuk
@@ -127,13 +129,12 @@ class SuratMasukController extends BaseController
          */
         $ttdArray = transformData($TTDdata);
 
-
         // set ke dalam database
         if (!$model->addSuratMasuk($data)) {
-            return "error meminta surat";
+            return FlashException('Tidak Dapat Meminta Surat');
         }
         if (!$model2->addTTD($ttdArray)) {
-            return "error meminta ttd";
+            return FlashException('Tidak dapat Meminta TTD');
         }
 
         return redirect()->to('/status-surat');
@@ -154,7 +155,7 @@ class SuratMasukController extends BaseController
         }
 
         foreach ($data['datasurat'] as $key => $value) {
-            if ($value['status']['belum'] !== 0) {
+            if ($value['status']['belum'] !== '0') {
                 unset($data['datasurat'][$key]);
             }
         }
@@ -173,7 +174,6 @@ class SuratMasukController extends BaseController
         $jenissurat = model(Jenissurat::class);
         $data['jenissurat'] = $jenissurat->seeall(true);
 
-        // d($data);
         return view('suratmasuk/semua_surat', $data);
     }
 
@@ -188,7 +188,6 @@ class SuratMasukController extends BaseController
             'diskripsi',
         ]);
 
-        // d($postdata);
         $dataform = $this->request->getPost();
 
         unset($dataform['inputisi']);
@@ -201,11 +200,11 @@ class SuratMasukController extends BaseController
 
         $model = model(Jenissurat::class);
 
-        if ($model->addJenisSurat($postdata['jenisSurat'], $postdata['diskripsi'], $postdata['inputisi'], $data['json_data'])) {
-            return redirect()->to('/bikin-surat');
+        if (!$model->addJenisSurat($postdata['jenisSurat'], $postdata['diskripsi'], $postdata['inputisi'], $data['json_data'])) {
+            return FlashException('Tidak dapat Menambahkan Surat ke dalam DataBase');
         }
 
-        echo "tidak dapat menambahkan Surat ke db";
+        return redirect()->to('/bikin-surat');
     }
 
     // untuk mengisi jenis surat
@@ -214,7 +213,6 @@ class SuratMasukController extends BaseController
         PagePerm(['Dosen']);
 
         $jenissurat = model(Jenissurat::class);
-        $data['jenissurat'] = $jenissurat->seeall();
         $data['level'] = $jenissurat->seegrouplvl();
         $data['ttd'] = $jenissurat->seeNamaPettd();
         return view('suratmasuk/inputjenissurat', $data);
@@ -236,10 +234,10 @@ class SuratMasukController extends BaseController
         $postdata = $this->request->getPost(['id']);
         $model = model(Jenissurat::class);
 
-        if ($model->toggleshow($postdata['id'])) {
-            return redirect()->to('/semua-surat');
+        if (!$model->toggleshow($postdata['id'])) {
+            return FlashException('Tidak Men Toggle Surat');
         }
-        return "error update show";
+        return redirect()->to('/semua-surat');
     }
 
     // untuk meng update jenis surat ke db
@@ -253,12 +251,11 @@ class SuratMasukController extends BaseController
                 'diskripsi'
             ]
         );
-        d($postdata);
         $model = model(Jenissurat::class);
-        if ($model->updateJenisSurat($postdata['id'], $postdata['jenisSurat'], $postdata['diskripsi'], $postdata['inputisi'])) {
-            return redirect()->to('/semua-surat');
+        if (!$model->updateJenisSurat($postdata['id'], $postdata['jenisSurat'], $postdata['diskripsi'], $postdata['inputisi'])) {
+            return FlashException('Tidak dapat Mengupdate Surat ke Database');
         }
-        return "error tidak bisa update";
+        return redirect()->to('/semua-surat');
     }
     // !END untuk pengajaran
 
@@ -275,13 +272,14 @@ class SuratMasukController extends BaseController
             $data['surat'][$key] = $value['NoSurat'];
             $data['datasurat'][$key]['status'] = $model->cekStatusSurat($data['surat'][$key]);
         }
+
         $data['perluttd'] = count($data['datasurat']);
         return view('suratmasuk/status_ttd', $data);
     }
 
     public function TTDProses()
     {
-        PagePerm(['Dosen'], '/', false, 1);
+        PagePerm(['Dosen'], 'error_perm', false, 1);
 
         $postdata = $this->request->getPost([
             'id',
@@ -292,20 +290,27 @@ class SuratMasukController extends BaseController
 
 
         if (!$data['TTD']['Status'] == 0) {
-            return "surat Sudah di TTd ngi";
+            return FlashException('surat Sudah di Tanda Tangani');
         }
 
         $enkripsi = new enkripsi_library;
 
-        $data['update']['Status'] = 1;
-        $data['update']['hash'] = $enkripsi->enkripsiTTD($data['TTD']['NoSurat'], $data['TTD']['mshw_id']);
-        $data['update']['TimeStamp'] = time();
+        $data['update']['Status']      = 1;
+        $data['update']['qrcodeName']  =  "QRCode-" . time() . random_string();
+        $data['update']['hash']        = $enkripsi->enkripsiTTD($data['TTD']['NoSurat'], $data['TTD']['mshw_id']);
+        $data['update']['TimeStamp']   = time();
         $data['update']['pendattg_id'] = userInfo()['id'];
 
 
-        if (!$model->updateTTD($postdata['id'], $data['update'])) {
-            return "TTD error";
+
+        if (!Render_Qr($data['update']['hash'], $data['update']['qrcodeName'])) {
+            return FlashException('QRCode Tidak dapat dibuat');
         }
+
+        if (!$model->updateTTD($postdata['id'], $data['update'])) {
+            return FlashException('Tidak Dapat Menyimpan Tanda Tangan Ke dalam Database');
+        }
+
         return redirect()->to('/status-TTD');
     }
 

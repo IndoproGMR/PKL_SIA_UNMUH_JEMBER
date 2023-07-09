@@ -15,12 +15,12 @@ class TandaTangan extends Model
     protected $protectFields    = true;
     protected $allowedFields    = [
         'Status',
-        'hash',
-        'RandomStr',
-        'TimeStamp',
         'NoSurat',
+        'hash',
+        'qrcodeName',
         'jenisttd',
         'pendattg_id',
+        'TimeStamp',
     ];
 
     function cekvalidasi($nosurat, $data)
@@ -69,6 +69,7 @@ class TandaTangan extends Model
 
     function updateTTD($id, $data)
     {
+        // masukan array
         return $this->update($id, $data);
     }
 
@@ -78,37 +79,90 @@ class TandaTangan extends Model
     // untuk melihat berapa banyak yang sudah ttd dan belum // (2/10)
     function cekStatusSurat($nosurat)
     {
-        $data['totalTTD'] = $this
+        $datautama = $this
+            ->select('COUNT(*) AS totalTTD,
+        SUM(CASE WHEN Status = 1 THEN 1 ELSE 0 END) AS sudah,
+        SUM(CASE WHEN Status = 0 THEN 1 ELSE 0 END) AS belum')
             ->where('NoSurat', $nosurat)
-            ->countAllResults();
+            ->find();
 
-        $data['belum'] = $this
-            ->where('NoSurat', $nosurat)
-            ->where('status', '0')
-            ->countAllResults();
+        if (count($datautama) == 1) {
+            return $datautama[0];
+        }
 
-        $data['sudah'] = $this
-            ->where('NoSurat', $nosurat)
-            ->where('status', '1')
-            ->countAllResults();
-
+        $data['totalTTD'] = 99;
+        $data['sudah'] = 0;
+        $data['belum'] = 99;
         return $data;
+
+        // !old query
+        // $data['totalTTD'] = $this
+        //     ->where('NoSurat', $nosurat)
+        //     ->countAllResults();
+
+        // $data['belum'] = $this
+        //     ->where('NoSurat', $nosurat)
+        //     ->where('status', '0')
+        //     ->countAllResults();
+
+        // $data['sudah'] = $this
+        //     ->where('NoSurat', $nosurat)
+        //     ->where('status', '1')
+        //     ->countAllResults();
+
+        // return $data;
+
+        /**
+         *SELECT
+         *COUNT(*) AS total,
+         *SUM(CASE WHEN Status = 1 THEN 1 ELSE 0 END) AS dataTrue,
+         *SUM(CASE WHEN Status = 0 THEN 1 ELSE 0 END) AS dataFalse
+         *FROM
+         *    SM_ttd
+         *GROUP BY
+         *    NoSurat;
+         *
+         */
     }
 
     // untuk melihat semua ttd yang sudah dan belum di TTD kan untuk penandatangan
     function cekStatusSuratTTD($pendattg_id, $status = 0)
     {
-        $db = \Config\Database::connect();
+        $data = $this
+            ->select('`SM_ttd`.`id` AS idttd,
+        `SM_ttd`.`Status`,
+        `SM_ttd`.`NoSurat`,
+        `SM_ttd`.`pendattg_id`,
+        `SM_JenisSurat`.`name` as namaJenisSurat,
+        `SM_ttd_SuratMasuk`.`TimeStamp`,
+        `SM_ttd`.`jenisttd` ,
+        `SM_ttd`.`TimeStamp` as `TimeStamp_ttd`')
+            ->join('SM_ttd_SuratMasuk', '`SM_ttd_SuratMasuk`.`NoSurat` = `SM_ttd`.`NoSurat`')
+            ->join('SM_JenisSurat', '`SM_JenisSurat`.`id`=`SM_ttd_SuratMasuk`.`JenisSurat_id`')
+            ->where('`SM_ttd`.`Status`', $status)
+            ->groupStart()
+            ->where('`SM_ttd`.`pendattg_id`', $pendattg_id['id'])
+            ->orWhere('`SM_ttd`.`pendattg_id`', $pendattg_id['namaLVL'])
+            ->groupEnd()
+            ->find();
 
-        $sql = "SELECT `SM_ttd`.`id` AS idttd,`SM_ttd`.`Status`,`SM_ttd`.`NoSurat`,`SM_ttd`.`pendattg_id`,`SM_JenisSurat`.`name` as namaJenisSurat,`SM_ttd_SuratMasuk`.`TimeStamp`,`SM_ttd`.`jenisttd` ,`SM_ttd`.`TimeStamp` as `TimeStamp_ttd`
-        FROM `SM_ttd` 
-        LEFT JOIN `SM_ttd_SuratMasuk` ON `SM_ttd_SuratMasuk`.`NoSurat` = `SM_ttd`.`NoSurat` 
-        LEFT JOIN `SM_JenisSurat` ON `SM_JenisSurat`.`id`=`SM_ttd_SuratMasuk`.`JenisSurat_id` 
-        WHERE `SM_ttd`.`Status` = '" . $status . "' and (`SM_ttd`.`pendattg_id` = '" .
-            $db->escapeLikeString($pendattg_id['id']) . "' OR `SM_ttd`.`pendattg_id` = '" .
-            $db->escapeLikeString($pendattg_id['namaLVL']) . "' );";
+        // d($data);
+        return $data;
 
-        return $db->query($sql)->getResult('array');
+        // $db = \Config\Database::connect();
+
+        // $sql = "SELECT `SM_ttd`.`id` AS idttd,`SM_ttd`.`Status`,`SM_ttd`.`NoSurat`,`SM_ttd`.`pendattg_id`,`SM_JenisSurat`.`name` as namaJenisSurat,`SM_ttd_SuratMasuk`.`TimeStamp`,`SM_ttd`.`jenisttd` ,`SM_ttd`.`TimeStamp` as `TimeStamp_ttd`
+        // FROM `SM_ttd` 
+        // LEFT JOIN `SM_ttd_SuratMasuk` ON `SM_ttd_SuratMasuk`.`NoSurat` = `SM_ttd`.`NoSurat` 
+        // LEFT JOIN `SM_JenisSurat` ON `SM_JenisSurat`.`id`=`SM_ttd_SuratMasuk`.`JenisSurat_id` 
+        // WHERE `SM_ttd`.`Status` = '" . $status . "' and 
+        // (`SM_ttd`.`pendattg_id` = '" .
+        //     $db->escapeLikeString($pendattg_id['id']) .
+        //     "' OR `SM_ttd`.`pendattg_id` = '" .
+        //     $db->escapeLikeString($pendattg_id['namaLVL']) .
+        //     "' );";
+
+        // return $db->query($sql)->getResult('array');
     }
 }
 

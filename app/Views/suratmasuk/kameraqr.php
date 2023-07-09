@@ -66,8 +66,10 @@
 <input type="checkbox" name="autodetail" id="autodetail" value="autodetail"> auto detail
 <br>
 <?php if (!$nocam) : ?>
-    <select name="kamera" id="kamera" onchange="jalankancamera()">
+    <select name="kamera" id="kamera">
     </select>
+    <button onclick="jalankancamera()">Start Scan</button>
+    <button onclick="stopcam()">Stop Scan</button>
 <?php else : ?>
     <select name="kamera" id="kamera">
         <option value="">camera has been disable</option>
@@ -132,17 +134,27 @@
                 cek(url_api)
             });
 
-
+            // scanner.stop();
             var idcamera = document.getElementById('kamera').value;
-            // console.log(idcamera);
+            console.log(idcamera);
             Instascan.Camera.getCameras().then(function(cameras) {
-                scanner.stop()
+                scanner.stop();
                 scanner.start(cameras[idcamera]);
             }).catch(function(e) {
                 console.error(e);
             });
 
         };
+
+        function stopcam() {
+            console.log('jalan');
+            let scanner = new Instascan.Scanner({
+                video: document.getElementById("preview")
+            });
+            scanner.stop().then(function() {
+                console.log('stop jalan');
+            });
+        }
 
     <?php endif ?>
 
@@ -215,7 +227,7 @@
 <!-- Js Script untuk Header -->
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.10/vue.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/3.3.3/adapter.min.js"></script>
-<script type="text/javascript" src=" <?= base_url('/js/instascan.min.js') ?>"></script>
-<!-- <script type="text/javascript" src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script> -->
+<!-- <script type="text/javascript" src="<?= base_url('/') ?>js/instascan.min.js"></script> -->
+<script type="text/javascript" src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
 
 <?= $this->endSection() ?>

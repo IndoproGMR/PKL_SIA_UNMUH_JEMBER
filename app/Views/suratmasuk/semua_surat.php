@@ -17,6 +17,7 @@
         <thead>
             <tr>
                 <th>Jenis Surat</th>
+                <th>Preview</th>
                 <th>Diskripsi Surat</th>
                 <th>Show Status</th>
                 <th>Edit Surat</th>
@@ -26,7 +27,8 @@
         <tbody>
             <?php foreach ($jenissurat as $key) : ?>
                 <tr>
-                    <th><?= esc($key['name']) ?></th>
+                    <td><?= esc($key['name']) ?></td>
+                    <td><?= TombolTo('/Preview/' . $key['id'], 'Preview Surat', 'signature', '_blank') ?></td>
                     <td><?= esc($key['description']) ?></td>
                     <?php if ($key['show'] == 0) : ?>
                         <td><?= TombolIDcheck(0, '/toggleshow-surat', $key['id']) ?></td>

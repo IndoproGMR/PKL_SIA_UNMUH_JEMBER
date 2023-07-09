@@ -12,68 +12,46 @@ use Endroid\QrCode\Writer\PngWriter;
 // library pdf
 use Dompdf\Dompdf;
 use Dompdf\Options;
-
-
-// lokasi public/{lokasi}
-// class pada css
-function Render_gambar(String $lokasi, String $class)
-{
-    if (file_exists($lokasi)) {
-        $type = pathinfo($lokasi, PATHINFO_EXTENSION);
-        $data = file_get_contents($lokasi);
-        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
-        Render_gambar_dari_base64($base64, $class);
-    } else {
-        echo "img not found: " . $lokasi;
-    }
-}
-
-// base64 code
-// class pada css
-function Render_gambar_dari_base64(String $database64, String  $class)
-{
-    echo "<img src='" . $database64 . "' class='" . $class . "' alt='' loading='lazy'>";
-}
+use Endroid\QrCode\Writer\WebPWriter;
+use PhpParser\Node\Stmt\Return_;
 
 // dataqr isi qr code
 // savefile nama file yang disimpan
 function Render_Qr(String $dataqr, String $savefile)
 {
-    $lokasifolder = __DIR__ . '/../../html/';
-    // $lokasi = $lokasifolder . "qrcode/$savefile.png";
-    $lokasi = "qrcode/$savefile.png";
+    $dir      = "uploads/QRcodeTTD/" . userInfo()['id'];
+    $lokasi   = cekDir($dir) . "/$savefile.png";
+    // $writer = new PngWriter(9);
+    $writer = new WebPWriter(100);
+    try {
+
+        // Create QR code
+        $qrCode = QrCode::create($dataqr)
+            ->setEncoding(new Encoding('UTF-8'))
+            ->setSize(500)
+            ->setMargin(10)
+            // ->compression_level(3)
+            // ->setRoundBlockSizeMode(new RoundBlockSizeModeMargin())
+            // ->setForegroundColor(new Color(0, 0, 0))
+            // ->setBackgroundColor(new Color(255, 255, 255))
+            ->setErrorCorrectionLevel(new ErrorCorrectionLevelLow());
 
 
+        // Create generic logo
+        $logo = Logo::create($_ENV['logoqr'])
+            ->setResizeToWidth(150);
 
-    $writer = new PngWriter(9);
+        $result = $writer->write($qrCode, $logo);
 
-    // Create QR code
-    $qrCode = QrCode::create($dataqr)
-        ->setEncoding(new Encoding('UTF-8'))
-        ->setSize(500)
-        ->setMargin(10)
-        // ->compression_level(3)
-        ->setErrorCorrectionLevel(new ErrorCorrectionLevelLow());
-    // ->setRoundBlockSizeMode(new RoundBlockSizeModeMargin())
-    // ->setForegroundColor(new Color(0, 0, 0))
-    // ->setBackgroundColor(new Color(255, 255, 255));
-
-
-    // Create generic logo
-    $logo = Logo::create($_ENV['logoqr'])
-        ->setResizeToWidth(50);
-
-    $result = $writer->write($qrCode, $logo);
-
-    $result->saveToFile(FCPATH . $lokasi);
+        $result->saveToFile(FCPATH . $lokasi);
+    } catch (Exception $e) {
+        return false;
+    }
+    return true;
 }
 
-
-
-
-
-
 /** 
+ * $htmlpage di ambil dari view() yang berada di controller
  * lokasi page yang di render 
  * 00 = tidak di save dan view;
  * 01 = tidak di save tapi di view;
@@ -81,46 +59,33 @@ function Render_Qr(String $dataqr, String $savefile)
  * 11 = di save dan di view;
  * nama file yang disimpan
  */
-function Render_mpdf(String $htmlpage, String $saveorview, String $namapdf, $data = null)
+function Render_mpdf(String $htmlpage, String $saveorview, String $namapdf)
 {
-    $data['defaultdata'] = "data dummy";
-    // $lokasi = "pdf/mpdf $namapdf.pdf";
-    // $lokasi = "pdf/mpdf$namapdf.pdf";
-    $randomnum =  random_string('alnum', 2);
-    $setting = [
-        'tempDir' =>  __DIR__ . '/../../html/',
-        'lokasi'  => "pdf/$namapdf-" . $randomnum . ".pdf",
-        'namapdf' => $namapdf,
-    ];
+    $lokasi = WRITEPATH . "pdf/$namapdf.pdf";
 
     $mpdf = new \Mpdf\Mpdf();
-    // $mpdf = new \Mpdf\Mpdf(['tempDir' =>  $setting['tempDir']]);
-    $mpdf->WriteHTML(view($htmlpage, $data));
-    $mpdf->SetTitle($setting['namapdf']);
-
+    $mpdf->WriteHTML($htmlpage);
+    $mpdf->SetTitle($namapdf);
     switch ($saveorview) {
         case '00':
             // no save no view
-            // echo "no view";
-            echo "no view no save";
+            return "no view no save";
             break;
 
         case '01':
             // no save but view
-            return redirect()->to($mpdf->Output());
+            return $mpdf->Output($namapdf, 'I');
             break;
 
         case '10':
             // save but no view
-            $mpdf->OutputFile($setting['lokasi']);
-            // return redirect()->to($mpdf->Output());
-            return redirect()->to(base_url());
+            $mpdf->OutputFile($lokasi);
             break;
 
         case '11':
             // save and view
-            $mpdf->OutputFile($setting['lokasi']);
-            return redirect()->to($mpdf->Output());
+            $mpdf->OutputFile($lokasi);
+            return $mpdf->Output($namapdf, 'I');
             break;
 
         default:
@@ -195,27 +160,24 @@ function Render_pdf(String $htmlpage, String $saveorview, String $namapdf, $data
 }
 
 
-function Render_Qr_temp(String $dataqr, String $savefile)
+
+// lokasi public/{lokasi}
+// class pada css
+function Render_gambar(String $lokasi, String $class)
 {
-    $lokasi = "qrtemp/$savefile.png";
-    $writer = new PngWriter();
+    if (file_exists($lokasi)) {
+        $type = pathinfo($lokasi, PATHINFO_EXTENSION);
+        $data = file_get_contents($lokasi);
+        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+        Render_gambar_dari_base64($base64, $class);
+    } else {
+        echo "img not found: " . $lokasi;
+    }
+}
 
-    // Create QR code
-    $qrCode = QrCode::create($dataqr)
-        ->setEncoding(new Encoding('UTF-8'))
-        ->setSize(300)
-        ->setMargin(10)
-        ->setErrorCorrectionLevel(new ErrorCorrectionLevelLow());
-    // ->setRoundBlockSizeMode(new RoundBlockSizeModeMargin())
-    // ->setForegroundColor(new Color(0, 0, 0))
-    // ->setBackgroundColor(new Color(255, 255, 255));
-
-
-    // Create generic logo
-    $logo = Logo::create($_ENV['logoqr'])
-        ->setResizeToWidth(50);
-
-    $result = $writer->write($qrCode, $logo);
-
-    $result->saveToFile(FCPATH . $lokasi);
+// base64 code
+// class pada css
+function Render_gambar_dari_base64(String $database64, String  $class)
+{
+    echo "<img src='" . $database64 . "' class='" . $class . "' alt='' loading='lazy'>";
 }

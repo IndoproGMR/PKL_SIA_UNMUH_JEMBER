@@ -22,7 +22,7 @@ class Loginlimiter implements FilterInterface
         $throttler = Services::throttler();
 
         $error = [
-            'status'  => 'error',
+            'status'  => '429',
             'message' => 'Too Many Login',
         ];
 

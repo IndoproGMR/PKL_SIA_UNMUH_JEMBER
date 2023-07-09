@@ -33,7 +33,7 @@ function potongString($inputString, $substring)
     }
 }
 
-function replacetextarray($datatext, $cariKatadenganKata, String $options)
+function replacetextarray($datatext, $cariKatadenganKata, String $options = '1')
 {
     foreach ($cariKatadenganKata as $kata) {
         $datatext = replacetext($datatext, $kata['carikata'], $kata['dengankata'], $options);
@@ -233,4 +233,13 @@ function timeconverter(int $timestamp = 0, $jenis = 'yunani')
 
 
     return $data;
+}
+
+function cekDir($dir)
+{
+    if (!is_dir($dir)) {
+        mkdir($dir, 0777, TRUE);
+        // cekDir($dir);
+    }
+    return $dir;
 }

@@ -24,24 +24,54 @@ class AuthUserGroup extends Model
     function proseslogin($datalogin, $datapassword)
     {
         $db = \Config\Database::connect("siautama", false);
-        $sql = "SELECT `level`.`Nama` as namaLVL 
-        FROM `level` 
-        LEFT JOIN `mhsw` ON `level`.`LevelID`=`mhsw`.`LevelID` 
-        LEFT JOIN `dosen` on `level`.`LevelID`=`dosen`.`LevelID` 
-        LEFT JOIN `karyawan` ON `level`.`LevelID`=`karyawan`.`LevelID` 
-        WHERE (`mhsw`.`Login` = '" .
-            $db->escapeLikeString($datalogin) .
-            "' AND `mhsw`.`Password`='" .
-            $db->escapeLikeString($datapassword) . "') 
-        OR (`dosen`.`Login`='" .
-            $db->escapeLikeString($datalogin) .
-            "' AND `dosen`.`Password`='" .
-            $db->escapeLikeString($datapassword) . "') 
-        OR (`karyawan`.`Login`='" .
-            $db->escapeLikeString($datalogin) .
-            "' AND `karyawan`.`Password`='" .
-            $db->escapeLikeString($datapassword) . "');";
-        $hasil = $db->query($sql)->getResultArray();
+
+        $builder = $db->table('level');
+        $hasil = $builder
+            ->select('level.Nama as namaLVL')
+            ->join('mhsw', 'level.LevelID = mhsw.LevelID', 'left')
+            ->join('dosen', 'level.LevelID = dosen.LevelID', 'left')
+            ->join('karyawan', 'level.LevelID = karyawan.LevelID', 'left')
+            ->groupStart()
+            ->where('mhsw.Login', $datalogin)
+            ->where('mhsw.Password', $datapassword)
+            ->where('mhsw.StatusMhswID', 'A')
+            ->groupEnd()
+            ->orGroupStart()
+            ->where('dosen.Login', $datalogin)
+            ->where('dosen.Password', $datapassword)
+            ->groupEnd()
+            ->orGroupStart()
+            ->where('karyawan.Login', $datalogin)
+            ->where('karyawan.Password', $datapassword)
+            ->groupEnd()
+            ->get()->getResultArray();
+
+
+
+
+
+        // $sql = "SELECT `level`.`Nama` as namaLVL 
+        // FROM `level` 
+        // LEFT JOIN `mhsw` ON `level`.`LevelID`=`mhsw`.`LevelID` 
+        // LEFT JOIN `dosen` on `level`.`LevelID`=`dosen`.`LevelID` 
+        // LEFT JOIN `karyawan` ON `level`.`LevelID`=`karyawan`.`LevelID` 
+        // WHERE (`mhsw`.`Login` = '" .
+        //     $db->escapeLikeString($datalogin) .
+        //     "' AND `mhsw`.`Password`='" .
+        //     $db->escapeLikeString($datapassword) .
+        //     "' AND `mhsw`.`StatusMhswID`='A') 
+        // OR (`dosen`.`Login`='" .
+        //     $db->escapeLikeString($datalogin) .
+        //     "' AND `dosen`.`Password`='" .
+        //     $db->escapeLikeString($datapassword) . "') 
+        // OR (`karyawan`.`Login`='" .
+        //     $db->escapeLikeString($datalogin) .
+        //     "' AND `karyawan`.`Password`='" .
+        //     $db->escapeLikeString($datapassword) . "');";
+        // $hasil = $db->query($sql)->getResultArray();
+
+        // d($hasil);
+
         if (count($hasil) == 1) {
             return true;
         }
@@ -51,19 +81,37 @@ class AuthUserGroup extends Model
     function cekuserinfo($iduser)
     {
         $db = \Config\Database::connect("siautama", false);
-        $sql = "SELECT `level`.`Nama` AS namaLVL, 
+        $builder = $db->table('level');
+        $hasil = $builder->select('
+        `level`.`Nama` AS namaLVL, 
         COALESCE(`mhsw`.`Nama` , `dosen`.`Nama`, `karyawan`.`Nama`) AS NamaUser, 
         COALESCE(`mhsw`.`Login`, `dosen`.`Login`, `karyawan`.`Login`) AS LoginUser, 
-        COALESCE(`mhsw`.`Foto` ,`level`.`Simbol`) AS FotoUser 
-        FROM `level` 
-        LEFT JOIN `mhsw` ON `level`.`LevelID` = `mhsw`.`LevelID` 
-        LEFT JOIN `dosen` ON `level`.`LevelID` = `dosen`.`LevelID` 
-        LEFT JOIN `karyawan` ON `level`.`LevelID` = `karyawan`.`LevelID` 
-        WHERE 
-        (`mhsw`.`Login` = '" . $db->escapeLikeString($iduser) . "' 
-        OR `dosen`.`Login` = '" . $db->escapeLikeString($iduser) . "' 
-        OR `karyawan`.`Login` = '" . $db->escapeLikeString($iduser) . "');";
-        return $db->query($sql)->getResultArray()[0];
+        COALESCE(`mhsw`.`Foto` ,`level`.`Simbol`) AS FotoUser')
+            ->join('mhsw', '`level`.`LevelID` = `mhsw`.`LevelID`', 'left')
+            ->join('dosen', '`level`.`LevelID` = `dosen`.`LevelID`', 'left')
+            ->join('karyawan', '`level`.`LevelID` = `karyawan`.`LevelID`', 'left')
+            ->groupStart()
+            ->where('`mhsw`.`Login`', $iduser)
+            ->orWhere('`dosen`.`Login`', $iduser)
+            ->orWhere('`karyawan`.`Login`', $iduser)
+            ->limit(1)
+            ->groupEnd()->get()->getResultArray()[0];
+        return $hasil;
+
+
+        // $sql = "SELECT `level`.`Nama` AS namaLVL, 
+        // COALESCE(`mhsw`.`Nama` , `dosen`.`Nama`, `karyawan`.`Nama`) AS NamaUser, 
+        // COALESCE(`mhsw`.`Login`, `dosen`.`Login`, `karyawan`.`Login`) AS LoginUser, 
+        // COALESCE(`mhsw`.`Foto` ,`level`.`Simbol`) AS FotoUser 
+        // FROM `level` 
+        // LEFT JOIN `mhsw` ON `level`.`LevelID` = `mhsw`.`LevelID` 
+        // LEFT JOIN `dosen` ON `level`.`LevelID` = `dosen`.`LevelID` 
+        // LEFT JOIN `karyawan` ON `level`.`LevelID` = `karyawan`.`LevelID` 
+        // WHERE 
+        // (`mhsw`.`Login` = '" . $db->escapeLikeString($iduser) . "' 
+        // OR `dosen`.`Login` = '" . $db->escapeLikeString($iduser) . "' 
+        // OR `karyawan`.`Login` = '" . $db->escapeLikeString($iduser) . "');";
+        // return $db->query($sql)->getResultArray()[0];
     }
 }
 

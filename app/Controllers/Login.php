@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Libraries\enkripsi_library;
 use App\Models\AuthUserGroup;
+use App\Models\Jenissurat;
 
 class Login extends BaseController
 {
@@ -14,6 +15,7 @@ class Login extends BaseController
     {
         $session = \Config\Services::session();
         $session->destroy();
+
         $data['datacoba'] = [
             '1' => [
                 'login' => 'yuni',
@@ -59,6 +61,12 @@ class Login extends BaseController
         ]);
         $model = model(AuthUserGroup::class);
 
+
+        // ! Algoritma password
+        /////
+        // !
+
+
         if (!$model->proseslogin($postdata['dataLogin'], $postdata['dataPassword'])) {
             $session->destroy();
             return redirect()->to('error_perm');
@@ -71,12 +79,7 @@ class Login extends BaseController
             'namaLVL' => $datauser['namaLVL']
         ];
         $session->set($data);
-
         return redirect()->to('/');
-        // $postdata = $this->request->getPost();
-        // d($postdata);
-        // d($data);
-        // d($session->get());
     }
 
     public function loginProses()

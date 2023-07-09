@@ -119,3 +119,23 @@ function PagePerm($group, $redirect = 'error_perm', $login = false, $secure = 0)
     //     "Rektorat"
     // ];
 }
+
+function FlashException($data = "Error Tidak Di Ketahui", $mode = 'set')
+{
+    $session = \Config\Services::session();
+
+    switch ($mode) {
+        case 'set':
+            $session->setFlashdata('error', $data);
+            return redirect()->to('/Error_Exception');
+            break;
+
+        case 'get':
+            return $session->getFlashdata('error');
+            break;
+
+        default:
+            # code...
+            break;
+    }
+}

@@ -32,6 +32,7 @@ $routes->set404Override();
 // !home all user
 $routes->get('/', 'Home::index');
 $routes->get('/error_perm', 'Home::error_perm');
+$routes->get('/Error_Exception', 'Home::CustomError');
 $routes->get('/qr-validasi', 'SuratMasukController::kameraQR');
 
 
@@ -85,9 +86,16 @@ $routes->post('/bikin-surat', 'SuratMasukController::addJenisSuratProses');
 
 
 
+// !PDF
+// Preview
+$routes->post('/staff/Preview-Surat', 'Pdfrender::PreviewSurat');
+// $routes->get('/staff/Preview-Surat', 'Pdfrender::PreviewSurat');
 
+// untuk Mahasiswa dan Pengajaran
+$routes->get('/Preview/(:num)', 'Pdfrender::PreviewJenisSurat/$1');
 
-
+// mahasiswa
+$routes->post('/Download/Surat', 'Pdfrender::DownloadSurat');
 
 
 

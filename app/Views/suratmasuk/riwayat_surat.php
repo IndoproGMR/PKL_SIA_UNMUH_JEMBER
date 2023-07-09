@@ -27,7 +27,7 @@
                     <th><?= esc($key['namaJenisSurat']) ?></th>
                     <td><?= esc(timeconverter($key['TimeStamp'])) ?></td>
                     <td><?= esc($key['NoSurat']) ?></td>
-                    <td><?= TombolID('', '', 'signature', 'Download') ?></td>
+                    <td><?= TombolID('Download/Surat', $key['NoSurat'], 'signature', 'Download') ?></td>
                 </tr>
             <?php endforeach ?>
         </tbody>

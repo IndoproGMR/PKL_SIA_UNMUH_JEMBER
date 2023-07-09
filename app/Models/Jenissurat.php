@@ -112,21 +112,49 @@ class Jenissurat extends Model
     function seegrouplvl()
     {
         $db = \Config\Database::connect("siautama", false);
-        $sql = "SELECT `Nama` FROM `level` ORDER BY `LevelID` ASC;";
-        return $db->query($sql)->getResultArray();
+        $builder = $db->table('level')->orderBy('LevelID', 'ASC');
+        return $builder->get()->getResultArray();
     }
 
     function seeNamaPettd()
     {
-        $db = \Config\Database::connect("siautama", false);
-        $sql = "SELECT `dosen`.`Nama` as namattd, `dosen`.`Login` as login, `level`.`Nama` as lvl 
-        FROM dosen LEFT JOIN `level` ON `level`.`LevelID`=`dosen`.`LevelID` UNION SELECT `karyawan`.`Nama` as namattd, `karyawan`.`Login` as login, `level`.`Nama` as lvl FROM karyawan LEFT JOIN `level` ON `level`.`LevelID`=`karyawan`.`LevelID` ORDER by namattd;";
-        return $db->query($sql)->getResultArray();
+        $db = \Config\Database::connect("siautama");
+
+        $union = $db
+            ->table('karyawan')
+            ->select('`karyawan`.`Nama` as namattd, `karyawan`.`Login` as login, `level`.`Nama` as lvl')
+            ->join('level', '`level`.`LevelID`=`karyawan`.`LevelID`');
+
+        $builder = $db
+            ->table('dosen')
+            ->select('`dosen`.`Nama` as namattd,`dosen`.`Login` as login, `level`.`Nama` as lvl')
+            ->join('level', '`level`.`LevelID`=`dosen`.`LevelID`')
+            ->union($union);
+
+        return $db->newQuery()->fromSubquery($builder, 'q')->orderBy('namattd', 'ASC')->get()->getResultArray();
+    }
+}
+
+
+
+        // return $builder->get()->getResultArray();
+
+
+        // $sql = "SELECT `dosen`.`Nama` as namattd, `dosen`.`Login` as login, `level`.`Nama` as lvl 
+        // FROM dosen 
+        // LEFT JOIN `level` ON `level`.`LevelID`=`dosen`.`LevelID` 
+        // UNION 
+        // SELECT `karyawan`.`Nama` as namattd, `karyawan`.`Login` as login, `level`.`Nama` as lvl 
+        // FROM karyawan 
+        // LEFT JOIN `level` ON `level`.`LevelID`=`karyawan`.`LevelID` 
+        // ORDER by namattd;";
+        // return $db->query($sql)->getResultArray();
 
 
         // $sql = "SELECT `dosen`.`Nama` as namattd, `dosen`.`Login` as login, `level`.`Nama` as lvl FROM dosen LEFT JOIN `level` ON `level`.`LevelID`=`dosen`.`LevelID` UNION SELECT `karyawan`.`Nama` as namattd, `karyawan`.`Login` as login, `level`.`Nama` as lvl FROM karyawan LEFT JOIN `level` ON `level`.`LevelID`=`karyawan`.`LevelID` WHERE `level`.`Nama` = 'Dosen' or `level`.`Nama` = 'Pengajaran Fakultas' ORDER by namattd;";
-    }
-}
+
+
+
 
 // INSERT INTO `SM_JenisSurat` (`id`, `name`, `description`, `isiSurat`, `form`) VALUES (19, 'test', 'test multi data', 'bmFtYTp7e25hbWF9fQ==', 'eyJpbnB1dCI6WyJuYW1hIl0sIlRURCI6WyJHcm91cF9Eb3NlbiIsIkdyb3VwX01haGFzaXN3YSIsIkdyb3VwX0NhbG9uIE1haGFzaXN3YSIsIlBlcm9yYW5nYW5fMDAxNDAyNzUwMSJdfQ==');
 

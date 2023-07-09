@@ -22,6 +22,7 @@
         <thead>
             <tr>
                 <th>Jenis Surat</th>
+                <th>Preview</th>
                 <th>Tanggal di TandaTangani</th>
                 <th>Nomer</th>
                 <th>Status TTD</th>
@@ -31,7 +32,8 @@
         <tbody>
             <?php foreach ($datasurat as $key) : ?>
                 <tr>
-                    <th><?= esc($key['namaJenisSurat']) ?></th>
+                    <td><?= esc($key['namaJenisSurat']) ?></td>
+                    <td><?= TombolID('staff/Preview-Surat', $key['NoSurat'], 'signature', 'Preview Surat', '_blank') ?></td>
                     <td><?= esc(timeconverter($key['TimeStamp_ttd'])) ?></td>
                     <td><?= esc($key['NoSurat']) ?></td>
                     <td>

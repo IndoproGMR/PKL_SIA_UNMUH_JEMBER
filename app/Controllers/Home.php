@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 
+use App\Models\AuthUserGroup;
 use App\Models\TandaTangan;
 
 class Home extends BaseController
@@ -10,18 +11,18 @@ class Home extends BaseController
     {
         PagePerm([''], '/login', true);
 
-        // d(userInfo());
-
-
-        // return view('suratmasuk/status_surat');
-        // return view('welcome_message');
         // return view('auth/Auth_login');
-        // return view('auth/Auth_register');
         return view('home/index');
     }
 
+    // !Error Page
     public function error_perm()
     {
-        return view("auth/Auth_noPerm");
+        return view('auth/Auth_noPerm');
+    }
+
+    public function CustomError()
+    {
+        return view('home/customError');
     }
 }

@@ -30,16 +30,17 @@
 </div>
 
 
+
+
 <?php if ($minta == 1) : ?>
     <div class="kontensurat">
         <h1><?= esc($datasurat['name']) ?></h1>
         <h3><?= esc($datasurat['description']) ?></h3>
+        <h3><?= TombolTo('/Preview/' . $datasurat['id'], 'Preview Surat', '', '_blank') ?></h3>
     </div>
-    <!-- <form action="" method="post"> -->
+
+
     <?= form_open_multipart('') ?>
-
-
-
     <?php
     inputform($dataform['input']);
     if (isset($dataform['tambahan'])) {

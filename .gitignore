@@ -131,9 +131,8 @@ nb-configuration.xml
 
 # public
 public/pdf/*
-public/qrcode/*
-public/qrtemp/*
-public/temp/*
+public/uploads/dataSurat/*
+public/uploads/QRcodeTTD/*
 
-/app/Libraries/enkripsi_library.php
-
+# Libraries
+app/Libraries/enkripsi_library.php
