@@ -1,41 +1,54 @@
-<?= $this->extend('templates/layout.php') ?>
+<!DOCTYPE html>
+<html lang="en">
 
-<?= $this->section('main') ?>
-<div class="container">
-	<div class="row justify-content-center mt-5">
-		<div class="col-md-4">
-			<br>
-			<div class="card">
-				<h5 class="text-center" style="margin-top: 50px;">
-					Form <span class="font-weight-bold text-primary">LOGIN</span>
-				</h5>
-				<div class="card-body">
-					<form action="../home/index.php" method="POST">
-						<div class="form-group">
-							<input type="text" name="username" class="form-control" placeholder="Username" required="required">
-						</div>
-						<div class="form-group">
-							<input type="password" name="password" class="form-control" placeholder="Password" required="required">
-						</div>
-						<div class="form-group custom-control custom-checkbox">
-							<input type="checkbox" class="custom-control-input" id="customControlAutosizing">
-							<label class="custom-control-label" for="customControlAutosizing">Remember me</label>
-							<a href="#" class="float-right" style="text-decoration: none;">Lupa Password?</a>
-						</div>
-						<div class="form-group">
-							<input type="submit" name="submit" class="btn btn-primary btn-block" value="Login">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Login</title>
+	<link rel="stylesheet" href="<?= base_url('/'); ?>css/style-login.css">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
 
-						</div>
-					</form>
-				</div>
+<body>
+	<!-- header -->
+
+	<header>
+		<h1>SELAMAT DATANG DI WEB</h1>
+		<h1>UNIVERSITAS MUHAMMADIYAH JEMBER</h1>
+	</header>
+
+	<!-- end header -->
+
+	<!-- content -->
+
+	<div class="content">
+		<div class="container">
+			<div class="login">
+
+				<form action="" method="post" class="formkontener">
+					<h3>GUNAKAN USERNAME DAN PASSWORD SESUAI SIA</h3>
+					<hr>
+					<?= csrf_field() ?>
+					<label for="">USERNAME</label>
+
+					<input type="text" name="dataLogin" placeholder="login" required>
+					<label for="">PASSWORD</label>
+
+					<input type="password" name="dataPassword" placeholder="password" required>
+					<input type="submit" value="MASUK">
+				</form>
+
 			</div>
-			<p class="text-center">
-				Belum Punya Akun ?<span class="font-weight-bold text-primary">
-					<a href="../register/index.php" style="text-decoration: none;">Daftar Disini</a></span>
-			</p>
+			<div class="image">
+				<img src="<?= base_url('/'); ?>asset/logo/unmuh.png" alt="">
+			</div>
 		</div>
 	</div>
-</div>
 
+	<!-- end content -->
+</body>
 
-<?= $this->endSection() ?>
+</html>

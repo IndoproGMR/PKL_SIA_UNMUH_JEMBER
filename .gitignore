@@ -136,3 +136,6 @@ public/uploads/QRcodeTTD/*
 
 # Libraries
 app/Libraries/enkripsi_library.php
+
+writable/pdf/*
+writable/temp/*

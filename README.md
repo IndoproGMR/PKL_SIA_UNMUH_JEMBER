@@ -97,16 +97,3 @@ ___
 ___
 ### Link
 [Desain UI/UX](https://www.figma.com/file/PSqK3nQi24n6Y7p7NvwzGQ/UI-SURAT-MENYURAT?type=design&node-id=0-1&t=ItdAVOX8ike9HtGa-0)
-
-
-Format Pemesanan Customer:
-Nama Penerima : Achmad Naji
-Alamat : Jl. KH Shiddiq gang 1
-No HP : 08179115451
-Item Pemesanan :
-- Delmonte Saus sambal besar (1kg) x1
-- Delmonte Saus tomat besar (1kg) x1
-- Finna kecap ikan x2
-- Roti burger bernardi besar isi 6 wijen x1
-Pembayaran : COD
-Share loc :

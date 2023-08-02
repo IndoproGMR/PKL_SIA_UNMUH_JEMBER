@@ -118,9 +118,9 @@ function pecahkan(String $text)
     return explode("_", $text);
 }
 
-function hash256($data)
+function hash256($data, $length = 12)
 {
-    return hash("sha256", $data);
+    return substr(hash("sha256", $data), 0, $length);
 }
 
 function UUIDv4()
@@ -242,4 +242,25 @@ function cekDir($dir)
         // cekDir($dir);
     }
     return $dir;
+}
+
+function cekFile($file)
+{
+    if (file_exists($file)) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function RandomString($length = 10)
+{
+    $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    $randomString = '';
+
+    for ($i = 0; $i < $length; $i++) {
+        $randomString .= $characters[rand(0, strlen($characters) - 1)];
+    }
+
+    return $randomString;
 }

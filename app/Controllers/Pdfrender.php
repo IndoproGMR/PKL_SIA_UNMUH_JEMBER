@@ -10,6 +10,9 @@ class Pdfrender extends BaseController
 {
     public function PreviewSurat()
     {
+        // TODO : Ambil data siapa yang TTD,
+        // TODO : buat tamplate TTD,
+        // TODO : buat keaman dimana hanya mahasiswa itu sendiri yang dapat membuka
         PagePerm(['Dosen']);
 
 
@@ -40,6 +43,9 @@ class Pdfrender extends BaseController
 
     public function PreviewJenisSurat($id)
     {
+        // TODO : Ambil data siapa yang TTD,
+        // TODO : buat tamplate TTD,
+        // TODO : buat keaman dimana hanya mahasiswa itu sendiri yang dapat membuka
         // PagePerm(['mahasiswa']);
         // $getdata = $this->request->getGet();
 
@@ -87,11 +93,28 @@ class Pdfrender extends BaseController
 
         $data['isi'] = replacetextarray($dataSurat['isiSurat'], $dataTambahan);
         $data['kop'] = 1;
+        $namapdf = $dataSurat['name'] . ' - ' . $postdata['id'];
 
         $html = view('surat/layout', $data);
         $html = replacetextarray($html, $dataTambahan);
 
         $this->response->setHeader('Content-Type', 'application/pdf');
-        return Render_mpdf($html, '01', $dataSurat['name'] . ' - ' . $postdata['id'], $data);
+        return Render_mpdf($html, '11', $namapdf);
+    }
+
+    // !========================================================================
+    public function TestMPDF()
+    {
+        $datajson = '{"foto":"asset/logo/unmuh.png"}';
+        $dataTambahan = ubaharray(json_decode($datajson));
+
+        $data['isi'] = '<h1>TEST MPDF</h1><hr>';
+        $data['kop'] = 1;
+
+        $html = view('surat/layout', $data);
+        $html = replacetextarray($html, $dataTambahan);
+
+        $this->response->setHeader('Content-Type', 'application/pdf');
+        return Render_mpdf($html, '01', 'PreviewSurat - TEST MPDF', $data);
     }
 }

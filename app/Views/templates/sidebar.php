@@ -68,7 +68,21 @@
                     </a>
                 </div>
 
+                <!-- Surat masuk -->
+                <div class="list-item">
+                    <a href="<?= base_url('/bikin-surat'); ?>">
+                        <img src="<?= base_url('/'); ?>asset/svg/tambah.svg" alt="" class="icon" loading='lazy'>
+                        <span class="description">Tambah Surat Masuk</span>
+                    </a>
+                </div>
 
+                <!-- Query  -->
+                <div class="list-item">
+                    <a href="<?= base_url('/bikin-surat'); ?>">
+                        <img src="<?= base_url('/'); ?>asset/svg/tambah.svg" alt="" class="icon" loading='lazy'>
+                        <span class="description">Query</span>
+                    </a>
+                </div>
 
 
 

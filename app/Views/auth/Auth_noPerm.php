@@ -9,7 +9,7 @@
 
 <body>
     <h1 style="text-align: center;">Error No Permission</h1>
-    <p style="text-align: center;">Halaman ini memiliki hak akses terbatas</p>
+    <p style="text-align: center;">Laman ini memiliki hak akses terbatas!!!</p>
     <p style="text-align: center;"><a href="<?= base_url('/'); ?>">Kembali ke Dashboard</a></p>
     <hr>
 </body>

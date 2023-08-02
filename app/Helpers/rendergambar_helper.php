@@ -61,15 +61,17 @@ function Render_Qr(String $dataqr, String $savefile)
  */
 function Render_mpdf(String $htmlpage, String $saveorview, String $namapdf)
 {
-    $lokasi = WRITEPATH . "pdf/$namapdf.pdf";
+    $namahash = hash256($namapdf);
+    $lokasi = cekDir(WRITEPATH . "pdf/") . "$namahash.pdf";
 
-    $mpdf = new \Mpdf\Mpdf();
+
+    $mpdf = new \Mpdf\Mpdf(['tempDir' => WRITEPATH . 'temp']);
     $mpdf->WriteHTML($htmlpage);
     $mpdf->SetTitle($namapdf);
     switch ($saveorview) {
         case '00':
             // no save no view
-            return "no view no save";
+            return FlashException('Mode PDF di set ke No View dan No Save');
             break;
 
         case '01':
@@ -79,29 +81,26 @@ function Render_mpdf(String $htmlpage, String $saveorview, String $namapdf)
 
         case '10':
             // save but no view
-            $mpdf->OutputFile($lokasi);
+            if (!cekFile($lokasi)) {
+                $mpdf->OutputFile($lokasi);
+            }
+            return FlashException('Mode PDF di set ke Only Save', 'set');
             break;
 
         case '11':
             // save and view
-            $mpdf->OutputFile($lokasi);
+            if (!cekFile($lokasi)) {
+                $mpdf->OutputFile($lokasi);
+            }
             return $mpdf->Output($namapdf, 'I');
             break;
 
         default:
-            echo "no view";
+            return FlashException('Mode PDF di set ke No View dan No Save');
             break;
     }
 }
 
-function Render_TTD(String $LokasiGambar, $data)
-{
-    echo $data['tanggal'];
-    echo '</br>';
-    Render_gambar($LokasiGambar, "fotottd");
-    echo '</br>';
-    echo $data['nama'];
-}
 
 
 
@@ -180,4 +179,13 @@ function Render_gambar(String $lokasi, String $class)
 function Render_gambar_dari_base64(String $database64, String  $class)
 {
     echo "<img src='" . $database64 . "' class='" . $class . "' alt='' loading='lazy'>";
+}
+
+function Render_TTD(String $LokasiGambar, $data)
+{
+    echo $data['tanggal'];
+    echo '</br>';
+    Render_gambar($LokasiGambar, "fotottd");
+    echo '</br>';
+    echo $data['nama'];
 }

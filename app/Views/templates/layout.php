@@ -1,5 +1,5 @@
 <?php
-$titletext = 'test';
+$titletext = 'Surat';
 if (!empty($title)) {
     $titletext = $title;
 }

@@ -48,8 +48,8 @@ class Login extends BaseController
         // $model = model(Testusers::class);
         // $data['datalogin'] = $model->seeall();
         $data['defaultdata'] = '';
-        return view("login", $data);
-        // return view("auth/Auth_login", $data);
+        // return view("login", $data);
+        return view("auth/Auth_login", $data);
     }
 
     public function debuglogin()

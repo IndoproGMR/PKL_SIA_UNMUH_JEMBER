@@ -67,6 +67,7 @@ $routes->post('/bikin-surat', 'SuratMasukController::addJenisSuratProses');
 
 // !WIP
 // $routes->get('/suratmasuk/pdf', 'TestSuratmasuk::pdf');
+$routes->get('/staff/TestMPDF', 'Pdfrender::TestMPDF');
 
 
 // !done

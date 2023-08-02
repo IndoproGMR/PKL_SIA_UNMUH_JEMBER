@@ -120,13 +120,13 @@ function PagePerm($group, $redirect = 'error_perm', $login = false, $secure = 0)
     // ];
 }
 
-function FlashException($data = "Error Tidak Di Ketahui", $mode = 'set')
+function FlashException($dataError = "Error Tidak Di Ketahui", $mode = 'set')
 {
     $session = \Config\Services::session();
 
     switch ($mode) {
         case 'set':
-            $session->setFlashdata('error', $data);
+            $session->setFlashdata('error', $dataError);
             return redirect()->to('/Error_Exception');
             break;
 
