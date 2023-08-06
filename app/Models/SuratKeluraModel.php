@@ -4,7 +4,7 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class Suratmasuk extends Model
+class SuratKeluraModel extends Model
 {
     // protected $DBGroup          = 'default';
     protected $table            = 'SM_ttd_SuratMasuk';
@@ -21,7 +21,7 @@ class Suratmasuk extends Model
         'mshw_id'
     ];
 
-    function addSuratMasuk($data)
+    function addSuratKeluar($data)
     {
         return $this->save($data);
     }
