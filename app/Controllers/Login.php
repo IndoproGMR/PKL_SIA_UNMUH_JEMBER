@@ -7,6 +7,9 @@ use App\Libraries\enkripsi_library;
 use App\Models\AuthUserGroup;
 use App\Models\Jenissurat;
 
+
+$GLOBALS['loginUI'] = 'debug';
+
 class Login extends BaseController
 {
 
@@ -48,7 +51,10 @@ class Login extends BaseController
         // $model = model(Testusers::class);
         // $data['datalogin'] = $model->seeall();
         $data['defaultdata'] = '';
-        // return view("login", $data);
+
+        if ($GLOBALS['loginUI'] == 'debug') {
+            return view("login", $data);
+        }
         return view("auth/Auth_login", $data);
     }
 

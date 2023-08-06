@@ -33,35 +33,35 @@ $routes->set404Override();
 $routes->get('/', 'Home::index');
 $routes->get('/error_perm', 'Home::error_perm');
 $routes->get('/Error_Exception', 'Home::CustomError');
-$routes->get('/qr-validasi', 'SuratMasukController::kameraQR');
+$routes->get('/qr-validasi', 'SuratKeluarController::kameraQR');
 
 
 // !surat Mahasiswa
-$routes->get('/status-surat', 'SuratMasukController::indexStatusSurat');
-$routes->get('/riwayat-surat', 'SuratMasukController::indexRiwayatSurat');
-$routes->get('/minta-surat', 'SuratMasukController::indexMintaSurat');
+$routes->get('/status-surat', 'SuratKeluarController::indexStatusSurat');
+$routes->get('/riwayat-surat', 'SuratKeluarController::indexRiwayatSurat');
+$routes->get('/minta-surat', 'SuratKeluarController::indexMintaSurat');
 
-$routes->get('/minta-surat/(:num)', 'SuratMasukController::indexMintaSurat/$1');
-$routes->post('/minta-surat/(:num)', 'SuratMasukController::addmintaSuratProses/$1');
+$routes->get('/minta-surat/(:num)', 'SuratKeluarController::indexMintaSurat/$1');
+$routes->post('/minta-surat/(:num)', 'SuratKeluarController::addmintaSuratProses/$1');
 
 
 
 // !PenandaTangan
-$routes->get('/status-TTD', 'SuratMasukController::indexStatusTTD');
-$routes->post('/status-TTD', 'SuratMasukController::TTDProses');
+$routes->get('/status-TTD', 'SuratKeluarController::indexStatusTTD');
+$routes->post('/status-TTD', 'SuratKeluarController::TTDProses');
 
-$routes->get('/riwayat-TTD', 'SuratMasukController::indexRiwayatTTD');
+$routes->get('/riwayat-TTD', 'SuratKeluarController::indexRiwayatTTD');
 
 // !untuk pengajaran
-$routes->get('/semua-surat', 'SuratMasukController::indexJenisSurat');
+$routes->get('/semua-surat', 'SuratKeluarController::indexJenisSurat');
 
-$routes->post('/toggleshow-surat', 'SuratMasukController::updateJenisSuratToggleProses');
+$routes->post('/toggleshow-surat', 'SuratKeluarController::updateJenisSuratToggleProses');
 
-$routes->get('/detail-surat/(:num)', 'SuratMasukController::detailJenisSurat/$1');
-$routes->post('/detail-surat', 'SuratMasukController::updateJenisSuratProses');
+$routes->get('/detail-surat/(:num)', 'SuratKeluarController::detailJenisSurat/$1');
+$routes->post('/detail-surat', 'SuratKeluarController::updateJenisSuratProses');
 
-$routes->get('/bikin-surat', 'SuratMasukController::addJenisSurat');
-$routes->post('/bikin-surat', 'SuratMasukController::addJenisSuratProses');
+$routes->get('/bikin-surat', 'SuratKeluarController::addJenisSurat');
+$routes->post('/bikin-surat', 'SuratKeluarController::addJenisSuratProses');
 
 
 
