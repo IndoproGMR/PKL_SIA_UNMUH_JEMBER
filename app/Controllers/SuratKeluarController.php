@@ -4,11 +4,9 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\Jenissurat;
-// use App\Models\suratkeluar;
 use App\Models\TandaTangan;
 use App\Libraries\enkripsi_library;
 use App\Models\SuratKeluraModel;
-use CodeIgniter\Files\File;
 
 class SuratKeluarController extends BaseController
 {
@@ -61,7 +59,7 @@ class SuratKeluarController extends BaseController
     }
 
     // proses data untuk meminta
-    public function addmintaSuratProses($idsurat)
+    public function addMintaSuratProses($idsurat)
     {
         PagePerm(['Mahasiswa', 'Calon Mahasiswa'], 'error_perm', false, 1);
         helper(['text']);
@@ -75,18 +73,7 @@ class SuratKeluarController extends BaseController
 
         if (isset($dataform['tambahan'])) {
             if (in_array('foto', $dataform['tambahan'])) {
-                $validationRule = [
-                    'foto' => [
-                        'label' => 'Image File',
-                        'rules' => [
-                            'uploaded[foto]',
-                            'is_image[foto]',
-                            'mime_in[foto,image/jpg,image/jpeg,image/gif,image/png,image/webp]',
-                            'max_size[foto,1024]',
-                            // 'max_dims[foto,1024,768]',
-                        ],
-                    ],
-                ];
+                $validationRule = Validasi_Foto();
 
                 if (!$this->validate($validationRule)) {
                     $data = ['errors' => $this->validator->getErrors()];
@@ -95,15 +82,16 @@ class SuratKeluarController extends BaseController
 
                 $img = $this->request->getFile('foto');
                 if (!$img->hasMoved()) {
-                    $filepath = 'uploads/' . $img->store('dataSurat/' . userInfo()['id'], null, 'public');
-                    // $filepath = $img->store('../../public/uploads/dataSurat/' . userInfo()['id']);
-                    // $filepath = WRITEPATH . 'uploads/' . $img->store('dataSurat/' . userInfo()['id']);
-                    $data = ['uploaded_fileinfo' => new File($filepath)];
+                    $filepath = "uploads/dataSurat/" . userInfo()['id'];
+                    $filename = generateIdentifier() . '.png';
+
+                    if (!$img->move($filepath, $filename)) {
+                        return FlashException('Tidak Dapat Menyimpan Foto');
+                    }
+
+                    $filepath = $filepath . '/' . $filename;
                 }
-                // $lokasifoto = potongString($filepath, '');
-                // $lokasifoto = potongString($filepath, WRITEPATH);
                 // d($filepath);
-                // d($lokasifoto);
                 $postdata['foto'] = $filepath;
             }
         }
@@ -114,7 +102,7 @@ class SuratKeluarController extends BaseController
 
 
         // !untuk menyimpan SuratKeluar
-        $data['NoSurat'] = random_string();
+        $data['SuratIdentifier'] = generateIdentifier();
         $data['TimeStamp'] = time();
         $data['DataTambahan'] = base64_encode(json_encode($dataformarray));
         $data['JenisSurat_id'] = $idsurat;
@@ -122,13 +110,16 @@ class SuratKeluarController extends BaseController
 
         // !untuk menyimpan TTD
         $TTDdata['TTD'] = removeGroups(json_decode($model3->seebyID($data['JenisSurat_id'])['form'], true)['TTD']);
-        $TTDdata['NoSurat'] = $data['NoSurat'];
+        $TTDdata['SuratIdentifier'] = $data['SuratIdentifier'];
 
         /**
-         * unutk TTDdata['status','hash','randomStr','Timestamp']
+         * unutk TTDdata['status','hash','IdentifierSurat','Timestamp']
          * berada di fungsi transformData(data);
          */
         $ttdArray = transformData($TTDdata);
+
+        // d($ttdArray);
+        // d($data);
 
         // set ke dalam database
         if (!$model->addSuratKeluar($data)) {
