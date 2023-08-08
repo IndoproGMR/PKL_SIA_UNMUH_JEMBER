@@ -7,7 +7,7 @@ use CodeIgniter\Model;
 class SuratKeluraModel extends Model
 {
     // protected $DBGroup          = 'default';
-    protected $table            = 'SM_ttd_SuratMasuk';
+    protected $table            = 'SK_ttd_SuratMasuk';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     // protected $returnType       = 'array';
@@ -15,6 +15,7 @@ class SuratKeluraModel extends Model
     protected $protectFields    = true;
     protected $allowedFields    = [
         'NoSurat',
+        'SuratIdentifier',
         'DataTambahan',
         'TimeStamp',
         'JenisSurat_id',
@@ -30,11 +31,11 @@ class SuratKeluraModel extends Model
     {
         $timefilter = time() - $timefilter;
         return $this
-            ->select('SM_JenisSurat.name as namaJenisSurat,SM_ttd_SuratMasuk.NoSurat,SM_ttd_SuratMasuk.TimeStamp')
+            ->select('SK_JenisSurat.name as namaJenisSurat,SK_ttd_SuratMasuk.NoSurat,SK_ttd_SuratMasuk.TimeStamp')
             ->where('mshw_id', $iduser)
-            ->where('SM_ttd_SuratMasuk.TimeStamp >', $timefilter)
-            ->join('SM_JenisSurat', 'SM_JenisSurat.id=SM_ttd_SuratMasuk.JenisSurat_id')
-            ->orderBy('SM_ttd_SuratMasuk.TimeStamp', 'DESC')
+            ->where('SK_ttd_SuratMasuk.TimeStamp >', $timefilter)
+            ->join('SK_JenisSurat', 'SK_JenisSurat.id=SK_ttd_SuratMasuk.JenisSurat_id')
+            ->orderBy('SK_ttd_SuratMasuk.TimeStamp', 'DESC')
             ->find();
     }
 
@@ -44,15 +45,15 @@ class SuratKeluraModel extends Model
         $builder = $db->table('mhsw');
         $surat = $this
             ->select('
-        SM_ttd_SuratMasuk.NoSurat,
-        SM_ttd_SuratMasuk.DataTambahan,
-        SM_ttd_SuratMasuk.TimeStamp,
-        SM_ttd_SuratMasuk.mshw_id,
-        SM_JenisSurat.name,
-        SM_JenisSurat.isiSurat,
-        SM_JenisSurat.form,
+        SK_ttd_SuratMasuk.NoSurat,
+        SK_ttd_SuratMasuk.DataTambahan,
+        SK_ttd_SuratMasuk.TimeStamp,
+        SK_ttd_SuratMasuk.mshw_id,
+        SK_JenisSurat.name,
+        SK_JenisSurat.isiSurat,
+        SK_JenisSurat.form,
         ')
-            ->join('SM_JenisSurat', 'SM_JenisSurat.id=SM_ttd_SuratMasuk.JenisSurat_id')
+            ->join('SK_JenisSurat', 'SK_JenisSurat.id=SK_ttd_SuratMasuk.JenisSurat_id')
             ->where('NoSurat', $noSurat)
             ->find();
 

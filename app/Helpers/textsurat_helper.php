@@ -70,9 +70,8 @@ function transformData($data)
         $ttdData = [
             'Status' => 0,
             'hash' => NULL,
-            'RandomStr' => NULL,
-            'TimeStamp' => NULL,
-            'NoSurat' => $data['NoSurat'],
+            'TimeStamp' => 0,
+            'SuratIdentifier' => $data['SuratIdentifier'],
             'jenisttd' => '', // Jenis TTD: Group atau Perorangan
             'pendattg_id' => '' // Nilai pendattg_id berdasarkan jenis TTD
         ];
@@ -253,14 +252,24 @@ function cekFile($file)
     }
 }
 
-function RandomString($length = 10)
+function generateIdentifier($length = 16)
 {
-    $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    $randomString = '';
+    $timestamp = time();
+    $timestampHex = dechex($timestamp);
 
-    for ($i = 0; $i < $length; $i++) {
-        $randomString .= $characters[rand(0, strlen($characters) - 1)];
+    if (function_exists('random_bytes')) {
+        $randomBytes = random_bytes($length - strlen($timestampHex) / 2);
+    } elseif (function_exists('openssl_random_pseudo_bytes')) {
+        $randomBytes = openssl_random_pseudo_bytes($length - strlen($timestampHex) / 2);
+    } else {
+        $randomBytes = '';
+        for ($i = 0; $i < $length - strlen($timestampHex) / 2; $i++) {
+            $randomBytes .= chr(mt_rand(0, 255));
+        }
     }
 
-    return $randomString;
+    $randomHex = bin2hex($randomBytes);
+    $identifier = $timestampHex . "-" . $randomHex;
+
+    return substr($identifier, 0, $length);
 }

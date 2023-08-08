@@ -4,7 +4,9 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\Jenissurat;
-use App\Models\Suratmasuk;
+use App\Models\SuratKeluraModel;
+
+$GLOBALS['RenderPDF'] = 'public';
 
 class Pdfrender extends BaseController
 {
@@ -18,7 +20,7 @@ class Pdfrender extends BaseController
 
         $postdata = $this->request->getPost();
 
-        $model = model(Suratmasuk::class);
+        $model = model(SuratKeluraModel::class);
         $dataSurat = $model->cekSuratByNo($postdata['id']);
 
         $dataJsonDecode = json_decode($dataSurat['DataTambahan'], true);
@@ -37,8 +39,13 @@ class Pdfrender extends BaseController
         $html = view('surat/layout', $data);
         $html = replacetextarray($html, $dataTambahan);
 
-        $this->response->setHeader('Content-Type', 'application/pdf');
-        return Render_mpdf($html, '01', 'PreviewSurat_-_' . $dataSurat['name'], $data);
+        if ($GLOBALS['RenderPDF'] !== 'debug') {
+            $this->response->setHeader('Content-Type', 'application/pdf');
+            return Render_mpdf($html, '01', 'PreviewSurat_-_' . $dataSurat['name'], $data);
+        }
+
+        d($dataJsonDecode);
+        d($html);
     }
 
     public function PreviewJenisSurat($id)
@@ -66,8 +73,13 @@ class Pdfrender extends BaseController
         $html = view('surat/layout', $data);
         $html = replacetextarray($html, $dataTambahan);
 
-        $this->response->setHeader('Content-Type', 'application/pdf');
-        return Render_mpdf($html, '01', 'PreviewSurat - ' . $dataSurat['name'], $data);
+        if ($GLOBALS['RenderPDF'] !== 'debug') {
+            $this->response->setHeader('Content-Type', 'application/pdf');
+            return Render_mpdf($html, '01', 'PreviewSurat - ' . $dataSurat['name'], $data);
+        }
+
+        // d($dataJsonDecode);
+        d($html);
     }
 
     public function DownloadSurat()
@@ -78,7 +90,7 @@ class Pdfrender extends BaseController
 
         $postdata = $this->request->getPost();
 
-        $model = model(Suratmasuk::class);
+        $model = model(SuratKeluraModel::class);
         $dataSurat = $model->cekSuratByNo($postdata['id']);
 
         $dataJsonDecode = json_decode($dataSurat['DataTambahan'], true);
@@ -98,8 +110,13 @@ class Pdfrender extends BaseController
         $html = view('surat/layout', $data);
         $html = replacetextarray($html, $dataTambahan);
 
-        $this->response->setHeader('Content-Type', 'application/pdf');
-        return Render_mpdf($html, '11', $namapdf);
+        if ($GLOBALS['RenderPDF'] !== 'debug') {
+            $this->response->setHeader('Content-Type', 'application/pdf');
+            return Render_mpdf($html, '11', $namapdf);
+        }
+
+        d($dataJsonDecode);
+        d($html);
     }
 
     // !========================================================================
@@ -114,7 +131,13 @@ class Pdfrender extends BaseController
         $html = view('surat/layout', $data);
         $html = replacetextarray($html, $dataTambahan);
 
-        $this->response->setHeader('Content-Type', 'application/pdf');
-        return Render_mpdf($html, '01', 'PreviewSurat - TEST MPDF', $data);
+
+        if ($GLOBALS['RenderPDF'] !== 'debug') {
+            $this->response->setHeader('Content-Type', 'application/pdf');
+            return Render_mpdf($html, '01', 'PreviewSurat - TEST MPDF', $data);
+        }
+
+        // d($dataJsonDecode);
+        d($html);
     }
 }
