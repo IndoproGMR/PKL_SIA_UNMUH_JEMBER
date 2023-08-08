@@ -72,3 +72,33 @@ function TombolID(
         // '<input type="submit" value="' . $valuesubmit . '" class="' . $submitclass . '" onclick="if(confirm(\'' . $confirmText . '\')) window.location.reload();">' .
         '</form>';
 }
+
+// !Validasi
+function Validasi_Foto()
+{
+    return [
+        'foto' => [
+            'label' => 'Image File',
+            'rules' => [
+                'uploaded[foto]',
+                'is_image[foto]',
+                'mime_in[foto,image/jpg,image/jpeg,image/gif,image/png,image/webp]',
+                // 'max_size[foto,1024]',
+                // 'max_dims[foto,1024,768]',
+            ],
+        ],
+    ];
+}
+
+function Validasi_Input()
+{
+    return [
+        'field_1' => [
+            'label'    => 'Field 1 Custom Name',
+            'rules'    => 'required',
+            'errors'   => [
+                'required'    => '{field} is required.'
+            ]
+        ],
+    ];
+}

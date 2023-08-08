@@ -44,6 +44,10 @@ class Login extends BaseController
                 'login' => '1210652011',
                 'password' => '*3E5287812'
             ],
+            '7' => [
+                'login' => generateIdentifier(),
+                'password' => generateIdentifier()
+            ],
         ];
 
         // d(user_id());

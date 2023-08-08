@@ -42,7 +42,7 @@ $routes->get('/riwayat-surat', 'SuratKeluarController::indexRiwayatSurat');
 $routes->get('/minta-surat', 'SuratKeluarController::indexMintaSurat');
 
 $routes->get('/minta-surat/(:num)', 'SuratKeluarController::indexMintaSurat/$1');
-$routes->post('/minta-surat/(:num)', 'SuratKeluarController::addmintaSuratProses/$1');
+$routes->post('/minta-surat/(:num)', 'SuratKeluarController::addMintaSuratProses/$1');
 
 
 
