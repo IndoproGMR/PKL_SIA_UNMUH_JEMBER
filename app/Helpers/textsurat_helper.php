@@ -1,5 +1,7 @@
 <?php
 
+use CodeIgniter\I18n\Time;
+
 /**
  * masukan string text
  * cari kalimat yang ingin di ubah
@@ -234,6 +236,11 @@ function timeconverter(int $timestamp = 0, $jenis = 'yunani')
     return $data;
 }
 
+function getUnixTimeStamp()
+{
+    return Time::now('Asia/Jakarta')->getTimestamp();
+}
+
 function cekDir($dir)
 {
     if (!is_dir($dir)) {
@@ -252,10 +259,13 @@ function cekFile($file)
     }
 }
 
-function generateIdentifier($length = 16)
+function generateIdentifier($length = 16, $mode = 'haxtime')
 {
     $timestamp = time();
-    $timestampHex = dechex($timestamp);
+    $timestampHex = $timestamp;
+    if ($mode == 'haxtime') {
+        $timestampHex = dechex($timestamp);
+    }
 
     if (function_exists('random_bytes')) {
         $randomBytes = random_bytes($length - strlen($timestampHex) / 2);

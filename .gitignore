@@ -131,7 +131,7 @@ nb-configuration.xml
 
 # public
 public/pdf/*
-public/uploads/dataSurat/*
+public/uploads/SuratKeluar/*
 public/uploads/QRcodeTTD/*
 
 # Libraries

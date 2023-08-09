@@ -76,15 +76,18 @@ function TombolID(
 // !Validasi
 function Validasi_Foto()
 {
+    // data ada
+    // apakah ini image
+    // apakah file ini adalah jpg,jpeg,png
+    // apakah ukuran ini tidak lebih dari 1025 kb
     return [
         'foto' => [
             'label' => 'Image File',
             'rules' => [
                 'uploaded[foto]',
                 'is_image[foto]',
-                'mime_in[foto,image/jpg,image/jpeg,image/gif,image/png,image/webp]',
-                // 'max_size[foto,1024]',
-                // 'max_dims[foto,1024,768]',
+                'mime_in[foto,image/jpg,image/jpeg,image/png]',
+                'max_size[foto,1024]',
             ],
         ],
     ];
