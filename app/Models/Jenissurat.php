@@ -7,7 +7,7 @@ use CodeIgniter\Model;
 class Jenissurat extends Model
 {
     // protected $DBGroup          = 'default';
-    protected $table            = 'SM_JenisSurat';
+    protected $table            = 'SK_JenisSurat';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     // protected $returnType       = 'array';
@@ -37,11 +37,15 @@ class Jenissurat extends Model
     }
 
 
-    public function seebyID(int $id)
+    public function seebyID(String $id, int $showAll = 0)
     {
         $data['error'] = 'y';
+        if ($showAll == 1) {
+            $datasurat = $this->where('id', $id)->find();
+        } else {
+            $datasurat = $this->where('id', $id)->where('show', 1)->find();
+        }
 
-        $datasurat = $this->where('id', $id)->where('show', '1')->find();
 
         if (count($datasurat) > 0) {
             $data['id']          = $datasurat[0]['id'];
@@ -56,16 +60,17 @@ class Jenissurat extends Model
 
     public function addJenisSurat(String $jenissurat, String $description, String $isiSurat, String $form)
     {
-        return $this->db->table('SM_JenisSurat')->insert([
+        return $this->db->table('SK_JenisSurat')->insert([
+            'id'            => generateIdentifier(),
             'name'          => $jenissurat,
             'description'   => $description,
             'isiSurat'      => base64_encode($isiSurat),
             'form'          => base64_encode($form),
-            'show'          => 0,
+            'TimeStamp'     => getUnixTimeStamp()
         ]);
     }
 
-    function updateJenisSurat(int $id, String $jenissurat, String $description, String $isiSurat)
+    function updateJenisSurat($id, String $jenissurat, String $description, String $isiSurat)
     {
         return $this->update(
             $id,
@@ -91,7 +96,7 @@ class Jenissurat extends Model
     function toggleshow($id)
     {
         $cek = $this->where('id', $id)->find();
-        d($cek);
+        // d($cek);
         if (!(count($cek) > 0)) {
             return false;
         }
@@ -156,7 +161,7 @@ class Jenissurat extends Model
 
 
 
-// INSERT INTO `SM_JenisSurat` (`id`, `name`, `description`, `isiSurat`, `form`) VALUES (19, 'test', 'test multi data', 'bmFtYTp7e25hbWF9fQ==', 'eyJpbnB1dCI6WyJuYW1hIl0sIlRURCI6WyJHcm91cF9Eb3NlbiIsIkdyb3VwX01haGFzaXN3YSIsIkdyb3VwX0NhbG9uIE1haGFzaXN3YSIsIlBlcm9yYW5nYW5fMDAxNDAyNzUwMSJdfQ==');
+// INSERT INTO `SK_JenisSurat` (`id`, `name`, `description`, `isiSurat`, `form`) VALUES (19, 'test', 'test multi data', 'bmFtYTp7e25hbWF9fQ==', 'eyJpbnB1dCI6WyJuYW1hIl0sIlRURCI6WyJHcm91cF9Eb3NlbiIsIkdyb3VwX01haGFzaXN3YSIsIkdyb3VwX0NhbG9uIE1haGFzaXN3YSIsIlBlcm9yYW5nYW5fMDAxNDAyNzUwMSJdfQ==');
 
 
 

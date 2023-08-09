@@ -49,7 +49,3 @@ class Suratmasuk extends Migration
         $this->forge->dropTable($GLOBALS['dbprefix'] . 'JenisSuratAr', true);
     }
 }
-
-
-// ALTER TABLE `SM_ttd`
-// ADD INDEX idx_NoSurat(`NoSurat`)

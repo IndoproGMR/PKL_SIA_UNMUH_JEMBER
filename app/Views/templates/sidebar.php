@@ -22,7 +22,11 @@
             </div>
 
 
-            <?php if (in_group(['Mahasiswa'])) : ?>
+            <?php
+
+            use App\Models\SuratKeluraModel;
+
+            if (in_group(['Mahasiswa'])) : ?>
 
                 <!-- Cek QR -->
                 <div class="list-item">
@@ -51,6 +55,25 @@
 
 
             <?php if (in_group(['Dosen'])) : ?>
+
+                <!-- count untuk notip -->
+                <?php
+                $model = model(SuratKeluraModel::class);
+                $data['datasurat'] = $model->seeAllnoNoSurat();
+                $perluttd = count($data['datasurat']);
+                ?>
+
+                <!-- Cek Status yang belum memiliki NoSurat -->
+                <div class="list-item">
+                    <a href="<?= base_url('/'); ?>list-surat-tanpa-NoSurat" class="notification">
+                        <img src="<?= base_url('/'); ?>asset/svg/list-status.svg" alt="" class="icon" loading='lazy'>
+                        <span class="description">Status Surat Yang belum punya No.</span>
+                        <?php if ($perluttd !== 0) : ?>
+                            <span class="badge"><?= esc($perluttd) ?></span>
+                        <?php endif ?>
+                    </a>
+                </div>
+
 
                 <!-- list Surat semua surat -->
                 <div class="list-item">
@@ -111,6 +134,16 @@
                         <span class="description">Riwayat Tanda Tangan</span>
                     </a>
                 </div>
+
+                <!-- Admin Panel -->
+                <div class="list-item">
+                    <a href="<?= base_url('/Admin-Panel'); ?>">
+                        <img src="<?= base_url('/'); ?>asset/svg/history.svg" alt="" class="icon" loading='lazy'>
+                        <span class="description">Admin Panel</span>
+                    </a>
+                </div>
+
+
 
             <?php endif ?>
 

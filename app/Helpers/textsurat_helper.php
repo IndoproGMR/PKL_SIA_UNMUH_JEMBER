@@ -1,5 +1,7 @@
 <?php
 
+use CodeIgniter\I18n\Time;
+
 /**
  * masukan string text
  * cari kalimat yang ingin di ubah
@@ -70,9 +72,8 @@ function transformData($data)
         $ttdData = [
             'Status' => 0,
             'hash' => NULL,
-            'RandomStr' => NULL,
-            'TimeStamp' => NULL,
-            'NoSurat' => $data['NoSurat'],
+            'TimeStamp' => 0,
+            'SuratIdentifier' => $data['SuratIdentifier'],
             'jenisttd' => '', // Jenis TTD: Group atau Perorangan
             'pendattg_id' => '' // Nilai pendattg_id berdasarkan jenis TTD
         ];
@@ -235,6 +236,11 @@ function timeconverter(int $timestamp = 0, $jenis = 'yunani')
     return $data;
 }
 
+function getUnixTimeStamp()
+{
+    return Time::now('Asia/Jakarta')->getTimestamp();
+}
+
 function cekDir($dir)
 {
     if (!is_dir($dir)) {
@@ -253,14 +259,27 @@ function cekFile($file)
     }
 }
 
-function RandomString($length = 10)
+function generateIdentifier($length = 16, $mode = 'haxtime')
 {
-    $characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    $randomString = '';
-
-    for ($i = 0; $i < $length; $i++) {
-        $randomString .= $characters[rand(0, strlen($characters) - 1)];
+    $timestamp = time();
+    $timestampHex = $timestamp;
+    if ($mode == 'haxtime') {
+        $timestampHex = dechex($timestamp);
     }
 
-    return $randomString;
+    if (function_exists('random_bytes')) {
+        $randomBytes = random_bytes($length - strlen($timestampHex) / 2);
+    } elseif (function_exists('openssl_random_pseudo_bytes')) {
+        $randomBytes = openssl_random_pseudo_bytes($length - strlen($timestampHex) / 2);
+    } else {
+        $randomBytes = '';
+        for ($i = 0; $i < $length - strlen($timestampHex) / 2; $i++) {
+            $randomBytes .= chr(mt_rand(0, 255));
+        }
+    }
+
+    $randomHex = bin2hex($randomBytes);
+    $identifier = $timestampHex . "-" . $randomHex;
+
+    return substr($identifier, 0, $length);
 }

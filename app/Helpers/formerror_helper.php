@@ -72,3 +72,36 @@ function TombolID(
         // '<input type="submit" value="' . $valuesubmit . '" class="' . $submitclass . '" onclick="if(confirm(\'' . $confirmText . '\')) window.location.reload();">' .
         '</form>';
 }
+
+// !Validasi
+function Validasi_Foto()
+{
+    // data ada
+    // apakah ini image
+    // apakah file ini adalah jpg,jpeg,png
+    // apakah ukuran ini tidak lebih dari 1025 kb
+    return [
+        'foto' => [
+            'label' => 'Image File',
+            'rules' => [
+                'uploaded[foto]',
+                'is_image[foto]',
+                'mime_in[foto,image/jpg,image/jpeg,image/png]',
+                'max_size[foto,1024]',
+            ],
+        ],
+    ];
+}
+
+function Validasi_Input()
+{
+    return [
+        'field_1' => [
+            'label'    => 'Field 1 Custom Name',
+            'rules'    => 'required',
+            'errors'   => [
+                'required'    => '{field} is required.'
+            ]
+        ],
+    ];
+}
