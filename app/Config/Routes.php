@@ -35,6 +35,8 @@ $routes->get('/error_perm', 'Home::error_perm');
 $routes->get('/Error_Exception', 'Home::CustomError');
 $routes->get('/qr-validasi', 'SuratKeluarController::kameraQR');
 
+// !Admin Panel
+$routes->get('/Admin-Panel', 'AdminPanelController::index');
 
 // !surat Mahasiswa
 $routes->get('/status-surat', 'SuratKeluarController::indexStatusSurat');
