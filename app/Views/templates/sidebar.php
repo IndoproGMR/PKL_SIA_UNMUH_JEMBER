@@ -135,6 +135,16 @@
                     </a>
                 </div>
 
+                <!-- Admin Panel -->
+                <div class="list-item">
+                    <a href="<?= base_url('/Admin-Panel'); ?>">
+                        <img src="<?= base_url('/'); ?>asset/svg/history.svg" alt="" class="icon" loading='lazy'>
+                        <span class="description">Admin Panel</span>
+                    </a>
+                </div>
+
+
+
             <?php endif ?>
 
 
