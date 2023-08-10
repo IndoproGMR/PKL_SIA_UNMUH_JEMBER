@@ -82,19 +82,31 @@ class SuratKeluarController extends BaseController
                 }
 
                 $img = $this->request->getFile('foto');
+
                 if ($img->isValid() && !$img->hasMoved()) {
                     $filepath = "uploads/SuratKeluar/" . userInfo()['id'];
                     $extension = $img->getExtension();
                     $extension = empty($extension) ? '' : '.' . $extension;
                     $filename = generateIdentifier(16, 'time') . $extension;
 
-                    if (!$img->move($filepath, $filename)) {
+                    // !menyimpan foto ke dalam folder public
+                    try {
+                        $img->move($filepath, $filename);
+                    } catch (\Throwable $th) {
                         return FlashException('Tidak Dapat Menyimpan Foto');
                     }
 
+                    // !Copy file ke folder archice
+                    $fileFrom = $filepath . "/" . $filename;
+                    $fileTo = cekDir("../Z_Archice/" . $filepath) . "/" . $filename;
+
+                    if (!copyFile($fileFrom, $fileTo)) {
+                        return FlashException('Tidak Dapat Menyimpan Foto ke safeplace');
+                    }
+
+
+
                     $filepath = $filepath . '/' . $filename;
-                    // d($filename);
-                    // d($filepath);
                 }
                 $postdata['foto'] = $filepath;
                 // d($postdata);

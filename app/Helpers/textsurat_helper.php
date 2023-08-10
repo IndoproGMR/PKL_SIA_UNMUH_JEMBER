@@ -283,3 +283,78 @@ function generateIdentifier($length = 16, $mode = 'haxtime')
 
     return substr($identifier, 0, $length);
 }
+
+function recursiveCopy($source, $destination)
+{
+    if (is_dir($source)) {
+        if (!is_dir($destination)) {
+            mkdir($destination, 0755, true);
+        }
+
+        $dirHandle = opendir($source);
+
+        while (($file = readdir($dirHandle)) !== false) {
+            if ($file != '.' && $file != '..') {
+                $sourcePath = $source . '/' . $file;
+                $destinationPath = $destination . '/' . $file;
+
+                if (is_dir($sourcePath)) {
+                    recursiveCopy($sourcePath, $destinationPath);
+                } else {
+                    if (!file_exists($destinationPath)) {
+                        copy($sourcePath, $destinationPath);
+                    }
+                }
+            }
+        }
+
+        closedir($dirHandle);
+
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function copyFile($source, $destination)
+{
+    try {
+        copy($source, $destination);
+    } catch (\Throwable $th) {
+        return false; // Gagal menyalin file
+    }
+    return true; // Berhasil menyalin file
+}
+
+// !bug mengambil semua folder dari root (/) hingga folder web
+// createZipFromFolder('../Z_Archice', '../Z_Archice.zip'); // contoh penggunaan
+
+function createZipFromFolder($sourceFolder, $destinationZip)
+{
+    $zip = new ZipArchive();
+
+    if ($zip->open($destinationZip, ZipArchive::CREATE | ZipArchive::OVERWRITE) === true) {
+        $sourceFolder = realpath($sourceFolder);
+
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($sourceFolder),
+            RecursiveIteratorIterator::SELF_FIRST
+        );
+
+        foreach ($iterator as $file) {
+            $file = realpath($file);
+
+            if (is_dir($file)) {
+                $zip->addEmptyDir(str_replace($sourceFolder . '/', '', $file . '/'));
+            } elseif (is_file($file)) {
+                $zip->addFile($file, str_replace($sourceFolder . '/', '', $file));
+            }
+        }
+
+        $zip->close();
+
+        return true;
+    } else {
+        return false;
+    }
+}
