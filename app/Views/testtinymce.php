@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>tinymce</title>
 
-    <script src="<?= base_url(); ?>tinymce/js/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="<?= base_url(); ?>module/tinymce/js/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
 
 
 

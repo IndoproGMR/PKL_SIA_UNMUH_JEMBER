@@ -1,0 +1,18 @@
+#!/bin/bash
+
+vendors='tinymce'
+# vendors='tinymce|qrscanner|selanjutnya'
+# buat fungsi untuk menclear public/module/*
+#
+
+# Pisahkan string vendor menjadi array berdasarkan tanda '|'
+IFS='|' read -ra vendor_array <<< "$vendors"
+
+# Loop melalui setiap vendor
+for vendor in "${vendor_array[@]}"; do
+    echo "Copying $vendor..."
+    cp -R "vendor/$vendor" "public/module"
+    sleep 1s
+done
+
+echo "Copy process completed."
