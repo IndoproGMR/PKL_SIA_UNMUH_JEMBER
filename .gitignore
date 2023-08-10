@@ -133,6 +133,7 @@ nb-configuration.xml
 public/pdf/*
 public/uploads/SuratKeluar/*
 public/uploads/QRcodeTTD/*
+public/module/tinymce/*
 
 # Libraries
 app/Libraries/enkripsi_library.php
