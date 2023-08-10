@@ -140,3 +140,7 @@ app/Libraries/enkripsi_library.php
 
 writable/pdf/*
 writable/temp/*
+
+Z_Archice/*
+!Z_Archice/index.html
+!Z_Archice/.htaccess
