@@ -31,7 +31,7 @@ class SuratKeluraModel extends Model
     {
         $timefilter = time() - $timefilter;
         return $this
-            ->select('SK_JenisSurat.name as namaJenisSurat,SK_ttd_SuratMasuk.NoSurat,SK_ttd_SuratMasuk.TimeStamp')
+            ->select('SK_JenisSurat.name as namaJenisSurat,SK_ttd_SuratMasuk.NoSurat,SK_ttd_SuratMasuk.TimeStamp,SK_ttd_SuratMasuk.SuratIdentifier')
             ->where('mshw_id', $iduser)
             ->where('SK_ttd_SuratMasuk.TimeStamp >', $timefilter)
             ->join('SK_JenisSurat', 'SK_JenisSurat.id=SK_ttd_SuratMasuk.JenisSurat_id')
@@ -91,5 +91,19 @@ class SuratKeluraModel extends Model
         $data['isiSurat']     = base64_decode($surat[0]['isiSurat']);
         $data['form']         = base64_decode($surat[0]['form']);
         return $data;
+    }
+
+    function seeAllnoNoSurat()
+    {
+        $data = $this->select('id,NoSurat,SuratIdentifier,TimeStamp,mshw_id')
+            ->where('SK_ttd_SuratMasuk.NoSurat', 'Belum_Memiliki_No_Surat')
+            ->where('deleteAt', null)
+            ->findAll();
+        return $data;
+    }
+
+    function updateNoSurat(int $id, $NoSurat)
+    {
+        return $this->update($id, ['NoSurat' => $NoSurat]);
     }
 }

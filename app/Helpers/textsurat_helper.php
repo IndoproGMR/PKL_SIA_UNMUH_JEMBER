@@ -1,5 +1,7 @@
 <?php
 
+use CodeIgniter\I18n\Time;
+
 /**
  * masukan string text
  * cari kalimat yang ingin di ubah
@@ -234,6 +236,11 @@ function timeconverter(int $timestamp = 0, $jenis = 'yunani')
     return $data;
 }
 
+function getUnixTimeStamp()
+{
+    return Time::now('Asia/Jakarta')->getTimestamp();
+}
+
 function cekDir($dir)
 {
     if (!is_dir($dir)) {
@@ -252,10 +259,13 @@ function cekFile($file)
     }
 }
 
-function generateIdentifier($length = 16)
+function generateIdentifier($length = 16, $mode = 'haxtime')
 {
     $timestamp = time();
-    $timestampHex = dechex($timestamp);
+    $timestampHex = $timestamp;
+    if ($mode == 'haxtime') {
+        $timestampHex = dechex($timestamp);
+    }
 
     if (function_exists('random_bytes')) {
         $randomBytes = random_bytes($length - strlen($timestampHex) / 2);
@@ -272,4 +282,79 @@ function generateIdentifier($length = 16)
     $identifier = $timestampHex . "-" . $randomHex;
 
     return substr($identifier, 0, $length);
+}
+
+function recursiveCopy($source, $destination)
+{
+    if (is_dir($source)) {
+        if (!is_dir($destination)) {
+            mkdir($destination, 0755, true);
+        }
+
+        $dirHandle = opendir($source);
+
+        while (($file = readdir($dirHandle)) !== false) {
+            if ($file != '.' && $file != '..') {
+                $sourcePath = $source . '/' . $file;
+                $destinationPath = $destination . '/' . $file;
+
+                if (is_dir($sourcePath)) {
+                    recursiveCopy($sourcePath, $destinationPath);
+                } else {
+                    if (!file_exists($destinationPath)) {
+                        copy($sourcePath, $destinationPath);
+                    }
+                }
+            }
+        }
+
+        closedir($dirHandle);
+
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function copyFile($source, $destination)
+{
+    try {
+        copy($source, $destination);
+    } catch (\Throwable $th) {
+        return false; // Gagal menyalin file
+    }
+    return true; // Berhasil menyalin file
+}
+
+// !bug mengambil semua folder dari root (/) hingga folder web
+// createZipFromFolder('../Z_Archice', '../Z_Archice.zip'); // contoh penggunaan
+
+function createZipFromFolder($sourceFolder, $destinationZip)
+{
+    $zip = new ZipArchive();
+
+    if ($zip->open($destinationZip, ZipArchive::CREATE | ZipArchive::OVERWRITE) === true) {
+        $sourceFolder = realpath($sourceFolder);
+
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($sourceFolder),
+            RecursiveIteratorIterator::SELF_FIRST
+        );
+
+        foreach ($iterator as $file) {
+            $file = realpath($file);
+
+            if (is_dir($file)) {
+                $zip->addEmptyDir(str_replace($sourceFolder . '/', '', $file . '/'));
+            } elseif (is_file($file)) {
+                $zip->addFile($file, str_replace($sourceFolder . '/', '', $file));
+            }
+        }
+
+        $zip->close();
+
+        return true;
+    } else {
+        return false;
+    }
 }
