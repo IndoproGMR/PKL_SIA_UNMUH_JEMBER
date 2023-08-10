@@ -2,7 +2,7 @@
 
 <?= $this->section('jsH') ?>
 
-<script src="<?= base_url('/'); ?>module/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
+<script src="<?= base_url('/'); ?>module/tinymce/tinymce/tinymce.min.js" referrerpolicy="origin"></script>
 
 
 <script>
