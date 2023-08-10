@@ -1,0 +1,3 @@
+#!/bin/bash
+cp -R vendor/tinymce/tinymce public/module
+sleep 1s
