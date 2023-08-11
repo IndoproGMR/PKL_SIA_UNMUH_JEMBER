@@ -51,12 +51,17 @@ class Suratmasuk extends Migration
                 'type'       => 'varchar',
                 'constraint' => 16,
             ],
+            'DiskirpsiSurat' => [
+                'type'       => 'varchar',
+                'constraint' => 255,
+                'default'    => 'Tanpa Diskripsi'
+            ],
             'NomerSurat' => [
                 'type'       => 'varchar',
                 'constraint' => 255
             ],
             'TanggalSurat' => [
-                'type' => 'DATETIME',
+                'type' => 'DATE',
                 'null' => true,
             ],
             'DataSurat' => [
@@ -69,7 +74,8 @@ class Suratmasuk extends Migration
             'JenisSuratArchice_id' => [
                 'type'       => 'int',
                 'constraint' => 10,
-                'default'    => 0
+                'default'    => 0,
+                'unsigned'       => true,
             ],
             'TimeStamp' => [
                 'type'       => 'int',
