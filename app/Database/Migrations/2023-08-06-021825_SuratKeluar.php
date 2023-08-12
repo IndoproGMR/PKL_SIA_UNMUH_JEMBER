@@ -50,6 +50,8 @@ class SuratKeluar extends Migration
         ];
         $this->forge->addField($fields);
         $this->forge->addKey('id', true);
+        $this->forge->addKey('show');
+        $this->forge->addKey('TimeStamp');
         $this->forge->createTable($GLOBALS['dbprefix'] . "$tablee", true, $GLOBALS['attributes']);
 
         // !ttd-SuratMasuk
@@ -97,6 +99,9 @@ class SuratKeluar extends Migration
         ];
         $this->forge->addField($fields);
         $this->forge->addKey('id', true);
+        $this->forge->addKey('SuratIdentifier');
+        $this->forge->addKey('TimeStamp');
+        $this->forge->addKey('mshw_id');
         $this->forge->addForeignKey('JenisSurat_id', $GLOBALS['dbprefix'] . 'JenisSurat', 'id', 'CASCADE', 'SET DEFAULT');
         $this->forge->createTable($GLOBALS['dbprefix'] . "$tablee", true, $GLOBALS['attributes']);
 
@@ -146,6 +151,12 @@ class SuratKeluar extends Migration
         ];
         $this->forge->addField($fields);
         $this->forge->addKey('id', true);
+        $this->forge->addKey('SuratIdentifier');
+        $this->forge->addKey('Status');
+        $this->forge->addKey('jenisttd');
+        $this->forge->addKey('pendattg_id');
+        $this->forge->addKey('TimeStamp');
+
         $this->forge->createTable($GLOBALS['dbprefix'] . "$tablee", true, $GLOBALS['attributes']);
     }
 
