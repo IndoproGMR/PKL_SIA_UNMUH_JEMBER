@@ -96,9 +96,9 @@ class SuratKeluarController extends BaseController
                         return FlashException('Tidak Dapat Menyimpan Foto');
                     }
 
-                    // !Copy file ke folder archice
+                    // !Copy file ke folder Arhive
                     $fileFrom = $filepath . "/" . $filename;
-                    $fileTo = cekDir("../Z_Archice/" . $filepath) . "/" . $filename;
+                    $fileTo = cekDir("../Z_Arhive/" . $filepath) . "/" . $filename;
 
                     if (!copyFile($fileFrom, $fileTo)) {
                         return FlashException('Tidak Dapat Menyimpan Foto ke safeplace');
@@ -257,6 +257,7 @@ class SuratKeluarController extends BaseController
     // untuk meng update jenis surat ke db
     public function updateJenisSuratProses()
     {
+        PagePerm(['Dosen'], 'error_perm', false, 1);
         $postdata = $this->request->getPost(
             [
                 'id',
