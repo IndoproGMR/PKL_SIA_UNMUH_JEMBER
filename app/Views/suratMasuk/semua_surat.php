@@ -14,7 +14,6 @@
             <?php foreach ($jenisFilter as $value) : ?>
                 <option value="<?= esc($value['id']) ?>"><?= esc($value['name']) ?></option>
             <?php endforeach ?>
-            <option value="---">tidak ketemu jenis surat ?</option>
         </select>
         <button type="submit">Cari surat</button>
     </form>

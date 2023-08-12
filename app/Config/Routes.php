@@ -100,15 +100,18 @@ $routes->post('/detail-surat', 'SuratKeluarController::updateJenisSuratProses');
 
 // *Surat Masuk ===============================================================>
 // ?index ======================================================================
-$routes->get('/semua-arhice-surat', 'SuratMasukController::indexArhiceSurat');
+$routes->get('/semua-arhive-surat', 'SuratMasukController::indexArhiveSurat');
 
-// ?Penambahan arhice ==========================================================
-$routes->get('/input-arhice-surat', 'SuratMasukController::index');
-$routes->post('/input-arhice-surat', 'SuratMasukController::index');
+// ?Membuka File PDF ===========================================================
+// !$routes->post('/staff/Preview_Arhive', 'ControllerName::index');
 
-// ?Penambahan jenis arhice ====================================================
-$routes->get('/input-jenis-arhice-surat', 'SuratMasukController::index');
-$routes->post('/input-jenis-arhice-surat', 'SuratMasukController::index');
+// ?Penambahan arhive ==========================================================
+$routes->get('/input-arhive-surat', 'SuratMasukController::addArhiveSurat');
+$routes->post('/input-arhive-surat', 'SuratMasukController::addArhiveSuratProses');
+
+// ?Penambahan jenis arhive ====================================================
+$routes->get('/input-jenis-arhive-surat', 'SuratMasukController::addJenisArhiveSurat');
+$routes->post('/input-jenis-arhive-surat', 'SuratMasukController::addJenisArhiveSuratProses');
 // *===========================================================================<
 
 // *quary =====================================================================>
@@ -122,6 +125,7 @@ $routes->post('/quary', 'TestQuary::caridata');
 
 // !WIP ======================================================================>>
 $routes->get('/staff/TestMPDF', 'Pdfrender::TestMPDF');
+// $routes->get('/staff/TestInfo', 'SuratMasukController::TestInfo');
 // ! =========================================================================<<
 
 // ?

@@ -93,6 +93,22 @@ function Validasi_Foto()
     ];
 }
 
+function Validasi_FilePDF()
+{
+    // data ada
+    // apakah file ini adalah pdf
+    // apakah ukuran ini tidak lebih dari 10 mb
+    return [
+        'filepdf' => [
+            'rules' => [
+                'uploaded[filepdf]',
+                'mime_in[filepdf,application/pdf]',
+                'max_size[filepdf,10240]',
+            ],
+        ],
+    ];
+}
+
 function Validasi_Input()
 {
     return [

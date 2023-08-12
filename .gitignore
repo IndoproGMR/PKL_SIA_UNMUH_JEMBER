@@ -138,6 +138,7 @@ public/module/tinymce/*
 # Libraries
 app/Libraries/enkripsi_library.php
 
+writable/ArhiveSurat/*
 writable/pdf/*
 writable/temp/*
 

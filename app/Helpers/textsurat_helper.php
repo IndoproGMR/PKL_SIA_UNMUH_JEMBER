@@ -245,21 +245,21 @@ function cekDir($dir)
 {
     if (!is_dir($dir)) {
         mkdir($dir, 0777, TRUE);
-        // cekDir($dir);
     }
     return $dir;
 }
 
 function cekFile($file)
 {
-    if (file_exists($file)) {
-        return true;
-    } else {
+    try {
+        file_exists($file);
+    } catch (\Throwable $th) {
         return false;
     }
+    return true;
 }
 
-function generateIdentifier($length = 16, $mode = 'haxtime')
+function generateIdentifier(int $length = 16, $mode = 'haxtime')
 {
     $timestamp = time();
     $timestampHex = $timestamp;

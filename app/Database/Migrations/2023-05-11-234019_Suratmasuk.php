@@ -26,7 +26,8 @@ class Suratmasuk extends Migration
             ],
             'description' => [
                 'type'       => 'varchar',
-                'constraint' => 255
+                'constraint' => 255,
+                'default'    => 'Tanpa Diskripsi'
             ],
             'TimeStamp' => [
                 'type'       => 'int',
@@ -41,6 +42,7 @@ class Suratmasuk extends Migration
         ];
         $this->forge->addField($fields);
         $this->forge->addKey('id', true);
+        $this->forge->addKey('TimeStamp');
         $this->forge->createTable($GLOBALS['dbprefix'] . "$tablee", true, $GLOBALS['attributes']);
 
 
@@ -90,6 +92,10 @@ class Suratmasuk extends Migration
         ];
         $this->forge->addField($fields);
         $this->forge->addKey('id', true);
+        $this->forge->addKey('NomerSurat');
+        $this->forge->addKey('TanggalSurat');
+        $this->forge->addKey('JenisSuratArchice_id');
+        $this->forge->addKey('TimeStamp');
         $this->forge->addForeignKey('JenisSuratArchice_id', $GLOBALS['dbprefix'] . 'JenisSuratArchice', 'id', 'CASCADE', 'SET DEFAULT');
         $this->forge->createTable($GLOBALS['dbprefix'] . "$tablee", true, $GLOBALS['attributes']);
     }
