@@ -93,9 +93,17 @@
 
                 <!-- Surat masuk -->
                 <div class="list-item">
-                    <a href="<?= base_url('/'); ?>semua-arhice-surat">
+                    <a href="<?= base_url('/'); ?>semua-arhive-surat">
                         <img src="<?= base_url('/'); ?>asset/svg/tambah.svg" alt="" class="icon" loading='lazy'>
-                        <span class="description">semua Arhice Surat</span>
+                        <span class="description">semua arhive Surat</span>
+                    </a>
+                </div>
+
+                <!-- Input Surat masuk -->
+                <div class="list-item">
+                    <a href="<?= base_url('/'); ?>input-arhive-surat">
+                        <img src="<?= base_url('/'); ?>asset/svg/tambah.svg" alt="" class="icon" loading='lazy'>
+                        <span class="description">Input semua arhive Surat</span>
                     </a>
                 </div>
 

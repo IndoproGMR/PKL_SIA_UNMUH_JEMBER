@@ -52,4 +52,9 @@ class SuratMasukModel extends Model
             ->findAll();
         // return $this->where('JenisSuratArchice_id', $idJenis)->findAll();
     }
+
+    function addSuratMasuk($data)
+    {
+        return $this->save($data);
+    }
 }

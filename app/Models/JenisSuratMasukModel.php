@@ -24,4 +24,9 @@ class JenisSuratMasukModel extends Model
     {
         return $this->findAll();
     }
+
+    function addJenisSurat($data)
+    {
+        return $this->save($data);
+    }
 }
