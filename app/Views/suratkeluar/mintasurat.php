@@ -45,7 +45,7 @@
     inputform($dataform['input']);
     if (isset($dataform['tambahan'])) {
         if (in_array('foto', $dataform['tambahan'])) {
-            echo '<input type="file" name="foto" size="20">';
+            echo '<input type="file" name="foto">';
         }
     }
     ?>
