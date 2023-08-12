@@ -33,23 +33,22 @@
     <tr>
         <th>login</th>
         <th>password</th>
+        <th>login</th>
     </tr>
-    <?php
-    foreach ($datacoba as $key => $value) {
-        echo "<tr>";
-        foreach ($value as $key2) {
-            echo "<td>" . $key2 . "</td>";
-        }
-        echo "</tr>";
-    }
-    ?>
+    <?php foreach ($datacoba as $key => $value) : ?>
+        <tr>
+            <td><?= $value['login'] ?></td>
+            <td><?= $value['password'] ?></td>
+            <td>
+                <form action="" method="post">
+                    <?= csrf_field() ?>
+                    <input hidden type="text" name="dataLogin" placeholder="login" value="<?= $value['login'] ?>">
+                    <input hidden type="text" name="dataPassword" placeholder="password" value="<?= $value['password'] ?>">
+                    <input type="submit" value="login">
+                </form>
+            </td>
+        </tr>
+    <?php endforeach ?>
 
 
 </table>
-
-<form action="" method="post">
-    <?= csrf_field() ?>
-    <input type="text" name="dataLogin" placeholder="login">
-    <input type="text" name="dataPassword" placeholder="password">
-    <input type="submit" value="login">
-</form>

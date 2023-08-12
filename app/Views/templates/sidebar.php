@@ -65,7 +65,7 @@
 
                 <!-- Cek Status yang belum memiliki NoSurat -->
                 <div class="list-item">
-                    <a href="<?= base_url('/'); ?>list-surat-tanpa-NoSurat" class="notification">
+                    <a href="<?= base_url('/'); ?>semua-surat-tanpa_NoSurat" class="notification">
                         <img src="<?= base_url('/'); ?>asset/svg/list-status.svg" alt="" class="icon" loading='lazy'>
                         <span class="description">Status Surat Yang belum punya No.</span>
                         <?php if ($perluttd !== 0) : ?>
@@ -93,9 +93,17 @@
 
                 <!-- Surat masuk -->
                 <div class="list-item">
-                    <a href="<?= base_url('/bikin-surat'); ?>">
+                    <a href="<?= base_url('/'); ?>semua-arhive-surat">
                         <img src="<?= base_url('/'); ?>asset/svg/tambah.svg" alt="" class="icon" loading='lazy'>
-                        <span class="description">Tambah Surat Masuk</span>
+                        <span class="description">semua arhive Surat</span>
+                    </a>
+                </div>
+
+                <!-- Input Surat masuk -->
+                <div class="list-item">
+                    <a href="<?= base_url('/'); ?>input-arhive-surat">
+                        <img src="<?= base_url('/'); ?>asset/svg/tambah.svg" alt="" class="icon" loading='lazy'>
+                        <span class="description">Input semua arhive Surat</span>
                     </a>
                 </div>
 
