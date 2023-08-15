@@ -45,16 +45,10 @@ class SuratMasukController extends BaseController
             'DataSurat',
             'filepdf'
         ]);
-        $postdata['id'] = generateIdentifier();
-        $postdata['NamaFile'] = generateIdentifier();
-        $postdata['TimeStamp'] = getUnixTimeStamp();
-        d($postdata);
-
-        // TODO: buat input proses file
-        // !ganti php.ini untuk menambah upload limit
-
+        // d($postdata);
 
         $validationRule = Validasi_FilePDF();
+        // !ganti php.ini untuk menambah upload limit
 
         if (!$this->validate($validationRule)) {
             $data = ['errors' => $this->validator->getErrors()];
@@ -78,7 +72,7 @@ class SuratMasukController extends BaseController
 
             // !Copy file ke folder Arhive
             $fileFrom = WRITEPATH . $filepath . "/" . $filename;
-            $fileTo = cekDir("../Z_Arhive/" . $filepath) . "/" . $filename;
+            $fileTo = cekDir("../Z_Archive/" . $filepath) . "/" . $filename;
 
             if (!copyFile($fileFrom, $fileTo)) {
                 return FlashException('Tidak Dapat Menyimpan PDF ke safeplace');
@@ -89,23 +83,23 @@ class SuratMasukController extends BaseController
             $filepath = $filepath . '/' . $filename;
             $postdata['filepdf'] = $filepath;
         }
-        d($postdata);
+        // d($postdata);
 
         $dataSimpan = [
-            'DiskirpsiSurat' => $postdata['DiskirpsiSurat'],
-            'NomerSurat' => $postdata['NomerSurat'],
-            'TanggalSurat' => $postdata['TanggalSurat'],
-            'DataSurat' => $postdata['DataSurat'],
-            'NamaFile' => $postdata['filepdf'],
+            'DiskirpsiSurat'       => $postdata['DiskirpsiSurat'],
+            'NomerSurat'           => $postdata['NomerSurat'],
+            'TanggalSurat'         => $postdata['TanggalSurat'],
+            'DataSurat'            => $postdata['DataSurat'],
+            'NamaFile'             => $postdata['filepdf'],
             'JenisSuratArchice_id' => $postdata['jenissuratid'],
-            'TimeStamp' => $postdata['TimeStamp']
+            'TimeStamp'            => getUnixTimeStamp()
         ];
-        d($dataSimpan);
+        // d($dataSimpan);
         $model = model(SuratMasukModel::class);
         if (!$model->addSuratMasuk($dataSimpan)) {
-            return FlashException('Tidak dapat Meminta Mengisi Jenis Surat');
+            return FlashException('Tidak dapat menginputkan Surat kedatabase');
         }
-        return redirect()->to('/input-arhive-surat');
+        return FlashSuccess('/input-arhive-surat', 'Berhasil Menyimpan Surat');
     }
 
     public function addJenisArhiveSurat()
@@ -138,7 +132,7 @@ class SuratMasukController extends BaseController
         if (!$model->addJenisSurat($dataSimpan)) {
             return FlashException('Tidak dapat Meminta Mengisi Jenis Surat');
         }
-        return redirect()->to('/input-jenis-arhive-surat');
+        return FlashSuccess('/input-jenis-arhive-surat', 'Berbahasil Menyimpan Jenis Surat');
     }
 
     public function TestInfo()

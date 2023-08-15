@@ -146,6 +146,7 @@
 #--------------------------------------------------------------------
 
 # session.driver = 'CodeIgniter\Session\Handlers\FileHandler'
+# session.driver = 'CodeIgniter\Session\Handlers\DatabaseHandler'
 # session.cookieName = 'ci_session'
 # session.expiration = 7200
 # session.savePath = null

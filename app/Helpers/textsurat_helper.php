@@ -318,11 +318,18 @@ function recursiveCopy($source, $destination)
 
 function copyFile($source, $destination)
 {
+    helper('filesystem');
     try {
         copy($source, $destination);
     } catch (\Throwable $th) {
         return false; // Gagal menyalin file
     }
+    try {
+        same_file($destination, $source);
+    } catch (\Throwable $th) {
+        return false; // file tidak sama
+    }
+
     return true; // Berhasil menyalin file
 }
 

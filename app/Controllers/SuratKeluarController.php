@@ -98,7 +98,7 @@ class SuratKeluarController extends BaseController
 
                     // !Copy file ke folder Arhive
                     $fileFrom = $filepath . "/" . $filename;
-                    $fileTo = cekDir("../Z_Arhive/" . $filepath) . "/" . $filename;
+                    $fileTo = cekDir("../Z_Archive/" . $filepath) . "/" . $filename;
 
                     if (!copyFile($fileFrom, $fileTo)) {
                         return FlashException('Tidak Dapat Menyimpan Foto ke safeplace');

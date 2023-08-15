@@ -71,7 +71,7 @@ class Suratmasuk extends Migration
             ],
             'NamaFile' => [
                 'type'       => 'varchar',
-                'constraint' => 16
+                'constraint' => 255
             ],
             'JenisSuratArchice_id' => [
                 'type'       => 'int',

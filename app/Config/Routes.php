@@ -154,6 +154,8 @@ $routes->get('/staff/Preview/(:any)', 'Pdfrender::staffPreviewJenisSurat/$1');
 
 // ?untuk Mahasiswa dan Pengajaran =============================================
 $routes->get('/Preview/(:any)', 'Pdfrender::PreviewJenisSurat/$1');
+$routes->post('/staff/Surat-Archive', 'Pdfrender::staffViewSurat');
+
 
 // ?mahasiswa ==================================================================
 $routes->post('/Download/Surat', 'Pdfrender::DownloadSurat');
