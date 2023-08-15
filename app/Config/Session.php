@@ -22,6 +22,7 @@ class Session extends BaseConfig
      * @phpstan-var class-string<BaseHandler>
      */
     public string $driver = FileHandler::class;
+    // public string $driver = DatabaseHandler::class;
 
     /**
      * --------------------------------------------------------------------------
@@ -59,6 +60,7 @@ class Session extends BaseConfig
      * IMPORTANT: You are REQUIRED to set a valid save path!
      */
     public string $savePath = WRITEPATH . 'session';
+    // public string $savePath = 'CI_sessions';
 
     /**
      * --------------------------------------------------------------------------

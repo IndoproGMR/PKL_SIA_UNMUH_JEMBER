@@ -24,6 +24,12 @@ class SuratMasukModel extends Model
         'DeleteAt'
     ];
 
+    public function seebyid($id)
+    {
+        return $this->find($id);
+    }
+
+
     public function seeallbyJenis($idJenis = 'all')
     {
         if ($idJenis == 'all') {
@@ -55,6 +61,8 @@ class SuratMasukModel extends Model
 
     function addSuratMasuk($data)
     {
-        return $this->save($data);
+        $data['id'] = generateIdentifier();
+        d($data);
+        return $this->db->table('SM_SuratArchice')->insert($data);
     }
 }

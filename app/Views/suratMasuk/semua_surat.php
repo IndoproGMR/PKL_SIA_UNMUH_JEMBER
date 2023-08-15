@@ -41,7 +41,6 @@
                 <tr>
                     <td>
                         <?= esc($value['JenisSurat']) ?>
-                        <?= esc($value['idSurat']) ?>
                     </td>
 
                     <td>
@@ -57,7 +56,7 @@
                     </td>
 
                     <td>
-                        <?= esc($value['idSurat']) ?>
+                        <?= TombolID('staff/Surat-Archive', $value['idSurat'], 'signature', 'Liat Surat') ?>
                     </td>
                 </tr>
             <?php endforeach ?>

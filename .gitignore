@@ -142,6 +142,6 @@ writable/ArhiveSurat/*
 writable/pdf/*
 writable/temp/*
 
-Z_Archice/*
-!Z_Archice/index.html
-!Z_Archice/.htaccess
+Z_Archive/*
+!Z_Archive/index.html
+!Z_Archive/.htaccess
