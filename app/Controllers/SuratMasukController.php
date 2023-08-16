@@ -8,14 +8,15 @@ use App\Models\SuratMasukModel;
 
 class SuratMasukController extends BaseController
 {
-    public function indexArhiveSurat()
+    public function indexArchiveSurat()
     {
         PagePerm(['Dosen']);
         $getget = ($filter = $this->request->getGet('filter')) ? $filter : 'all';
         $model = model(JenisSuratMasukModel::class);
-        $modelsurat = model(SuratMasukModel::class);
         $data['jenisFilter'] = $model->seeall();
+        $modelsurat = model(SuratMasukModel::class);
         $data['surat'] = $modelsurat->seeallbyJenis($getget);
+        $data['filter'] = $getget;
 
 
         // d($data);
@@ -24,7 +25,8 @@ class SuratMasukController extends BaseController
         return view('suratMasuk/semua_surat', $data);
     }
 
-    public function addArhiveSurat()
+    // ! Surat ArchiveSurat
+    public function addArchiveSurat()
     {
         PagePerm(['Dosen']);
         $model = model(JenisSuratMasukModel::class);
@@ -33,7 +35,7 @@ class SuratMasukController extends BaseController
         return view('suratMasuk/input_arhive', $data);
     }
 
-    public function addArhiveSuratProses()
+    public function addArchiveSuratProses()
     {
         PagePerm(['Dosen'], 'error_perm', false, 1);
 
@@ -102,7 +104,62 @@ class SuratMasukController extends BaseController
         return FlashSuccess('/input-arhive-surat', 'Berhasil Menyimpan Surat');
     }
 
-    public function addJenisArhiveSurat()
+    public function updateArchiveSurat()
+    {
+        $postdata = $this->request->getPost('id');
+        $model = Model(SuratMasukModel::class);
+        $namaFile = $model->seebyid($postdata);
+        $model = model(JenisSuratMasukModel::class);
+        $data = [
+            'id'                   => $postdata,
+            'DiskirpsiSurat'       => $namaFile['DiskirpsiSurat'],
+            'NomerSurat'           => $namaFile['NomerSurat'],
+            'TanggalSurat'         => $namaFile['TanggalSurat'],
+            'DataSurat'            => $namaFile['DataSurat'],
+            'name'                 => $namaFile['name'],
+            'JenisSuratArchice_id' => $namaFile['JenisSuratArchice_id'],
+            'TimeStamp'            => $namaFile['TimeStamp'],
+        ];
+        $data['jenisFilter'] = $model->seeall();
+
+        d($namaFile);
+        d($postdata);
+        d($data);
+        return view('suratMasuk/edit_surat', $data);
+    }
+
+    public function updateArchiveSuratProses()
+    {
+        $postdata = $this->request->getPost(
+            [
+                'id',
+                'DiskirpsiSurat',
+                'NomerSurat',
+                'TanggalSurat',
+                'DataSurat',
+                'jenisFilter',
+            ]
+        );
+        $model = Model(SuratMasukModel::class);
+        $data = [
+            'DiskirpsiSurat'       => $postdata['DiskirpsiSurat'],
+            'NomerSurat'           => $postdata['NomerSurat'],
+            'TanggalSurat'         => $postdata['TanggalSurat'],
+            'DataSurat'            => $postdata['DataSurat'],
+            'JenisSuratArchice_id' => $postdata['jenisFilter'],
+            'TimeStampUpdate'      => getUnixTimeStamp(),
+        ];
+
+        d($postdata);
+        d($data);
+        if (!$model->updateSuratMasuk($postdata['id'], $data)) {
+            return FlashException('Gagal Meng update Surat');
+        }
+        return FlashSuccess('semua-archive-surat', 'berhasil Meng Update Surat');
+    }
+
+    // !Jenis Surat
+    public function addJenisArchiveSurat()
     {
         PagePerm(['Dosen']);
         $model = model(JenisSuratMasukModel::class);
@@ -113,7 +170,7 @@ class SuratMasukController extends BaseController
         return view('suratMasuk/input_jenis_arhive', $data);
     }
 
-    public function addJenisArhiveSuratProses()
+    public function addJenisArchiveSuratProses()
     {
         PagePerm(['Dosen'], 'error_perm', false, 1);
         // echo 'proses';
@@ -133,10 +190,5 @@ class SuratMasukController extends BaseController
             return FlashException('Tidak dapat Meminta Mengisi Jenis Surat');
         }
         return FlashSuccess('/input-jenis-arhive-surat', 'Berbahasil Menyimpan Jenis Surat');
-    }
-
-    public function TestInfo()
-    {
-        // return phpinfo();
     }
 }

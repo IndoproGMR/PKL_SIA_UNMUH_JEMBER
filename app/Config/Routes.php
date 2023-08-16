@@ -100,18 +100,25 @@ $routes->post('/detail-surat', 'SuratKeluarController::updateJenisSuratProses');
 
 // *Surat Masuk ===============================================================>
 // ?index ======================================================================
-$routes->get('/semua-arhive-surat', 'SuratMasukController::indexArhiveSurat');
+$routes->get('/semua-archive-surat', 'SuratMasukController::indexArchiveSurat');
 
 // ?Membuka File PDF ===========================================================
-// !$routes->post('/staff/Preview_Arhive', 'ControllerName::index');
+$routes->post('/staff/Surat-Archive', 'Pdfrender::staffViewSurat');
 
-// ?Penambahan arhive ==========================================================
-$routes->get('/input-arhive-surat', 'SuratMasukController::addArhiveSurat');
-$routes->post('/input-arhive-surat', 'SuratMasukController::addArhiveSuratProses');
+// ?Penambahan archive ==========================================================
+$routes->get('/input-archive-surat', 'SuratMasukController::addArchiveSurat');
+$routes->post('/input-archive-surat', 'SuratMasukController::addArchiveSuratProses');
 
-// ?Penambahan jenis arhive ====================================================
-$routes->get('/input-jenis-arhive-surat', 'SuratMasukController::addJenisArhiveSurat');
-$routes->post('/input-jenis-arhive-surat', 'SuratMasukController::addJenisArhiveSuratProses');
+// ?edit archive ================================================================
+$routes->post('/detail-archive-surat', 'SuratMasukController::updateArchiveSurat');
+$routes->post('/edit-archive-surat', 'SuratMasukController::updateArchiveSuratProses');
+
+// ?delete archive ==============================================================
+// $routes->post('/delete-archive-surat', 'SuratMasukController::deleteArchiveSuratProses');
+
+// ?Penambahan jenis archive ====================================================
+$routes->get('/input-jenis-archive-surat', 'SuratMasukController::addJenisArchiveSurat');
+$routes->post('/input-jenis-archive-surat', 'SuratMasukController::addJenisArchiveSuratProses');
 // *===========================================================================<
 
 // *quary =====================================================================>
@@ -130,23 +137,6 @@ $routes->get('/staff/TestMPDF', 'Pdfrender::TestMPDF');
 
 // ?
 
-// !done =====================================================================>>
-// $routes->get('/suratmasuk/kameraQR', 'TestSuratmasuk::kameraQR');
-// $routes->get('/suratmasuk', 'TestSuratmasuk::index');
-// $routes->get('/suratmasuk/mintasurat', 'TestSuratmasuk::mintasuratindex');
-// $routes->get('/suratmasuk/mintasurat/(:num)', 'TestSuratmasuk::mintasurat/$1');
-// $routes->post('/suratmasuk/mintasurat/(:num)', 'TestSuratmasuk::addmintasurat/$1');
-// $routes->post('/suratmasuk/mintasurat', 'TestSuratmasuk::addsuratmasuk');
-// $routes->get('/StatusSurat', 'StatuSurat::statusSurat');
-// $routes->get('/StatusTTD', 'StatuSurat::statusTTD');
-// $routes->post('/StatusTTD/proses', 'StatuSurat::prosesTTD');
-// $routes->get('/suratmasuk/validasi/(:any)', 'TestSuratmasuk::validasi/$1/$2');
-// $routes->get('/suratmasuk/(:any)', 'TestSuratmasuk::testreture/$1');
-// $routes->get('/suratmasuk2/(:any)', 'TestSuratmasuk::testreture2/$1/$2');
-// ! =========================================================================<<
-
-// ?
-
 // !PDF ======================================================================>>
 // ?Preview ====================================================================
 $routes->post('/staff/Preview-Surat', 'Pdfrender::staffPreviewSurat');
@@ -154,8 +144,6 @@ $routes->get('/staff/Preview/(:any)', 'Pdfrender::staffPreviewJenisSurat/$1');
 
 // ?untuk Mahasiswa dan Pengajaran =============================================
 $routes->get('/Preview/(:any)', 'Pdfrender::PreviewJenisSurat/$1');
-$routes->post('/staff/Surat-Archive', 'Pdfrender::staffViewSurat');
-
 
 // ?mahasiswa ==================================================================
 $routes->post('/Download/Surat', 'Pdfrender::DownloadSurat');
@@ -171,6 +159,7 @@ $routes->post('/login', 'Login::debuglogin');
 // $routes->post('/login', 'Login::loginProses');
 
 // ?Api Auth ===================================================================
+// $routes->get('/api/v1/login', 'apiv1::validasiqr');
 
 // ! =========================================================================<<
 

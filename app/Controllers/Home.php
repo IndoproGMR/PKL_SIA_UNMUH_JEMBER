@@ -25,4 +25,9 @@ class Home extends BaseController
     {
         return view('home/customError');
     }
+
+    public function TestInfo()
+    {
+        // return phpinfo();
+    }
 }

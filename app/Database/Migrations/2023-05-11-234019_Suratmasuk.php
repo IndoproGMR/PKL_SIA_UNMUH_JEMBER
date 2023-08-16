@@ -84,6 +84,11 @@ class Suratmasuk extends Migration
                 'constraint' => 10,
                 'unsigned'   => true
             ],
+            'TimeStampUpdate' => [
+                'type'       => 'int',
+                'constraint' => 10,
+                'default'    => null
+            ],
             'DeleteAt' => [
                 'type'       => 'int',
                 'constraint' => 10,

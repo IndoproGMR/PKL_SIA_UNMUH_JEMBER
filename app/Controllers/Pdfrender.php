@@ -170,7 +170,7 @@ class Pdfrender extends BaseController
     {
         $postdata = $this->request->getPost('id');
         $model = Model(SuratMasukModel::class);
-        $namaFile = $model->seebyid($postdata)['NamaFile'];
+        $namaFile = $model->seefilebyid($postdata);
         helper('filesystem');
         try {
             $path = WRITEPATH . $namaFile;

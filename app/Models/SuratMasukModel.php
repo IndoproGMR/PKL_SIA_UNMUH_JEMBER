@@ -26,7 +26,25 @@ class SuratMasukModel extends Model
 
     public function seebyid($id)
     {
-        return $this->find($id);
+        // return $this->find($id);
+        return $this->select('
+        SM_SuratArchice.DiskirpsiSurat,
+        SM_SuratArchice.NomerSurat,
+        SM_SuratArchice.DataSurat,
+        SM_SuratArchice.TanggalSurat,
+        SM_SuratArchice.DiskirpsiSurat,
+        SM_SuratArchice.TimeStamp,
+        SM_SuratArchice.JenisSuratArchice_id,
+        SM_JenisSuratArchice.name
+        ')
+            ->join('SM_JenisSuratArchice', 'SM_JenisSuratArchice.id=SM_SuratArchice.JenisSuratArchice_id')
+            ->find($id);
+    }
+
+    public function seefilebyid($id)
+    {
+        // return $this->find($id);
+        return $this->select('SM_SuratArchice.NamaFile')->find($id)['NamaFile'];
     }
 
 
@@ -64,5 +82,10 @@ class SuratMasukModel extends Model
         $data['id'] = generateIdentifier();
         d($data);
         return $this->db->table('SM_SuratArchice')->insert($data);
+    }
+
+    function updateSuratMasuk($id, $data)
+    {
+        return $this->update($id, $data);
     }
 }

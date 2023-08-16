@@ -93,17 +93,17 @@
 
                 <!-- Surat masuk -->
                 <div class="list-item">
-                    <a href="<?= base_url('/'); ?>semua-arhive-surat">
-                        <img src="<?= base_url('/'); ?>asset/svg/tambah.svg" alt="" class="icon" loading='lazy'>
-                        <span class="description">semua arhive Surat</span>
+                    <a href="<?= base_url('/'); ?>semua-archive-surat">
+                        <img src="<?= base_url('/'); ?>asset/svg/list-menu.svg" alt="" class="icon" loading='lazy'>
+                        <span class="description">semua archive Surat</span>
                     </a>
                 </div>
 
                 <!-- Input Surat masuk -->
                 <div class="list-item">
-                    <a href="<?= base_url('/'); ?>input-arhive-surat">
+                    <a href="<?= base_url('/'); ?>input-archive-surat">
                         <img src="<?= base_url('/'); ?>asset/svg/tambah.svg" alt="" class="icon" loading='lazy'>
-                        <span class="description">Input semua arhive Surat</span>
+                        <span class="description">Input semua archive Surat</span>
                     </a>
                 </div>
 

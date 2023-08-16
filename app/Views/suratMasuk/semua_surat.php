@@ -10,9 +10,11 @@
     <p class="first">Filter:
     <form action="">
         <select name="filter" id="filter">
-            <option value="all" selected>semua Surat</option>
+            <option value="all">semua Surat</option>
             <?php foreach ($jenisFilter as $value) : ?>
-                <option value="<?= esc($value['id']) ?>"><?= esc($value['name']) ?></option>
+                <option value="<?= esc($value['id']); ?>" <?= ($value['id'] == $filter) ? 'selected' : ''; ?>>
+                    <?= esc($value['name']); ?>
+                </option>
             <?php endforeach ?>
         </select>
         <button type="submit">Cari surat</button>
@@ -21,6 +23,11 @@
     <p class="third">Tanggal: <span><?= esc(timeconverter(time(), 'hijriahtgl')) ?></span></p>
 </div>
 
+<?php
+dialog();
+
+
+?>
 
 <div class="table-rown">
     <table>
@@ -31,7 +38,7 @@
                 <th>Diskripsi Surat</th>
                 <th>Nomer Surat</th>
                 <th>Tanggal Surat</th>
-                <th>Priview Surat</th>
+                <th>Actions</th>
             </tr>
         </thead>
 
@@ -57,6 +64,7 @@
 
                     <td>
                         <?= TombolID('staff/Surat-Archive', $value['idSurat'], 'signature', 'Liat Surat') ?>
+                        <?= TombolID('detail-archive-surat', $value['idSurat'], 'signature', 'edit Surat') ?>
                     </td>
                 </tr>
             <?php endforeach ?>
