@@ -72,3 +72,81 @@ function TombolID(
         // '<input type="submit" value="' . $valuesubmit . '" class="' . $submitclass . '" onclick="if(confirm(\'' . $confirmText . '\')) window.location.reload();">' .
         '</form>';
 }
+
+// !Validasi
+function Validasi_Foto()
+{
+    // data ada
+    // apakah ini image
+    // apakah file ini adalah jpg,jpeg,png
+    // apakah ukuran ini tidak lebih dari 1025 kb
+    return [
+        'foto' => [
+            'label' => 'Image File',
+            'rules' => [
+                'uploaded[foto]',
+                'is_image[foto]',
+                'mime_in[foto,image/jpg,image/jpeg,image/png]',
+                'max_size[foto,1024]',
+            ],
+        ],
+    ];
+}
+
+function Validasi_FilePDF()
+{
+    // data ada
+    // apakah file ini adalah pdf
+    // apakah ukuran ini tidak lebih dari 10 mb
+    return [
+        'filepdf' => [
+            'rules' => [
+                'uploaded[filepdf]',
+                'mime_in[filepdf,application/pdf]',
+                // 'max_size[filepdf,10240]',
+            ],
+        ],
+    ];
+}
+
+function Validasi_Input()
+{
+    return [
+        'field_1' => [
+            'label'    => 'Field 1 Custom Name',
+            'rules'    => 'required',
+            'errors'   => [
+                'required'    => '{field} is required.'
+            ]
+        ],
+    ];
+}
+
+
+function dialog()
+{
+    if (FlashSuccess('', '', 'get') !== null) {
+        echo ('
+        <div class="success-box">
+        <span class="success-icon">&#10003;</span>
+        <span class="success-message">' .
+            esc(FlashSuccess("", "", "get")) .
+            '</span>
+        </div>
+        ');
+    }
+}
+
+function dialogmessege()
+{
+    if (FlashSuccess('', '', 'get') !== null) {
+        echo ('
+        <div class="success-box">
+        <span class="success-icon">&#10003;</span>
+            <span class="success-message">' .
+            esc(FlashMessage("", "", "get")) .
+            '</span>
+        </div>
+        ');
+    }
+}

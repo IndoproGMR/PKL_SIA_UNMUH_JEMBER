@@ -13,6 +13,7 @@
         <div class="desc">
             <h1><?= esc(userInfo()['NamaUser']) ?></h1>
             <p><?= esc(userInfo()['namaLVL']) ?></p>
+            <p><a href="<?= base_url('/login'); ?>">LogOut</a></p>
         </div>
     </div>
     <!-- <img src="asset/user-4-fill (3).svg" alt="" class="user"> -->

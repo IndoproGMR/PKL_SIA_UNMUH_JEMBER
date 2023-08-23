@@ -2,8 +2,24 @@
 echo "instaling dependency"
 echo " "
 composer install
+
 sleep 5s
 echo " "
 echo "Updateting dependency"
 echo " "
 composer update
+
+sleep 5s
+echo " "
+echo "copying dependency to public"
+echo " "
+./copyvendor
+
+sleep 5s
+read -p "buat file env baru ? (Y/n) : " envbaru
+if [[ $envbaru == "Y" ]]; then
+echo " "
+echo "copying env"
+echo " "
+cp env .env
+fi

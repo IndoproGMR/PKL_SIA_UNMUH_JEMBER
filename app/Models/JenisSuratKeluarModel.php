@@ -4,7 +4,7 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class Jenissurat extends Model
+class JenisSuratKeluarModel extends Model
 {
     // protected $DBGroup          = 'default';
     protected $table            = 'SK_JenisSurat';
@@ -139,6 +139,8 @@ class Jenissurat extends Model
         return $db->newQuery()->fromSubquery($builder, 'q')->orderBy('namattd', 'ASC')->get()->getResultArray();
     }
 }
+
+
 
 
 

@@ -28,13 +28,13 @@ class Apiv1 extends ResourceController
             $data['dataJson'] = $validasienkripsi->validasiTTD($data['hashraw'], $data['nosurat']);
 
             $data['respond'] = [
-                'valid' => datacallRespond($data['dataJson']['valid'])
+                'valid' => resMas($data['dataJson']['valid'])
             ];
             return $this->respond($data['respond']);
         }
 
         $data['respond'] = [
-            'valid' => datacallRespond('e1')
+            'valid' => resMas('e.param.n.exist')
         ];
         return $this->respond($data['respond']);
     }
@@ -69,12 +69,12 @@ class Apiv1 extends ResourceController
         helper('datacall');
 
         $data['respond'] = [
-            'nosurat'       => datacallRespond('e'),
-            'JenisSurat'    => datacallRespond('e'),
-            'Mahasiswa'     => datacallRespond('e'),
-            'penandatangan' => datacallRespond('e'),
-            'TimeStamp'     => datacallRespond('e'),
-            'valid'         => datacallRespond('e1'),
+            'nosurat'       => resMas('e'),
+            'JenisSurat'    => resMas('e'),
+            'Mahasiswa'     => resMas('e'),
+            'penandatangan' => resMas('e'),
+            'TimeStamp'     => resMas('e'),
+            'valid'         => resMas('e.param.n.exist'),
         ];
         return $this->respond($data['respond']);
     }

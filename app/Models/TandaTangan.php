@@ -7,7 +7,7 @@ use CodeIgniter\Model;
 class TandaTangan extends Model
 {
     // protected $DBGroup          = 'default';
-    protected $table            = 'SM_ttd';
+    protected $table            = 'SK_ttd';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     // protected $returnType       = 'array';
@@ -16,6 +16,7 @@ class TandaTangan extends Model
     protected $allowedFields    = [
         'Status',
         'NoSurat',
+        'SuratIdentifier',
         'hash',
         'qrcodeName',
         'jenisttd',
@@ -26,25 +27,23 @@ class TandaTangan extends Model
     function cekvalidasi($nosurat, $data)
     {
         $data = $this
-            ->select('SM_ttd.NoSurat,SM_ttd.TimeStamp,SM_ttd.pendattg_id,SM_ttd_SuratMasuk.mshw_id,SM_JenisSurat.name as jenisSurat')
-            ->join('SM_ttd_SuratMasuk', 'SM_ttd_SuratMasuk.NoSurat = SM_ttd.NoSurat')
-            ->join('SM_JenisSurat', 'SM_JenisSurat.id = SM_ttd_SuratMasuk.JenisSurat_id')
-            ->where('SM_ttd.NoSurat', $nosurat)
-            ->where('SM_ttd.hash', $data)
+            ->select('SK_ttd.NoSurat,SK_ttd.TimeStamp,SK_ttd.pendattg_id,SK_ttd_SuratMasuk.mshw_id,SK_JenisSurat.name as jenisSurat')
+            ->join('SK_ttd_SuratMasuk', 'SK_ttd_SuratMasuk.NoSurat = SK_ttd.NoSurat')
+            ->join('SK_JenisSurat', 'SK_JenisSurat.id = SK_ttd_SuratMasuk.JenisSurat_id')
+            ->where('SK_ttd.NoSurat', $nosurat)
+            ->where('SK_ttd.hash', $data)
             ->find();
 
         if (count($data) > 0) {
             return $data[0];
         } else {
-            helper('datacall');
-
             $data = [
-                'NoSurat'     => datacallRespond('e'),
-                'TimeStamp'   => datacallRespond('e'),
-                'pendattg_id' => datacallRespond('e'),
-                'mshw_id'     => datacallRespond('e'),
-                'jenisSurat'  => datacallRespond('e'),
-                'valid'       => 'TTD0'
+                'NoSurat'     => resMas('e'),
+                'TimeStamp'   => resMas('e'),
+                'pendattg_id' => resMas('e'),
+                'mshw_id'     => resMas('e'),
+                'jenisSurat'  => resMas('e'),
+                'valid'       => 'TTD.n.exist.db'
             ];
             return $data;
         }
@@ -55,9 +54,9 @@ class TandaTangan extends Model
     {
         // return $this->where('status',$id)->find($id);
         return $this
-            ->select('SM_ttd.Status,SM_ttd_SuratMasuk.mshw_id,SM_ttd.NoSurat')
-            ->join('SM_ttd_SuratMasuk', 'SM_ttd_SuratMasuk.NoSurat=SM_ttd.NoSurat')
-            ->where('SM_ttd.id', $id)
+            ->select('SK_ttd.Status,SK_ttd_SuratMasuk.mshw_id,SK_ttd_SuratMasuk.NoSurat')
+            ->join('SK_ttd_SuratMasuk', 'SK_ttd_SuratMasuk.SuratIdentifier=SK_ttd.SuratIdentifier')
+            ->where('SK_ttd.id', $id)
             ->find()[0];
     }
 
@@ -77,13 +76,13 @@ class TandaTangan extends Model
 
 
     // untuk melihat berapa banyak yang sudah ttd dan belum // (2/10)
-    function cekStatusSurat($nosurat)
+    function cekStatusSurat($SuratIdentifier)
     {
         $datautama = $this
             ->select('COUNT(*) AS totalTTD,
         SUM(CASE WHEN Status = 1 THEN 1 ELSE 0 END) AS sudah,
         SUM(CASE WHEN Status = 0 THEN 1 ELSE 0 END) AS belum')
-            ->where('NoSurat', $nosurat)
+            ->where('SuratIdentifier', $SuratIdentifier)
             ->find();
 
         if (count($datautama) == 1) {
@@ -118,7 +117,7 @@ class TandaTangan extends Model
          *SUM(CASE WHEN Status = 1 THEN 1 ELSE 0 END) AS dataTrue,
          *SUM(CASE WHEN Status = 0 THEN 1 ELSE 0 END) AS dataFalse
          *FROM
-         *    SM_ttd
+         *    SK_ttd
          *GROUP BY
          *    NoSurat;
          *
@@ -129,20 +128,24 @@ class TandaTangan extends Model
     function cekStatusSuratTTD($pendattg_id, $status = 0)
     {
         $data = $this
-            ->select('`SM_ttd`.`id` AS idttd,
-        `SM_ttd`.`Status`,
-        `SM_ttd`.`NoSurat`,
-        `SM_ttd`.`pendattg_id`,
-        `SM_JenisSurat`.`name` as namaJenisSurat,
-        `SM_ttd_SuratMasuk`.`TimeStamp`,
-        `SM_ttd`.`jenisttd` ,
-        `SM_ttd`.`TimeStamp` as `TimeStamp_ttd`')
-            ->join('SM_ttd_SuratMasuk', '`SM_ttd_SuratMasuk`.`NoSurat` = `SM_ttd`.`NoSurat`')
-            ->join('SM_JenisSurat', '`SM_JenisSurat`.`id`=`SM_ttd_SuratMasuk`.`JenisSurat_id`')
-            ->where('`SM_ttd`.`Status`', $status)
+            ->select('
+        `SK_ttd`.`id` AS idttd,
+        `SK_ttd`.`Status`,
+        `SK_ttd_SuratMasuk`.`NoSurat`,
+        `SK_ttd`.`SuratIdentifier`,
+        `SK_ttd`.`pendattg_id`,
+        `SK_JenisSurat`.`name` as namaJenisSurat,
+        `SK_ttd_SuratMasuk`.`TimeStamp`,
+        `SK_ttd`.`jenisttd` ,
+        `SK_ttd`.`TimeStamp` as `TimeStamp_ttd`')
+            ->join('SK_ttd_SuratMasuk', '`SK_ttd_SuratMasuk`.`SuratIdentifier` = `SK_ttd`.`SuratIdentifier`')
+            ->join('SK_JenisSurat', '`SK_JenisSurat`.`id`=`SK_ttd_SuratMasuk`.`JenisSurat_id`')
+            ->where('`SK_ttd`.`Status`', $status)
+            ->where('`SK_ttd_SuratMasuk`.`NoSurat` != ', 'Belum_Memiliki_No_Surat')
+            ->where('SK_ttd_SuratMasuk.DeleteAt', null)
             ->groupStart()
-            ->where('`SM_ttd`.`pendattg_id`', $pendattg_id['id'])
-            ->orWhere('`SM_ttd`.`pendattg_id`', $pendattg_id['namaLVL'])
+            ->where('`SK_ttd`.`pendattg_id`', $pendattg_id['id'])
+            ->orWhere('`SK_ttd`.`pendattg_id`', $pendattg_id['namaLVL'])
             ->groupEnd()
             ->find();
 
@@ -151,14 +154,14 @@ class TandaTangan extends Model
 
         // $db = \Config\Database::connect();
 
-        // $sql = "SELECT `SM_ttd`.`id` AS idttd,`SM_ttd`.`Status`,`SM_ttd`.`NoSurat`,`SM_ttd`.`pendattg_id`,`SM_JenisSurat`.`name` as namaJenisSurat,`SM_ttd_SuratMasuk`.`TimeStamp`,`SM_ttd`.`jenisttd` ,`SM_ttd`.`TimeStamp` as `TimeStamp_ttd`
-        // FROM `SM_ttd` 
-        // LEFT JOIN `SM_ttd_SuratMasuk` ON `SM_ttd_SuratMasuk`.`NoSurat` = `SM_ttd`.`NoSurat` 
-        // LEFT JOIN `SM_JenisSurat` ON `SM_JenisSurat`.`id`=`SM_ttd_SuratMasuk`.`JenisSurat_id` 
-        // WHERE `SM_ttd`.`Status` = '" . $status . "' and 
-        // (`SM_ttd`.`pendattg_id` = '" .
+        // $sql = "SELECT `SK_ttd`.`id` AS idttd,`SK_ttd`.`Status`,`SK_ttd`.`NoSurat`,`SK_ttd`.`pendattg_id`,`SK_JenisSurat`.`name` as namaJenisSurat,`SK_ttd_SuratMasuk`.`TimeStamp`,`SK_ttd`.`jenisttd` ,`SK_ttd`.`TimeStamp` as `TimeStamp_ttd`
+        // FROM `SK_ttd` 
+        // LEFT JOIN `SK_ttd_SuratMasuk` ON `SK_ttd_SuratMasuk`.`NoSurat` = `SK_ttd`.`NoSurat` 
+        // LEFT JOIN `SK_JenisSurat` ON `SK_JenisSurat`.`id`=`SK_ttd_SuratMasuk`.`JenisSurat_id` 
+        // WHERE `SK_ttd`.`Status` = '" . $status . "' and 
+        // (`SK_ttd`.`pendattg_id` = '" .
         //     $db->escapeLikeString($pendattg_id['id']) .
-        //     "' OR `SM_ttd`.`pendattg_id` = '" .
+        //     "' OR `SK_ttd`.`pendattg_id` = '" .
         //     $db->escapeLikeString($pendattg_id['namaLVL']) .
         //     "' );";
 
@@ -167,53 +170,53 @@ class TandaTangan extends Model
 }
 
 
-// SELECT * FROM `SM_ttd`
+// SELECT * FROM `SK_ttd`
 // WHERE `NoSurat` = 'DveUCIo1' 
 // AND 
 // ( `pendattg_id` = '0014027501'
 //     OR    `pendattg_id` = 'Dosen')
-// ORDER BY `SM_ttd`.`Status` ASC;
+// ORDER BY `SK_ttd`.`Status` ASC;
 
 
 
-// SELECT * FROM `SM_ttd`
-// WHERE (`SM_ttd`.`pendattg_id` = '0014027501'
+// SELECT * FROM `SK_ttd`
+// WHERE (`SK_ttd`.`pendattg_id` = '0014027501'
 //     OR
-//     `SM_ttd`.`pendattg_id` = 'Dosen' )
-//     LEFT JOIN `SM_ttd_SuratMasuk`
-//     ON `SM_ttd_SuratMasuk`.`NoSurat` = `SM_ttd`.`NoSurat`
+//     `SK_ttd`.`pendattg_id` = 'Dosen' )
+//     LEFT JOIN `SK_ttd_SuratMasuk`
+//     ON `SK_ttd_SuratMasuk`.`NoSurat` = `SK_ttd`.`NoSurat`
 
 
-// SELECT * FROM `SM_ttd`
-//     LEFT JOIN `SM_ttd_SuratMasuk`
-//     ON `SM_ttd_SuratMasuk`.`NoSurat` = `SM_ttd`.`NoSurat`
-//     WHERE (`SM_ttd`.`pendattg_id` = '0014027501'
+// SELECT * FROM `SK_ttd`
+//     LEFT JOIN `SK_ttd_SuratMasuk`
+//     ON `SK_ttd_SuratMasuk`.`NoSurat` = `SK_ttd`.`NoSurat`
+//     WHERE (`SK_ttd`.`pendattg_id` = '0014027501'
 //     OR
-//     `SM_ttd`.`pendattg_id` = 'Dosen' );
+//     `SK_ttd`.`pendattg_id` = 'Dosen' );
 
 
 
-// SELECT `SM_ttd`.`id` AS idttd,`SM_ttd`.`Status`,`SM_ttd`.`NoSurat`,`SM_ttd`.`NoSurat`,`SM_ttd`.`pendattg_id`
+// SELECT `SK_ttd`.`id` AS idttd,`SK_ttd`.`Status`,`SK_ttd`.`NoSurat`,`SK_ttd`.`NoSurat`,`SK_ttd`.`pendattg_id`
 
-// FROM `SM_ttd` 
+// FROM `SK_ttd` 
 
-// LEFT JOIN `SM_ttd_SuratMasuk` 
+// LEFT JOIN `SK_ttd_SuratMasuk` 
 
-// ON `SM_ttd_SuratMasuk`.`NoSurat` = `SM_ttd`.`NoSurat` 
+// ON `SK_ttd_SuratMasuk`.`NoSurat` = `SK_ttd`.`NoSurat` 
 
-// WHERE (`SM_ttd`.`pendattg_id` = '0001016602' 
-//        OR `SM_ttd`.`pendattg_id` = 'Dosen' );
-
-
+// WHERE (`SK_ttd`.`pendattg_id` = '0001016602' 
+//        OR `SK_ttd`.`pendattg_id` = 'Dosen' );
 
 
-// SELECT `SM_ttd`.`id` AS idttd,`SM_ttd`.`Status`,`SM_ttd`.`NoSurat`,`SM_ttd`.`pendattg_id`,`SM_JenisSurat`.`name`,`SM_ttd_SuratMasuk`.`TimeStamp`,`SM_ttd`.`jenisttd`
-// FROM `SM_ttd` 
-// LEFT JOIN `SM_ttd_SuratMasuk` 
-// ON `SM_ttd_SuratMasuk`.`NoSurat` = `SM_ttd`.`NoSurat`
-// LEFT JOIN `SM_JenisSurat`
-// ON `SM_JenisSurat`.`id`=`SM_ttd_SuratMasuk`.`JenisSurat_id`
-// WHERE (`SM_ttd`.`pendattg_id` = '0001016602' 
-//        OR `SM_ttd`.`pendattg_id` = 'Dosen' );
 
-// SELECT `SM_ttd`.`id` AS idttd,`SM_ttd`.`Status`,`SM_ttd`.`NoSurat`,`SM_ttd`.`pendattg_id`,`SM_JenisSurat`.`name`,`SM_ttd_SuratMasuk`.`TimeStamp`,`SM_ttd`.`jenisttd` FROM `SM_ttd` LEFT JOIN `SM_ttd_SuratMasuk` ON `SM_ttd_SuratMasuk`.`NoSurat` = `SM_ttd`.`NoSurat` LEFT JOIN `SM_JenisSurat` ON `SM_JenisSurat`.`id`=`SM_ttd_SuratMasuk`.`JenisSurat_id` WHERE (`SM_ttd`.`pendattg_id` = '0001016602' OR `SM_ttd`.`pendattg_id` = 'Dosen' );
+
+// SELECT `SK_ttd`.`id` AS idttd,`SK_ttd`.`Status`,`SK_ttd`.`NoSurat`,`SK_ttd`.`pendattg_id`,`SK_JenisSurat`.`name`,`SK_ttd_SuratMasuk`.`TimeStamp`,`SK_ttd`.`jenisttd`
+// FROM `SK_ttd` 
+// LEFT JOIN `SK_ttd_SuratMasuk` 
+// ON `SK_ttd_SuratMasuk`.`NoSurat` = `SK_ttd`.`NoSurat`
+// LEFT JOIN `SK_JenisSurat`
+// ON `SK_JenisSurat`.`id`=`SK_ttd_SuratMasuk`.`JenisSurat_id`
+// WHERE (`SK_ttd`.`pendattg_id` = '0001016602' 
+//        OR `SK_ttd`.`pendattg_id` = 'Dosen' );
+
+// SELECT `SK_ttd`.`id` AS idttd,`SK_ttd`.`Status`,`SK_ttd`.`NoSurat`,`SK_ttd`.`pendattg_id`,`SK_JenisSurat`.`name`,`SK_ttd_SuratMasuk`.`TimeStamp`,`SK_ttd`.`jenisttd` FROM `SK_ttd` LEFT JOIN `SK_ttd_SuratMasuk` ON `SK_ttd_SuratMasuk`.`NoSurat` = `SK_ttd`.`NoSurat` LEFT JOIN `SK_JenisSurat` ON `SK_JenisSurat`.`id`=`SK_ttd_SuratMasuk`.`JenisSurat_id` WHERE (`SK_ttd`.`pendattg_id` = '0001016602' OR `SK_ttd`.`pendattg_id` = 'Dosen' );

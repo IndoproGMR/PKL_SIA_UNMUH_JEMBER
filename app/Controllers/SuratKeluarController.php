@@ -4,11 +4,9 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\Jenissurat;
-// use App\Models\suratkeluar;
 use App\Models\TandaTangan;
 use App\Libraries\enkripsi_library;
 use App\Models\SuratKeluraModel;
-use CodeIgniter\Files\File;
 
 class SuratKeluarController extends BaseController
 {
@@ -22,7 +20,7 @@ class SuratKeluarController extends BaseController
         $data['datasurat'] = $model->cekNoSurat(userInfo()['id']);
 
         foreach ($data['datasurat'] as $key => $value) {
-            $data['surat'][$key] = $value['NoSurat'];
+            $data['surat'][$key] = $value['SuratIdentifier'];
             $data['datasurat'][$key]['status'] = $model2->cekStatusSurat($data['surat'][$key]);
         }
 
@@ -32,6 +30,7 @@ class SuratKeluarController extends BaseController
             }
         }
 
+        // d($data);
         return view('suratkeluar/status_surat', $data);
     }
 
@@ -61,7 +60,7 @@ class SuratKeluarController extends BaseController
     }
 
     // proses data untuk meminta
-    public function addmintaSuratProses($idsurat)
+    public function addMintaSuratProses($idsurat)
     {
         PagePerm(['Mahasiswa', 'Calon Mahasiswa'], 'error_perm', false, 1);
         helper(['text']);
@@ -75,18 +74,7 @@ class SuratKeluarController extends BaseController
 
         if (isset($dataform['tambahan'])) {
             if (in_array('foto', $dataform['tambahan'])) {
-                $validationRule = [
-                    'foto' => [
-                        'label' => 'Image File',
-                        'rules' => [
-                            'uploaded[foto]',
-                            'is_image[foto]',
-                            'mime_in[foto,image/jpg,image/jpeg,image/gif,image/png,image/webp]',
-                            'max_size[foto,1024]',
-                            // 'max_dims[foto,1024,768]',
-                        ],
-                    ],
-                ];
+                $validationRule = Validasi_Foto();
 
                 if (!$this->validate($validationRule)) {
                     $data = ['errors' => $this->validator->getErrors()];
@@ -94,17 +82,34 @@ class SuratKeluarController extends BaseController
                 }
 
                 $img = $this->request->getFile('foto');
-                if (!$img->hasMoved()) {
-                    $filepath = 'uploads/' . $img->store('dataSurat/' . userInfo()['id'], null, 'public');
-                    // $filepath = $img->store('../../public/uploads/dataSurat/' . userInfo()['id']);
-                    // $filepath = WRITEPATH . 'uploads/' . $img->store('dataSurat/' . userInfo()['id']);
-                    $data = ['uploaded_fileinfo' => new File($filepath)];
+
+                if ($img->isValid() && !$img->hasMoved()) {
+                    $filepath = "uploads/SuratKeluar/" . userInfo()['id'];
+                    $extension = $img->getExtension();
+                    $extension = empty($extension) ? '' : '.' . $extension;
+                    $filename = generateIdentifier(16, 'time') . $extension;
+
+                    // !menyimpan foto ke dalam folder public
+                    try {
+                        $img->move($filepath, $filename);
+                    } catch (\Throwable $th) {
+                        return FlashException('Tidak Dapat Menyimpan Foto');
+                    }
+
+                    // !Copy file ke folder Arhive
+                    $fileFrom = $filepath . "/" . $filename;
+                    $fileTo = cekDir("../Z_Archive/" . $filepath) . "/" . $filename;
+
+                    if (!copyFile($fileFrom, $fileTo)) {
+                        return FlashException('Tidak Dapat Menyimpan Foto ke safeplace');
+                    }
+
+
+
+                    $filepath = $filepath . '/' . $filename;
                 }
-                // $lokasifoto = potongString($filepath, '');
-                // $lokasifoto = potongString($filepath, WRITEPATH);
-                // d($filepath);
-                // d($lokasifoto);
                 $postdata['foto'] = $filepath;
+                // d($postdata);
             }
         }
 
@@ -114,21 +119,24 @@ class SuratKeluarController extends BaseController
 
 
         // !untuk menyimpan SuratKeluar
-        $data['NoSurat'] = random_string();
-        $data['TimeStamp'] = time();
+        $data['SuratIdentifier'] = generateIdentifier();
+        $data['TimeStamp'] = getUnixTimeStamp();
         $data['DataTambahan'] = base64_encode(json_encode($dataformarray));
         $data['JenisSurat_id'] = $idsurat;
         $data['mshw_id'] = userInfo()['id'];
 
         // !untuk menyimpan TTD
         $TTDdata['TTD'] = removeGroups(json_decode($model3->seebyID($data['JenisSurat_id'])['form'], true)['TTD']);
-        $TTDdata['NoSurat'] = $data['NoSurat'];
+        $TTDdata['SuratIdentifier'] = $data['SuratIdentifier'];
 
         /**
-         * unutk TTDdata['status','hash','randomStr','Timestamp']
+         * unutk TTDdata['status','hash','IdentifierSurat','Timestamp']
          * berada di fungsi transformData(data);
          */
         $ttdArray = transformData($TTDdata);
+
+        // d($ttdArray);
+        // d($data);
 
         // set ke dalam database
         if (!$model->addSuratKeluar($data)) {
@@ -151,7 +159,7 @@ class SuratKeluarController extends BaseController
         $data['datasurat'] = $model->cekNoSurat(userInfo()['id']);
 
         foreach ($data['datasurat'] as $key => $value) {
-            $data['surat'][$key] = $value['NoSurat'];
+            $data['surat'][$key] = $value['SuratIdentifier'];
             $data['datasurat'][$key]['status'] = $model2->cekStatusSurat($data['surat'][$key]);
         }
 
@@ -191,6 +199,7 @@ class SuratKeluarController extends BaseController
 
         $dataform = $this->request->getPost();
 
+
         unset($dataform['inputisi']);
         unset($dataform['jenisSurat']);
         unset($dataform['diskripsi']);
@@ -198,6 +207,10 @@ class SuratKeluarController extends BaseController
         unset($dataform['Za1koo5E']);
 
         $data['json_data'] = ubahJSONkeSimpelJSON(json_encode($dataform, true));
+
+        d($data);
+        d($postdata);
+        d($dataform);
 
         $model = model(Jenissurat::class);
 
@@ -224,8 +237,8 @@ class SuratKeluarController extends BaseController
     {
         $model = model(Jenissurat::class);
 
-        $data['datasurat'] = $model->seebyID($idsurat);
-
+        $data['datasurat'] = $model->seebyID($idsurat, 1);
+        // d($data);
         return view('suratkeluar/detailjenissurat', $data);
     }
 
@@ -244,6 +257,7 @@ class SuratKeluarController extends BaseController
     // untuk meng update jenis surat ke db
     public function updateJenisSuratProses()
     {
+        PagePerm(['Dosen'], 'error_perm', false, 1);
         $postdata = $this->request->getPost(
             [
                 'id',
@@ -258,6 +272,73 @@ class SuratKeluarController extends BaseController
         }
         return redirect()->to('/semua-surat');
     }
+
+    public function indexTanpaNoSurat()
+    {
+        PagePerm(['Dosen']);
+        $model = model(SuratKeluraModel::class);
+        $data['datasurat'] = $model->seeAllnoNoSurat();
+        // if (!$model->updateNoSurat(3, 'test3')) {
+        //     FlashException('Tidak dapat mengganti Nomer Surat');
+        // }
+
+
+        // foreach ($data['datasurat'] as $key => $value) {
+        // $data['surat'][$key] = $value['NoSurat'];
+        // $data['datasurat'][$key]['status'] = $model->cekStatusSurat($data['surat'][$key]);
+        // }
+
+        // $data['perluttd'] = count($data['datasurat']);
+
+
+        // d($data);
+        return view('suratkeluar/index_SuratTanpaNo', $data);
+    }
+
+    public function updateTanpaNoSurat()
+    {
+        $postdata = $this->request->getPost('id');
+        $model = model('SuratKeluraModel');
+        $dataSurat = $model->cekSuratByNo($postdata);
+        $dataSurat['id'] = $postdata;
+
+
+        // d($dataSurat);
+        // d($postdata);
+
+        return view('suratKeluar/edit_suratMasuk', $dataSurat);
+    }
+
+    public function updateTanpaNoSuratProses()
+    {
+        $postdata = $this->request->getPost(['id', 'NoSurat']);
+        $model = model('SuratKeluraModel');
+        // $dataSurat = $model->cekSuratByNo($postdata['id']);
+        // $dataSurat['id'] = $postdata;
+
+        $data = [
+            'NoSurat' => $postdata['NoSurat']
+        ];
+        if (!$model->updateNoSurat($postdata['id'], $data)) {
+            // return "gagal mengubah nomer surat";
+            return FlashException('gagal mengubah nomer surat');
+        }
+        // d($dataSurat);
+        // d($postdata);
+
+        return FlashSuccess('semua-surat-tanpa_NoSurat');
+        // return view('suratKeluar/edit_suratMasuk', $dataSurat);
+    }
+
+    public function deleteTanpaNoSuratProses()
+    {
+        $postdata = $this->request->getPost('id');
+        $model = model('SuratKeluraModel');
+        if (!$model->deleteSurat($postdata)) {
+            return FlashException('gagal menghapus Surat');
+        }
+        return FlashSuccess('semua-surat-tanpa_NoSurat', 'berhasil menghapus Surat');
+    }
     // !END untuk pengajaran
 
 
@@ -270,11 +351,12 @@ class SuratKeluarController extends BaseController
         $data['datasurat'] = $model->cekStatusSuratTTD(userInfo());
 
         foreach ($data['datasurat'] as $key => $value) {
-            $data['surat'][$key] = $value['NoSurat'];
+            $data['surat'][$key] = $value['SuratIdentifier'];
             $data['datasurat'][$key]['status'] = $model->cekStatusSurat($data['surat'][$key]);
         }
 
         $data['perluttd'] = count($data['datasurat']);
+        // d($data);
         return view('suratkeluar/status_ttd', $data);
     }
 
@@ -297,11 +379,10 @@ class SuratKeluarController extends BaseController
         $enkripsi = new enkripsi_library;
 
         $data['update']['Status']      = 1;
-        $data['update']['qrcodeName']  =  "QRCode-" . time() . random_string();
+        $data['update']['qrcodeName']  =  "QRCode-" . generateIdentifier(16, 'time');
         $data['update']['hash']        = $enkripsi->enkripsiTTD($data['TTD']['NoSurat'], $data['TTD']['mshw_id']);
-        $data['update']['TimeStamp']   = time();
+        $data['update']['TimeStamp']   = getUnixTimeStamp();
         $data['update']['pendattg_id'] = userInfo()['id'];
-
 
 
         if (!Render_Qr($data['update']['hash'], $data['update']['qrcodeName'])) {

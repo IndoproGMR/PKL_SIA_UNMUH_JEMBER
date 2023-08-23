@@ -5,8 +5,6 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Libraries\enkripsi_library;
 use App\Models\AuthUserGroup;
-use App\Models\Jenissurat;
-
 
 $GLOBALS['loginUI'] = 'debug';
 
@@ -43,6 +41,10 @@ class Login extends BaseController
             '6' => [
                 'login' => '1210652011',
                 'password' => '*3E5287812'
+            ],
+            '7' => [
+                'login' => generateIdentifier(16, 'time'),
+                'password' => generateIdentifier()
             ],
         ];
 
