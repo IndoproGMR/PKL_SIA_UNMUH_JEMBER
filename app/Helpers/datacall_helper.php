@@ -25,6 +25,7 @@ function resMas($errorCategory)
 
         'exist' => 'ada',
         'valid' => 'valid',
+        'param' => 'parameter',
 
         'y' => 'iya',
         'n' => 'tidak',
@@ -54,7 +55,7 @@ function resMas($errorCategory)
     return implode(' ', $errorMessageParts);
 }
 
-function datacallRespond($id)
+function datacallResponddep($id)
 {
     /**
      * validasi = v

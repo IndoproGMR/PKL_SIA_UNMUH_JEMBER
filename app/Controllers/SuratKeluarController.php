@@ -278,12 +278,10 @@ class SuratKeluarController extends BaseController
         PagePerm(['Dosen']);
         $model = model(SuratKeluraModel::class);
         $data['datasurat'] = $model->seeAllnoNoSurat();
-        // $data['hasil'] = ;
-        if (!$model->updateNoSurat(3, 'test3')) {
-            FlashException('Tidak dapat mengganti Nomer Surat');
-        }
+        // if (!$model->updateNoSurat(3, 'test3')) {
+        //     FlashException('Tidak dapat mengganti Nomer Surat');
+        // }
 
-        d($data);
 
         // foreach ($data['datasurat'] as $key => $value) {
         // $data['surat'][$key] = $value['NoSurat'];
@@ -291,7 +289,55 @@ class SuratKeluarController extends BaseController
         // }
 
         // $data['perluttd'] = count($data['datasurat']);
-        // return view('suratkeluar/status_ttd', $data);
+
+
+        // d($data);
+        return view('suratkeluar/index_SuratTanpaNo', $data);
+    }
+
+    public function updateTanpaNoSurat()
+    {
+        $postdata = $this->request->getPost('id');
+        $model = model('SuratKeluraModel');
+        $dataSurat = $model->cekSuratByNo($postdata);
+        $dataSurat['id'] = $postdata;
+
+
+        // d($dataSurat);
+        // d($postdata);
+
+        return view('suratKeluar/edit_suratMasuk', $dataSurat);
+    }
+
+    public function updateTanpaNoSuratProses()
+    {
+        $postdata = $this->request->getPost(['id', 'NoSurat']);
+        $model = model('SuratKeluraModel');
+        // $dataSurat = $model->cekSuratByNo($postdata['id']);
+        // $dataSurat['id'] = $postdata;
+
+        $data = [
+            'NoSurat' => $postdata['NoSurat']
+        ];
+        if (!$model->updateNoSurat($postdata['id'], $data)) {
+            // return "gagal mengubah nomer surat";
+            return FlashException('gagal mengubah nomer surat');
+        }
+        // d($dataSurat);
+        // d($postdata);
+
+        return FlashSuccess('semua-surat-tanpa_NoSurat');
+        // return view('suratKeluar/edit_suratMasuk', $dataSurat);
+    }
+
+    public function deleteTanpaNoSuratProses()
+    {
+        $postdata = $this->request->getPost('id');
+        $model = model('SuratKeluraModel');
+        if (!$model->deleteSurat($postdata)) {
+            return FlashException('gagal menghapus Surat');
+        }
+        return FlashSuccess('semua-surat-tanpa_NoSurat', 'berhasil menghapus Surat');
     }
     // !END untuk pengajaran
 
