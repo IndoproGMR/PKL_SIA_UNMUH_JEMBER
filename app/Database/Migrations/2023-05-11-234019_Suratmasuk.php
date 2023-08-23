@@ -71,7 +71,7 @@ class Suratmasuk extends Migration
             ],
             'NamaFile' => [
                 'type'       => 'varchar',
-                'constraint' => 16
+                'constraint' => 255
             ],
             'JenisSuratArchice_id' => [
                 'type'       => 'int',
@@ -83,6 +83,11 @@ class Suratmasuk extends Migration
                 'type'       => 'int',
                 'constraint' => 10,
                 'unsigned'   => true
+            ],
+            'TimeStampUpdate' => [
+                'type'       => 'int',
+                'constraint' => 10,
+                'default'    => null
             ],
             'DeleteAt' => [
                 'type'       => 'int',

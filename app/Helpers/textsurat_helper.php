@@ -318,12 +318,45 @@ function recursiveCopy($source, $destination)
 
 function copyFile($source, $destination)
 {
+    helper('filesystem');
     try {
         copy($source, $destination);
     } catch (\Throwable $th) {
         return false; // Gagal menyalin file
     }
+    try {
+        same_file($destination, $source);
+    } catch (\Throwable $th) {
+        return false; // file tidak sama
+    }
+
     return true; // Berhasil menyalin file
+}
+
+function deleteFile($filePath)
+{
+    if (file_exists($filePath)) {
+        if (unlink($filePath)) {
+            return true; // Berhasil menghapus file
+        } else {
+            return false; // Gagal menghapus file
+        }
+    } else {
+        return false; // File tidak ditemukan
+    }
+}
+
+function moveFile($source, $destination)
+{
+    if (file_exists($source)) {
+        if (rename($source, $destination)) {
+            return true; // Berhasil memindahkan file
+        } else {
+            return false; // Gagal memindahkan file
+        }
+    } else {
+        return false; // File sumber tidak ditemukan
+    }
 }
 
 // !bug mengambil semua folder dari root (/) hingga folder web

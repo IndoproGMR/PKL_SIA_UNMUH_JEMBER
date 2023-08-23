@@ -103,7 +103,7 @@ function Validasi_FilePDF()
             'rules' => [
                 'uploaded[filepdf]',
                 'mime_in[filepdf,application/pdf]',
-                'max_size[filepdf,10240]',
+                // 'max_size[filepdf,10240]',
             ],
         ],
     ];
@@ -120,4 +120,33 @@ function Validasi_Input()
             ]
         ],
     ];
+}
+
+
+function dialog()
+{
+    if (FlashSuccess('', '', 'get') !== null) {
+        echo ('
+        <div class="success-box">
+        <span class="success-icon">&#10003;</span>
+        <span class="success-message">' .
+            esc(FlashSuccess("", "", "get")) .
+            '</span>
+        </div>
+        ');
+    }
+}
+
+function dialogmessege()
+{
+    if (FlashSuccess('', '', 'get') !== null) {
+        echo ('
+        <div class="success-box">
+        <span class="success-icon">&#10003;</span>
+            <span class="success-message">' .
+            esc(FlashMessage("", "", "get")) .
+            '</span>
+        </div>
+        ');
+    }
 }

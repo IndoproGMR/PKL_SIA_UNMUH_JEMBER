@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\Jenissurat;
 use App\Models\SuratKeluraModel;
+use App\Models\SuratMasukModel;
 
 $GLOBALS['RenderPDF'] = 'public';
 // $GLOBALS['RenderPDF'] = 'debug';
@@ -85,6 +86,8 @@ class Pdfrender extends BaseController
 
         d($dataJsonDecode);
         d($html);
+        d($data);
+        d($namapdf);
     }
 
 
@@ -165,7 +168,37 @@ class Pdfrender extends BaseController
         d($html);
     }
 
+    public function staffViewSurat()
+    {
+        $postdata = $this->request->getPost('id');
+        $model = Model(SuratMasukModel::class);
+        $namaFile = $model->seefilebyid($postdata);
+        helper('filesystem');
+        try {
+            $path = WRITEPATH . $namaFile;
+            $file = new \CodeIgniter\Files\File($path, true);
+        } catch (\Throwable $th) {
+            try {
+                $path = "../Z_Archive/" . $namaFile;
+                $file = new \CodeIgniter\Files\File($path, true);
+            } catch (\Throwable $th) {
+                return FlashException('file Tidak ada didalam server');
+            }
+        }
+        $binary = readfile($path);
 
+        // d($postdata);
+        // d($model->seebyid($postdata));
+        // d($path);
+        // d($file);
+        // d($binary);
+
+        return $this->response
+            ->setHeader('Content-Type', $file->getMimeType())
+            ->setHeader('Content-disposition', 'inline; filename="' . $file->getBasename() . '"')
+            ->setStatusCode(200)
+            ->setBody($binary);
+    }
 
     // !========================================================================
     public function TestMPDF()
