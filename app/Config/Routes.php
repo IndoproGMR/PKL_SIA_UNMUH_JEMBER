@@ -81,6 +81,11 @@ $routes->get('/riwayat-TTD', 'SuratKeluarController::indexRiwayatTTD');
 $routes->get('/semua-surat', 'SuratKeluarController::indexJenisSurat');
 $routes->get('/semua-surat-tanpa_NoSurat', 'SuratKeluarController::indexTanpaNoSurat');
 
+$routes->post('/edit/surat-tanpa_NoSurat', 'SuratKeluarController::updateTanpaNoSurat');
+$routes->post('/edit-proses/surat-tanpa_NoSurat', 'SuratKeluarController::updateTanpaNoSuratProses');
+
+$routes->post('/delete-proses/surat-tanpa_NoSurat', 'SuratKeluarController::deleteTanpaNoSuratProses');
+
 // ?penambahan =================================================================
 $routes->get('/bikin-surat', 'SuratKeluarController::addJenisSurat');
 $routes->post('/bikin-surat', 'SuratKeluarController::addJenisSuratProses');

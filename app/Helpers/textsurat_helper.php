@@ -201,29 +201,46 @@ function timeconverter(int $timestamp = 0, $jenis = 'yunani')
     date_default_timezone_set('Asia/Jakarta');
     $Arabic = new \ArPHP\I18N\Arabic();
 
-    // tgl yunani
-    $date = new DateTime("@$timestamp");
-    $date->setTimezone(new DateTimeZone('GMT+7'));
 
     $Arabic->setDateMode(8);
     $correction = $Arabic->dateCorrection($timestamp);
 
 
+    // tgl yunani
+    $date = new DateTime("@$timestamp");
+    $date->setTimezone(new DateTimeZone('GMT+7'));
+
+    $daysInIndonesian = [
+        'Sunday'    => 'Minggu',
+        'Monday'    => 'Senin',
+        'Tuesday'   => 'Selasa',
+        'Wednesday' => 'Rabu',
+        'Thursday'  => 'Kamis',
+        'Friday'    => 'Jumat',
+        'Saturday'  => 'Sabtu'
+    ];
+
+
+
     switch ($jenis) {
             // ! tanggal yunani
         case 'yunani':
-            $data = $date->format('l, d F Y H:i:s');
+            $indonesianDay = $daysInIndonesian[$date->format('l')];
+            $data = $indonesianDay . ', ' . $date->format('d F Y H:i:s');
             break;
         case 'yunanitgl':
-            $data = $date->format('l, d F Y');
+            $indonesianDay = $daysInIndonesian[$date->format('l')];
+            $data = $indonesianDay . ', ' . $date->format('d F Y');
             break;
 
             // ! tanggal hijriah
         case 'hijriah':
-            $data = $Arabic->date('l, j F Y H:i:s', $timestamp, $correction);
+            $indonesianDay = $daysInIndonesian[$Arabic->date('l', $timestamp, $correction)];
+            $data = $indonesianDay . $Arabic->date(', j F Y H:i:s', $timestamp, $correction);
             break;
         case 'hijriahtgl':
-            $data = $Arabic->date('l, j F Y', $timestamp, $correction);
+            $indonesianDay = $daysInIndonesian[$Arabic->date('l', $timestamp, $correction)];
+            $data = $indonesianDay . $Arabic->date(', j F Y', $timestamp, $correction);
             break;
 
             // ! error
@@ -231,8 +248,6 @@ function timeconverter(int $timestamp = 0, $jenis = 'yunani')
             $data = 'jenis tanggal tidak ditemukan';
             break;
     }
-
-
     return $data;
 }
 
