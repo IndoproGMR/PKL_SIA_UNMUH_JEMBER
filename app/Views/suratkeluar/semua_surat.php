@@ -28,7 +28,7 @@
             <?php foreach ($jenissurat as $key) : ?>
                 <tr>
                     <td><?= esc($key['name']) ?></td>
-                    <td><?= TombolTo('/Preview/' . $key['id'], 'Preview Surat', 'signature', '_blank') ?></td>
+                    <td><?= TombolTo('/staff/Preview/' . $key['id'], 'Preview Surat', 'signature', '_blank') ?></td>
                     <td><?= esc($key['description']) ?></td>
                     <?php if ($key['show'] == 0) : ?>
                         <td><?= TombolIDcheck(0, '/toggleshow-surat', $key['id']) ?></td>

@@ -1,10 +1,9 @@
 <!-- Siidebar -->
-
 <div class="container">
     <div class="sidebar">
         <div class="header">
             <div class="list-item">
-                <a href="">
+                <a href="<?= base_url('/'); ?>">
                     <img src="https://sia.unmuhjember.ac.id/<?= esc(userInfo()['FotoUser']) ?>" alt="Foto Profile" class="icon" loading='lazy'>
                     <p class="description-header"><?= esc(userInfo()['NamaUser']) ?></p>
                 </a>
@@ -13,127 +12,171 @@
 
         <div class="main">
 
-            <!-- Cek QR -->
-            <div class="list-item">
-                <a href="<?= base_url(''); ?>">
-                    <img src="<?= base_url('/'); ?>asset/svg/home.svg" alt="" class="icon" loading='lazy'>
-                    <span class="description">Dashboard</span>
-                </a>
-            </div>
+            <?= view_cell(
+                'SidebarLinkNotifCell',
+                [
+                    'linktext'  => 'Dashboard',
+                ]
+            ) ?>
 
 
-            <?php if (in_group(['Mahasiswa'])) : ?>
+            <?php
 
-                <!-- Cek QR -->
-                <div class="list-item">
-                    <a href="<?= base_url('/status-surat'); ?>">
-                        <img src="<?= base_url('/'); ?>asset/svg/list-status.svg" alt="" class="icon" loading='lazy'>
-                        <span class="description">Status</span>
-                    </a>
-                </div>
+            if (in_group(['Mahasiswa'])) : ?>
 
-                <!-- Cek QR -->
-                <div class="list-item">
-                    <a href="<?= base_url('/minta-surat'); ?>">
-                        <img src="<?= base_url('/'); ?>asset/svg/buat-surat.svg" alt="" class="icon" loading='lazy'>
-                        <span class="description">Buat Surat</span>
-                    </a>
-                </div>
+                <?= view_cell(
+                    'SidebarLinkNotifCell',
+                    [
+                        'link'      => 'status-surat',
+                        'linktext'  => 'Status Tanda Tangan',
+                        'imagelink' => 'asset/svg/list-status.svg',
+                    ]
+                ) ?>
 
-                <!-- Cek QR -->
-                <div class="list-item">
-                    <a href="<?= base_url('/riwayat-surat'); ?>">
-                        <img src="<?= base_url('/'); ?>asset/svg/history.svg" alt="" class="icon" loading='lazy'>
-                        <span class="description">Riwayat</span>
-                    </a>
-                </div>
+                <?= view_cell(
+                    'SidebarLinkNotifCell',
+                    [
+                        'link'      => 'minta-surat',
+                        'linktext'  => 'Buat Surat',
+                        'imagelink' => 'asset/svg/buat-surat.svg',
+                    ]
+                ) ?>
+
+
+                <?= view_cell(
+                    'SidebarLinkNotifCell',
+                    [
+                        'link'      => 'riwayat-surat',
+                        'linktext'  => 'Riwayat',
+                        'imagelink' => 'asset/svg/history.svg',
+                    ]
+                ) ?>
             <?php endif ?>
 
 
-            <?php if (in_group(['Dosen'])) : ?>
-
-                <!-- list Surat semua surat -->
-                <div class="list-item">
-                    <a href="<?= base_url('/semua-surat'); ?>">
-                        <img src="<?= base_url('/'); ?>asset/svg/list-menu.svg" alt="" class="icon" loading='lazy'>
-                        <span class="description">Semua Surat</span>
-                    </a>
-                </div>
-
-                <!-- bikin Surat -->
-                <div class="list-item">
-                    <a href="<?= base_url('/bikin-surat'); ?>">
-                        <img src="<?= base_url('/'); ?>asset/svg/tambah.svg" alt="" class="icon" loading='lazy'>
-                        <span class="description">Tambah Surat</span>
-                    </a>
-                </div>
-
-                <!-- Surat masuk -->
-                <div class="list-item">
-                    <a href="<?= base_url('/bikin-surat'); ?>">
-                        <img src="<?= base_url('/'); ?>asset/svg/tambah.svg" alt="" class="icon" loading='lazy'>
-                        <span class="description">Tambah Surat Masuk</span>
-                    </a>
-                </div>
-
-                <!-- Query  -->
-                <div class="list-item">
-                    <a href="<?= base_url('/bikin-surat'); ?>">
-                        <img src="<?= base_url('/'); ?>asset/svg/tambah.svg" alt="" class="icon" loading='lazy'>
-                        <span class="description">Query</span>
-                    </a>
-                </div>
-
-
-
-                <!-- count untuk notip -->
+            <?php if (in_group(['Dosen', 'Kepala Keuangan'])) : ?>
                 <?php
-                $model = model(TandaTangan::class);
-                $data['datasurat'] = $model->cekStatusSuratTTD(userInfo());
-                $perluttd = count($data['datasurat']);
+                $cache = \Config\Services::cache();
+                $namacache = userInfo()['id'];
+
+                if (cache($namacache . '_perluNoSuratC') === null) {
+                    $model = model('SuratKeluraModel');
+                    $perluNoSurat = count($model->seeAllnoNoSurat());
+                    cache()->save($namacache . '_perluNoSuratC', $perluNoSurat, 30);
+                }
+
+                if (cache($namacache . '_TandaTanganc') === null) {
+                    $model = model('TandaTangan');
+                    $perluttd = count($model->cekStatusSuratTTD(userInfo()));
+                    cache()->save($namacache . '_TandaTanganc', $perluttd, 30);
+                }
+
+                $perluNoSurat = cache($namacache . '_perluNoSuratC');
+                $perluttd = cache($namacache . '_TandaTanganc');
                 ?>
 
-                <!-- Cek Status yang belum TTD -->
-                <div class="list-item">
-                    <a href="<?= base_url('/status-TTD'); ?>" class="notification">
-                        <img src="<?= base_url('/'); ?>asset/svg/list-status.svg" alt="" class="icon" loading='lazy'>
-                        <span class="description">Status Tanda Tangan</span>
-                        <?php if ($perluttd !== 0) : ?>
-                            <span class="badge"><?= esc($perluttd) ?></span>
-                        <?php endif ?>
-                    </a>
-                </div>
+                <?= view_cell(
+                    'SidebarLinkNotifCell',
+                    [
+                        'link'      => 'semua-surat-tanpa_NoSurat',
+                        'linktext'  => 'Status Surat Yang belum punya No.',
+                        'imagelink' => 'asset/svg/list-status.svg',
+                        'notif'     => $perluNoSurat,
+                    ]
+                ) ?>
 
-                <!-- Cek Riwayat yang sudah di TTDkan -->
-                <div class="list-item">
-                    <a href="<?= base_url('/riwayat-TTD'); ?>">
-                        <img src="<?= base_url('/'); ?>asset/svg/history.svg" alt="" class="icon" loading='lazy'>
-                        <span class="description">Riwayat Tanda Tangan</span>
-                    </a>
-                </div>
+                <?= view_cell(
+                    'SidebarLinkNotifCell',
+                    [
+                        'link'      => 'semua-surat',
+                        'linktext'  => 'Semua Surat',
+                        'imagelink' => 'asset/svg/list-menu.svg',
+                        'notif'     => 0,
+                    ]
+                ) ?>
 
-                <!-- Admin Panel -->
-                <div class="list-item">
-                    <a href="<?= base_url('/Admin-Panel'); ?>">
-                        <img src="<?= base_url('/'); ?>asset/svg/history.svg" alt="" class="icon" loading='lazy'>
-                        <span class="description">Admin Panel</span>
-                    </a>
-                </div>
+                <?= view_cell(
+                    'SidebarLinkNotifCell',
+                    [
+                        'link'      => 'bikin-surat',
+                        'linktext'  => 'Tambah Surat',
+                        'imagelink' => 'asset/svg/tambah.svg',
+                        'notif'     => 0,
+                    ]
+                ) ?>
+
+                <?= view_cell(
+                    'SidebarLinkNotifCell',
+                    [
+                        'link'      => 'semua-archive-surat',
+                        'linktext'  => 'semua archive Surat',
+                        'imagelink' => 'asset/svg/list-menu.svg',
+                        'notif'     => 0,
+                    ]
+                ) ?>
+
+                <?= view_cell(
+                    'SidebarLinkNotifCell',
+                    [
+                        'link'      => 'input-archive-surat',
+                        'linktext'  => 'Input semua archive Surat',
+                        'imagelink' => 'asset/svg/tambah.svg',
+                        'notif'     => 0,
+                    ]
+                ) ?>
+
+                <?= view_cell(
+                    'SidebarLinkNotifCell',
+                    [
+                        'link'      => '',
+                        'linktext'  => 'Query',
+                        'imagelink' => 'asset/svg/tambah.svg',
+                        'notif'     => 0,
+                    ]
+                ) ?>
 
 
 
+                <?= view_cell(
+                    'SidebarLinkNotifCell',
+                    [
+                        'link'      => 'status-TTD',
+                        'linktext'  => 'Status Tanda Tangan',
+                        'imagelink' => 'asset/svg/list-status.svg',
+                        'notif'     => $perluttd,
+                    ]
+                ) ?>
+
+                <?= view_cell(
+                    'SidebarLinkNotifCell',
+                    [
+                        'link'      => 'riwayat-TTD',
+                        'linktext'  => 'Riwayat Tanda Tangan',
+                        'imagelink' => 'asset/svg/history.svg',
+                        'notif'     => 0,
+                    ]
+                ) ?>
+
+                <?= view_cell(
+                    'SidebarLinkNotifCell',
+                    [
+                        'link'      => 'Admin-Panel',
+                        'linktext'  => 'Admin Panel',
+                        'imagelink' => 'asset/svg/history.svg',
+                        'notif'     => 0,
+                    ]
+                ) ?>
             <?php endif ?>
 
-
-
-
-            <!-- Cek QR -->
-            <div class="list-item">
-                <a href="<?= base_url('/qr-validasi'); ?>">
-                    <img src="<?= base_url('/'); ?>asset/svg/outline-qrcode.svg" alt="" class="icon" loading='lazy'>
-                    <span class="description">Cek Surat</span>
-                </a>
-            </div>
+            <?= view_cell(
+                'SidebarLinkNotifCell',
+                [
+                    'link'      => 'qr-validasi',
+                    'linktext'  => 'Cek Surat',
+                    'imagelink' => 'asset/svg/outline-qrcode.svg',
+                    'notif'     => 0,
+                ]
+            ) ?>
 
         </div>
     </div>
@@ -149,7 +192,6 @@
 
         <!-- Start Main data -->
         <div class="kontenerutama">
-
             <?= $this->renderSection('main') ?>
         </div>
         <!-- END Main data -->

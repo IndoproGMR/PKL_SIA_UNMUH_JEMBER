@@ -37,15 +37,13 @@ class TandaTangan extends Model
         if (count($data) > 0) {
             return $data[0];
         } else {
-            helper('datacall');
-
             $data = [
-                'NoSurat'     => datacallRespond('e'),
-                'TimeStamp'   => datacallRespond('e'),
-                'pendattg_id' => datacallRespond('e'),
-                'mshw_id'     => datacallRespond('e'),
-                'jenisSurat'  => datacallRespond('e'),
-                'valid'       => 'TTD0'
+                'NoSurat'     => resMas('e'),
+                'TimeStamp'   => resMas('e'),
+                'pendattg_id' => resMas('e'),
+                'mshw_id'     => resMas('e'),
+                'jenisSurat'  => resMas('e'),
+                'valid'       => 'TTD.n.exist.db'
             ];
             return $data;
         }
@@ -56,8 +54,8 @@ class TandaTangan extends Model
     {
         // return $this->where('status',$id)->find($id);
         return $this
-            ->select('SK_ttd.Status,SK_ttd_SuratMasuk.mshw_id,SK_ttd.NoSurat')
-            ->join('SK_ttd_SuratMasuk', 'SK_ttd_SuratMasuk.NoSurat=SK_ttd.NoSurat')
+            ->select('SK_ttd.Status,SK_ttd_SuratMasuk.mshw_id,SK_ttd_SuratMasuk.NoSurat')
+            ->join('SK_ttd_SuratMasuk', 'SK_ttd_SuratMasuk.SuratIdentifier=SK_ttd.SuratIdentifier')
             ->where('SK_ttd.id', $id)
             ->find()[0];
     }
@@ -78,13 +76,13 @@ class TandaTangan extends Model
 
 
     // untuk melihat berapa banyak yang sudah ttd dan belum // (2/10)
-    function cekStatusSurat($nosurat)
+    function cekStatusSurat($SuratIdentifier)
     {
         $datautama = $this
             ->select('COUNT(*) AS totalTTD,
         SUM(CASE WHEN Status = 1 THEN 1 ELSE 0 END) AS sudah,
         SUM(CASE WHEN Status = 0 THEN 1 ELSE 0 END) AS belum')
-            ->where('NoSurat', $nosurat)
+            ->where('SuratIdentifier', $SuratIdentifier)
             ->find();
 
         if (count($datautama) == 1) {
@@ -130,18 +128,21 @@ class TandaTangan extends Model
     function cekStatusSuratTTD($pendattg_id, $status = 0)
     {
         $data = $this
-            ->select('`SK_ttd`.`id` AS idttd,
+            ->select('
+        `SK_ttd`.`id` AS idttd,
         `SK_ttd`.`Status`,
-        `SK_ttd`.`NoSurat`,
+        `SK_ttd_SuratMasuk`.`NoSurat`,
+        `SK_ttd`.`SuratIdentifier`,
         `SK_ttd`.`pendattg_id`,
         `SK_JenisSurat`.`name` as namaJenisSurat,
         `SK_ttd_SuratMasuk`.`TimeStamp`,
         `SK_ttd`.`jenisttd` ,
         `SK_ttd`.`TimeStamp` as `TimeStamp_ttd`')
-            ->join('SK_ttd_SuratMasuk', '`SK_ttd_SuratMasuk`.`NoSurat` = `SK_ttd`.`NoSurat`')
+            ->join('SK_ttd_SuratMasuk', '`SK_ttd_SuratMasuk`.`SuratIdentifier` = `SK_ttd`.`SuratIdentifier`')
             ->join('SK_JenisSurat', '`SK_JenisSurat`.`id`=`SK_ttd_SuratMasuk`.`JenisSurat_id`')
             ->where('`SK_ttd`.`Status`', $status)
-            ->where('`SK_ttd`.`NoSurat` != ', 'Belum_Memiliki_No_Surat')
+            ->where('`SK_ttd_SuratMasuk`.`NoSurat` != ', 'Belum_Memiliki_No_Surat')
+            ->where('SK_ttd_SuratMasuk.DeleteAt', null)
             ->groupStart()
             ->where('`SK_ttd`.`pendattg_id`', $pendattg_id['id'])
             ->orWhere('`SK_ttd`.`pendattg_id`', $pendattg_id['namaLVL'])

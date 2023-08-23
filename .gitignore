@@ -131,11 +131,17 @@ nb-configuration.xml
 
 # public
 public/pdf/*
-public/uploads/dataSurat/*
+public/uploads/SuratKeluar/*
 public/uploads/QRcodeTTD/*
+public/module/tinymce/*
 
 # Libraries
 app/Libraries/enkripsi_library.php
 
+writable/ArhiveSurat/*
 writable/pdf/*
 writable/temp/*
+
+Z_Archive/*
+!Z_Archive/index.html
+!Z_Archive/.htaccess

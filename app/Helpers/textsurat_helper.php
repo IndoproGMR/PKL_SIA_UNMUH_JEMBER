@@ -1,5 +1,7 @@
 <?php
 
+use CodeIgniter\I18n\Time;
+
 /**
  * masukan string text
  * cari kalimat yang ingin di ubah
@@ -199,29 +201,46 @@ function timeconverter(int $timestamp = 0, $jenis = 'yunani')
     date_default_timezone_set('Asia/Jakarta');
     $Arabic = new \ArPHP\I18N\Arabic();
 
-    // tgl yunani
-    $date = new DateTime("@$timestamp");
-    $date->setTimezone(new DateTimeZone('GMT+7'));
 
     $Arabic->setDateMode(8);
     $correction = $Arabic->dateCorrection($timestamp);
 
 
+    // tgl yunani
+    $date = new DateTime("@$timestamp");
+    $date->setTimezone(new DateTimeZone('GMT+7'));
+
+    $daysInIndonesian = [
+        'Sunday'    => 'Minggu',
+        'Monday'    => 'Senin',
+        'Tuesday'   => 'Selasa',
+        'Wednesday' => 'Rabu',
+        'Thursday'  => 'Kamis',
+        'Friday'    => 'Jumat',
+        'Saturday'  => 'Sabtu'
+    ];
+
+
+
     switch ($jenis) {
             // ! tanggal yunani
         case 'yunani':
-            $data = $date->format('l, d F Y H:i:s');
+            $indonesianDay = $daysInIndonesian[$date->format('l')];
+            $data = $indonesianDay . ', ' . $date->format('d F Y H:i:s');
             break;
         case 'yunanitgl':
-            $data = $date->format('l, d F Y');
+            $indonesianDay = $daysInIndonesian[$date->format('l')];
+            $data = $indonesianDay . ', ' . $date->format('d F Y');
             break;
 
             // ! tanggal hijriah
         case 'hijriah':
-            $data = $Arabic->date('l, j F Y H:i:s', $timestamp, $correction);
+            $indonesianDay = $daysInIndonesian[$Arabic->date('l', $timestamp, $correction)];
+            $data = $indonesianDay . $Arabic->date(', j F Y H:i:s', $timestamp, $correction);
             break;
         case 'hijriahtgl':
-            $data = $Arabic->date('l, j F Y', $timestamp, $correction);
+            $indonesianDay = $daysInIndonesian[$Arabic->date('l', $timestamp, $correction)];
+            $data = $indonesianDay . $Arabic->date(', j F Y', $timestamp, $correction);
             break;
 
             // ! error
@@ -229,33 +248,39 @@ function timeconverter(int $timestamp = 0, $jenis = 'yunani')
             $data = 'jenis tanggal tidak ditemukan';
             break;
     }
-
-
     return $data;
+}
+
+function getUnixTimeStamp()
+{
+    return Time::now('Asia/Jakarta')->getTimestamp();
 }
 
 function cekDir($dir)
 {
     if (!is_dir($dir)) {
         mkdir($dir, 0777, TRUE);
-        // cekDir($dir);
     }
     return $dir;
 }
 
 function cekFile($file)
 {
-    if (file_exists($file)) {
-        return true;
-    } else {
+    try {
+        file_exists($file);
+    } catch (\Throwable $th) {
         return false;
     }
+    return true;
 }
 
-function generateIdentifier($length = 16)
+function generateIdentifier(int $length = 16, $mode = 'haxtime')
 {
     $timestamp = time();
-    $timestampHex = dechex($timestamp);
+    $timestampHex = $timestamp;
+    if ($mode == 'haxtime') {
+        $timestampHex = dechex($timestamp);
+    }
 
     if (function_exists('random_bytes')) {
         $randomBytes = random_bytes($length - strlen($timestampHex) / 2);
@@ -272,4 +297,112 @@ function generateIdentifier($length = 16)
     $identifier = $timestampHex . "-" . $randomHex;
 
     return substr($identifier, 0, $length);
+}
+
+function recursiveCopy($source, $destination)
+{
+    if (is_dir($source)) {
+        if (!is_dir($destination)) {
+            mkdir($destination, 0755, true);
+        }
+
+        $dirHandle = opendir($source);
+
+        while (($file = readdir($dirHandle)) !== false) {
+            if ($file != '.' && $file != '..') {
+                $sourcePath = $source . '/' . $file;
+                $destinationPath = $destination . '/' . $file;
+
+                if (is_dir($sourcePath)) {
+                    recursiveCopy($sourcePath, $destinationPath);
+                } else {
+                    if (!file_exists($destinationPath)) {
+                        copy($sourcePath, $destinationPath);
+                    }
+                }
+            }
+        }
+
+        closedir($dirHandle);
+
+        return true;
+    } else {
+        return false;
+    }
+}
+
+function copyFile($source, $destination)
+{
+    helper('filesystem');
+    try {
+        copy($source, $destination);
+    } catch (\Throwable $th) {
+        return false; // Gagal menyalin file
+    }
+    try {
+        same_file($destination, $source);
+    } catch (\Throwable $th) {
+        return false; // file tidak sama
+    }
+
+    return true; // Berhasil menyalin file
+}
+
+function deleteFile($filePath)
+{
+    if (file_exists($filePath)) {
+        if (unlink($filePath)) {
+            return true; // Berhasil menghapus file
+        } else {
+            return false; // Gagal menghapus file
+        }
+    } else {
+        return false; // File tidak ditemukan
+    }
+}
+
+function moveFile($source, $destination)
+{
+    if (file_exists($source)) {
+        if (rename($source, $destination)) {
+            return true; // Berhasil memindahkan file
+        } else {
+            return false; // Gagal memindahkan file
+        }
+    } else {
+        return false; // File sumber tidak ditemukan
+    }
+}
+
+// !bug mengambil semua folder dari root (/) hingga folder web
+// createZipFromFolder('../Z_Archice', '../Z_Archice.zip'); // contoh penggunaan
+
+function createZipFromFolder($sourceFolder, $destinationZip)
+{
+    $zip = new ZipArchive();
+
+    if ($zip->open($destinationZip, ZipArchive::CREATE | ZipArchive::OVERWRITE) === true) {
+        $sourceFolder = realpath($sourceFolder);
+
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($sourceFolder),
+            RecursiveIteratorIterator::SELF_FIRST
+        );
+
+        foreach ($iterator as $file) {
+            $file = realpath($file);
+
+            if (is_dir($file)) {
+                $zip->addEmptyDir(str_replace($sourceFolder . '/', '', $file . '/'));
+            } elseif (is_file($file)) {
+                $zip->addFile($file, str_replace($sourceFolder . '/', '', $file));
+            }
+        }
+
+        $zip->close();
+
+        return true;
+    } else {
+        return false;
+    }
 }
