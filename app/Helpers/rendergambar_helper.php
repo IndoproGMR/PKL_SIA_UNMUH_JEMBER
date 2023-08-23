@@ -53,16 +53,19 @@ function Render_Qr(String $dataqr, String $savefile)
 /** 
  * $htmlpage di ambil dari view() yang berada di controller
  * lokasi page yang di render 
+ * 11x = di save kedalam Z_archice
  * 00 = tidak di save dan view;
  * 01 = tidak di save tapi di view;
  * 10 = di save tapi tidak ada view;
  * 11 = di save dan di view;
  * nama file yang disimpan
  */
+// TODO: tamabah fungsi untuk menyimpan ke dalam Z_archice
 function Render_mpdf(String $htmlpage, String $saveorview, String $namapdf)
 {
     $namahash = hash256($namapdf);
     $lokasi = cekDir(WRITEPATH . "pdf/") . "$namahash.pdf";
+    $lokasiZ = cekDir("../Z_Archive/pdf/") . "$namahash.pdf";
 
 
     $mpdf = new \Mpdf\Mpdf(['tempDir' => WRITEPATH . 'temp']);
@@ -84,7 +87,7 @@ function Render_mpdf(String $htmlpage, String $saveorview, String $namapdf)
             if (!cekFile($lokasi)) {
                 $mpdf->OutputFile($lokasi);
             }
-            return FlashException('Mode PDF di set ke Only Save', 'set');
+            return FlashException('Mode PDF di set ke Only Save');
             break;
 
         case '11':

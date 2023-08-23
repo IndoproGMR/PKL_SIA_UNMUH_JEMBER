@@ -6,7 +6,7 @@ use App\Models\AuthUserGroup;
  * $group array
  * $secure
  * 0 = cek dari session user
- * 1 = cek daro database
+ * 1 = cek dari database
  */
 function in_group($group, int $secure = 0)
 {
@@ -30,7 +30,8 @@ function in_group($group, int $secure = 0)
             }
             break;
         default:
-            echo "terjadi masalah pada perm";
+            // "terjadi masalah pada perm";
+            return false;
             break;
     }
     return false;
@@ -135,7 +136,61 @@ function FlashException($dataError = "Error Tidak Di Ketahui", $mode = 'set')
             break;
 
         default:
-            # code...
+            return null;
+            break;
+    }
+}
+
+
+function FlashSuccess($link = '', $data = "something something has success", $mode = 'set')
+{
+    $session = \Config\Services::session();
+    // $session->setFlashdata('data', $data);
+    // return redirect()->to($link);
+
+
+
+    switch ($mode) {
+        case 'set':
+            $session->setFlashdata('data', $data);
+            return redirect()->to($link);
+            break;
+
+        case 'get':
+            if ($session->getFlashdata('data') !== '') {
+                return $session->getFlashdata('data');
+            }
+            break;
+
+        default:
+            return null;
+            break;
+    }
+}
+
+
+function FlashMessage($link = '', $data = ["something something has success"], $mode = 'set')
+{
+    $session = \Config\Services::session();
+    // $session->setFlashdata('data', $data);
+    // return redirect()->to($link);
+
+
+
+    switch ($mode) {
+        case 'set':
+            $session->setFlashdata('data', $data);
+            return redirect()->to($link);
+            break;
+
+        case 'get':
+            if ($session->getFlashdata('data') !== '') {
+                return $session->getFlashdata('data');
+            }
+            break;
+
+        default:
+            return null;
             break;
     }
 }

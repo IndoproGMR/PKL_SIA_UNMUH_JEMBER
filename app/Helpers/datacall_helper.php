@@ -1,5 +1,61 @@
 <?php
-function datacallRespond($id)
+
+function resMas($errorCategory)
+{
+    $errorCategory = strtolower($errorCategory);
+    $errorMessages = [
+        'f'    => 'Gagal',
+        's'    => 'Berhasil',
+        'e'    => 'Error',
+        'conn' => 'Koneksi',
+
+        'save'   => 'menyimpan',
+        'update' => 'mengupdate',
+        'edit'   => 'mengedit',
+        'delete' => 'menghapus',
+
+        'ttd'      => 'tanda tangan',
+        'surat'    => 'surat',
+        'jenis'    => 'jenis',
+        'archive'  => 'Archive',
+        'validasi' => 'validasi',
+        'db'       => 'di database',
+        'fl'       => 'file',
+
+
+        'exist' => 'ada',
+        'valid' => 'valid',
+        'param' => 'parameter',
+
+        'y' => 'iya',
+        'n' => 'tidak',
+
+        'u' => 'Untuk',
+        'k' => 'karena',
+        't' => 'tapi',
+        'd' => 'dan',
+        'dt' => 'data',
+
+
+        '??' => 'Penyebab Yang Tidak Diketahui',
+        '?'  => '?',
+        '!'  => '!',
+        '!2' => '!!',
+    ];
+
+    $errorParts = explode('.', $errorCategory);
+    $errorMessageParts = [];
+
+    foreach ($errorParts as $part) {
+        if (isset($errorMessages[$part])) {
+            $errorMessageParts[] = $errorMessages[$part];
+        }
+    }
+
+    return implode(' ', $errorMessageParts);
+}
+
+function datacallResponddep($id)
 {
     /**
      * validasi = v
