@@ -6,17 +6,21 @@
 
 <?= $this->section('main') ?>
 
+
+<!-- <?= view_cell('DisplayErrorCell', ['dataterima' => '["data dikirim","data nomer2"]']) ?> -->
+
+
+
 <div class="filter">
     <p class="first">Filter:
     <form action="">
-        <select name="filter" id="filter">
-            <option value="all">semua Surat</option>
-            <?php foreach ($jenisFilter as $value) : ?>
-                <option value="<?= esc($value['id']); ?>" <?= ($value['id'] == $filter) ? 'selected' : ''; ?>>
-                    <?= esc($value['name']); ?>
-                </option>
-            <?php endforeach ?>
-        </select>
+        <?= view_cell('SelectOptionCell', [
+            'options'      => $jenisFilter,
+            'nameselect'   => 'filter',
+            'idselect'     => 'filter',
+            'firstoptions' => ['value' => 'all', 'name' => 'Semua Surat'],
+            'selected'     => $filter,
+        ]) ?>
         <button type="submit">Cari surat</button>
     </form>
     </p>
@@ -28,6 +32,9 @@ dialog();
 
 
 ?>
+
+
+
 
 <div class="table-rown">
     <table>
@@ -47,7 +54,11 @@ dialog();
 
                 <tr>
                     <td>
-                        <?= esc($value['JenisSurat']) ?>
+                        <?php if ($value['JenisSurat'] == 'tidak diketahui') : ?>
+                            <span style="background-color: red;padding: 5px; color: white;"><?= esc($value['JenisSurat']) ?></span>
+                        <?php else : ?>
+                            <?= esc($value['JenisSurat']) ?>
+                        <?php endif ?>
                     </td>
 
                     <td>
@@ -63,8 +74,23 @@ dialog();
                     </td>
 
                     <td>
-                        <?= TombolID('staff/Surat-Archive', $value['idSurat'], 'signature', 'Liat Surat') ?>
-                        <?= TombolID('detail-archive-surat', $value['idSurat'], 'signature', 'edit Surat') ?>
+
+                        <?= view_cell('TombolIdCell', [
+                            'link'              => 'staff/Surat-Archive',
+                            'valueinput'        => $value['idSurat'],
+                            'tombolsubmitclass' => 'signature',
+                            'textsubmit'        => 'Liat Surat',
+                            'target'            => '_blank'
+                        ]) ?>
+
+                        <?= view_cell('TombolIdCell', [
+                            'link'              => 'detail_edit/archive-surat',
+                            'valueinput'        => $value['idSurat'],
+                            'tombolsubmitclass' => 'signature',
+                            'textsubmit'        => 'Edit Surat',
+                            'target'            => '_self'
+                        ]) ?>
+
                     </td>
                 </tr>
             <?php endforeach ?>

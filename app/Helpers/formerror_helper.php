@@ -136,3 +136,17 @@ function dialog()
         ');
     }
 }
+
+function dialogmessege()
+{
+    if (FlashSuccess('', '', 'get') !== null) {
+        echo ('
+        <div class="success-box">
+        <span class="success-icon">&#10003;</span>
+            <span class="success-message">' .
+            esc(FlashMessage("", "", "get")) .
+            '</span>
+        </div>
+        ');
+    }
+}

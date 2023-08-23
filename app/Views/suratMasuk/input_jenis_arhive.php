@@ -39,7 +39,7 @@
 <?php dialog(); ?>
 
 
-<form action="/input-jenis-arhive-surat" id="inputJenisSurat" style="display: none;">
+<form action="/input-jenis-archive-surat" id="inputJenisSurat" style="display: none;">
     <input type="submit" value="Tambah Jenis Surat">
 </form>
 <br>
@@ -60,11 +60,39 @@
     <input type="submit" value="Simpan">
 </form>
 
-<?php foreach ($jenisFilter as $value) : ?>
-    <br>
-    <p><?= esc($value['name']) ?></p>
-    <p><?= esc($value['description']) ?></p>
-<?php endforeach ?>
+<table>
+    <thead>
+        <tr>
+            <th>no.</th>
+            <th>nama</th>
+            <th>deskripsi</th>
+            <th>actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        <?php foreach ($jenisFilter as $index => $value) : ?>
+            <?php if ($value['id'] > 0) : ?>
+                <tr>
+                    <td><?= $index ?></td>
+                    <td><?= esc($value['name']) ?></td>
+                    <td><?= esc($value['description']) ?></td>
+                    <td>
+
+                        <?= view_cell('TombolIdCell', [
+                            'link'              => 'staff/edit/JenisSurat',
+                            'valueinput'        => $value['id'],
+                            'tombolsubmitclass' => 'signature',
+                            'textsubmit'        => 'edit Jenis Surat',
+                            'confirmdialog'     => false,
+                        ]) ?>
+
+                    </td>
+                </tr>
+            <?php endif ?>
+        <?php endforeach ?>
+    </tbody>
+</table>
+
 
 
 <?= $this->endSection() ?>

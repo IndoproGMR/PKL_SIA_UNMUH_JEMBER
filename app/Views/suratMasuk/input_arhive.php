@@ -6,21 +6,26 @@
 
 <?= $this->section('main') ?>
 
-<form action="/input-jenis-arhive-surat" id="inputJenisSurat" style="display: none;">
+<form action="/input-jenis-archive-surat" id="inputJenisSurat" style="display: none;">
     <input type="submit" value="Tambah Jenis Surat">
 </form>
 <br>
 <br>
-<?= form_open_multipart('') ?>
+<?= form_open_multipart(base_url('/staff/input-proses/archive-surat')) ?>
 <?= csrf_field() ?>
 <div>
     <label for="jenissuratid">Jenis Surat:</label>
-    <select name="jenissuratid" id="jenissuratid" onchange="cek()">
-        <?php foreach ($jenisFilter as $value) : ?>
-            <option value="<?= esc($value['id']) ?>"><?= esc($value['name']) ?></option>
-        <?php endforeach ?>
-        <option value="---">Tidak Ketemu Jenis Surat ?</option>
-    </select>
+    <?= view_cell(
+        'SelectOptionCell',
+        [
+            'options'      => $jenisFilter,
+            'nameselect'   => 'jenissuratid',
+            'idselect'     => 'jenissuratid',
+            'lastoptions'  => ['value' => '---', 'name' => 'Tidak Ketemu Jenis Surat ?'],
+            'onchange'     => 'cek()',
+        ]
+    )
+    ?>
 </div>
 <div>
     <label for="DiskirpsiSurat">Deskripsi Surat:</label>

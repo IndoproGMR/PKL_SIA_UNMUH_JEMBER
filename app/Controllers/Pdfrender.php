@@ -7,8 +7,8 @@ use App\Models\Jenissurat;
 use App\Models\SuratKeluraModel;
 use App\Models\SuratMasukModel;
 
-// $GLOBALS['RenderPDF'] = 'public';
-$GLOBALS['RenderPDF'] = 'debug';
+$GLOBALS['RenderPDF'] = 'public';
+// $GLOBALS['RenderPDF'] = 'debug';
 
 class Pdfrender extends BaseController
 {
@@ -86,6 +86,8 @@ class Pdfrender extends BaseController
 
         d($dataJsonDecode);
         d($html);
+        d($data);
+        d($namapdf);
     }
 
 

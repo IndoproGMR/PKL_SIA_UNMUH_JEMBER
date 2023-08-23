@@ -6,7 +6,7 @@
 
 <?= $this->section('main') ?>
 
-<form action="<?= base_url('/'); ?>edit-archive-surat" method="post">
+<form action="<?= base_url('/edit-proses/archive-surat'); ?>" method="post">
     <?= csrf_field() ?>
     <input type="hidden" name="id" value="<?= esc($id); ?>">
     <br>
@@ -23,14 +23,12 @@
     <input type="text" name="DataSurat" value="<?= esc($DataSurat); ?>">
     <br>
     <label for="jenisFilter">Jenis Surat:</label>
-    <select name="jenisFilter" id="jenisFilter">
-        <!-- <option value="all">Semua Surat</option> -->
-        <?php foreach ($jenisFilter as $value) : ?>
-            <option value="<?= esc($value['id']); ?>" <?= ($value['id'] == $JenisSuratArchice_id) ? 'selected' : ''; ?>>
-                <?= esc($value['name']); ?>
-            </option>
-        <?php endforeach; ?>
-    </select>
+    <?= view_cell('SelectOptionCell', [
+        'options'      => $jenisFilter,
+        'nameselect'   => 'jenisFilter',
+        'idselect'     => 'jenisFilter',
+        'selected'     => $JenisSuratArchice_id,
+    ]) ?>
     <p><span style="color: red;"><strong>Mohon maaf Untuk File Tidak Dapat Di update</strong></span></p>
     <br>
     <input type="submit" value="Update">
@@ -38,7 +36,15 @@
 
 
 <br>
-<?= TombolID('delete-archive-surat', $id, 'signature', 'Delete') ?>
+<hr>
+<br>
+
+<?= view_cell('TombolIdCell', [
+    'link'              => 'delete-proses/archive-surat',
+    'valueinput'        => $id,
+    'tombolsubmitclass' => 'signature',
+    'textsubmit'        => 'Delete Surat'
+]) ?>
 
 
 <?= $this->endSection() ?>
