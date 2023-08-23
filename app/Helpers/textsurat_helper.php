@@ -333,6 +333,32 @@ function copyFile($source, $destination)
     return true; // Berhasil menyalin file
 }
 
+function deleteFile($filePath)
+{
+    if (file_exists($filePath)) {
+        if (unlink($filePath)) {
+            return true; // Berhasil menghapus file
+        } else {
+            return false; // Gagal menghapus file
+        }
+    } else {
+        return false; // File tidak ditemukan
+    }
+}
+
+function moveFile($source, $destination)
+{
+    if (file_exists($source)) {
+        if (rename($source, $destination)) {
+            return true; // Berhasil memindahkan file
+        } else {
+            return false; // Gagal memindahkan file
+        }
+    } else {
+        return false; // File sumber tidak ditemukan
+    }
+}
+
 // !bug mengambil semua folder dari root (/) hingga folder web
 // createZipFromFolder('../Z_Archice', '../Z_Archice.zip'); // contoh penggunaan
 

@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\AuthUserGroup;
 use App\Models\TandaTangan;
+use Faker\Extension\Helper;
 
 class Home extends BaseController
 {
@@ -24,5 +25,26 @@ class Home extends BaseController
     public function CustomError()
     {
         return view('home/customError');
+    }
+
+    public function TestInfo()
+    {
+        Helper('datacall');
+        d(resMas('F.u.save.Archive.k.??'));
+        d('F.u.save.Archive.k.??');
+
+        d(resMas('F.u.save.Archive.k.n.exist.db.!'));
+        d('F.u.save.Archive.k.n.exist.db');
+
+        d(resMas('edit.surat.?'));
+        d('edit.surat.?');
+
+        d(resMas('ttd.valid.t.n.exist.db.!2'));
+        d('ttd.valid.t.n.exist.db.!2');
+
+        d(resMas('conn.e.db'));
+        d('conn.e.db');
+        // $data = 'Tanda Tangan Valid tapi tidak ada di dalam Database!!!';
+        // return phpinfo();
     }
 }

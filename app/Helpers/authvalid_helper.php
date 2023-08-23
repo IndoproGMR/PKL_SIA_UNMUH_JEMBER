@@ -167,3 +167,30 @@ function FlashSuccess($link = '', $data = "something something has success", $mo
             break;
     }
 }
+
+
+function FlashMessage($link = '', $data = ["something something has success"], $mode = 'set')
+{
+    $session = \Config\Services::session();
+    // $session->setFlashdata('data', $data);
+    // return redirect()->to($link);
+
+
+
+    switch ($mode) {
+        case 'set':
+            $session->setFlashdata('data', $data);
+            return redirect()->to($link);
+            break;
+
+        case 'get':
+            if ($session->getFlashdata('data') !== '') {
+                return $session->getFlashdata('data');
+            }
+            break;
+
+        default:
+            return null;
+            break;
+    }
+}

@@ -7,8 +7,8 @@ use App\Models\Jenissurat;
 use App\Models\SuratKeluraModel;
 use App\Models\SuratMasukModel;
 
-// $GLOBALS['RenderPDF'] = 'public';
-$GLOBALS['RenderPDF'] = 'debug';
+$GLOBALS['RenderPDF'] = 'public';
+// $GLOBALS['RenderPDF'] = 'debug';
 
 class Pdfrender extends BaseController
 {
@@ -86,6 +86,8 @@ class Pdfrender extends BaseController
 
         d($dataJsonDecode);
         d($html);
+        d($data);
+        d($namapdf);
     }
 
 
@@ -170,7 +172,7 @@ class Pdfrender extends BaseController
     {
         $postdata = $this->request->getPost('id');
         $model = Model(SuratMasukModel::class);
-        $namaFile = $model->seebyid($postdata)['NamaFile'];
+        $namaFile = $model->seefilebyid($postdata);
         helper('filesystem');
         try {
             $path = WRITEPATH . $namaFile;

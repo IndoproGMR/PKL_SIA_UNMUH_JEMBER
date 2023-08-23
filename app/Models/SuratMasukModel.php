@@ -21,14 +21,42 @@ class SuratMasukModel extends Model
         'NamaFile',
         'JenisSuratArchice_id',
         'TimeStamp',
+        'TimeStampUpdate',
         'DeleteAt'
     ];
 
     public function seebyid($id)
     {
-        return $this->find($id);
+        // return $this->find($id);
+        return $this->select('
+        SM_SuratArchice.DiskirpsiSurat,
+        SM_SuratArchice.NomerSurat,
+        SM_SuratArchice.DataSurat,
+        SM_SuratArchice.TanggalSurat,
+        SM_SuratArchice.DiskirpsiSurat,
+        SM_SuratArchice.TimeStamp,
+        SM_SuratArchice.JenisSuratArchice_id,
+        SM_JenisSuratArchice.name,
+        SM_SuratArchice.NamaFile
+        ')
+            ->join('SM_JenisSuratArchice', 'SM_JenisSuratArchice.id=SM_SuratArchice.JenisSuratArchice_id')
+            ->find($id);
     }
 
+    public function seefilebyid($id)
+    {
+        // return $this->find($id);
+        return $this->select('SM_SuratArchice.NamaFile')->find($id)['NamaFile'];
+    }
+
+    function deleteSuratMasuk($id)
+    {
+
+        $data = [
+            'DeleteAt' => getUnixTimeStamp()
+        ];
+        return $this->update($id, $data);
+    }
 
     public function seeallbyJenis($idJenis = 'all')
     {
@@ -40,8 +68,11 @@ class SuratMasukModel extends Model
                 SM_SuratArchice.DiskirpsiSurat as DiskripsiSurat,
                 SM_SuratArchice.NomerSurat as NoSurat,
                 SM_SuratArchice.TanggalSurat as TanggalSurat,
+                
                 ')
                 ->join('SM_JenisSuratArchice', 'SM_JenisSuratArchice.id=SM_SuratArchice.JenisSuratArchice_id')
+                ->where('SM_SuratArchice.DeleteAt', null)
+                ->orderBy('SM_SuratArchice.TimeStamp', 'DESC')
                 ->findAll();
             // return $this->findAll();
         }
@@ -55,6 +86,8 @@ class SuratMasukModel extends Model
             ')
             ->join('SM_JenisSuratArchice', 'SM_JenisSuratArchice.id=SM_SuratArchice.JenisSuratArchice_id')
             ->where('JenisSuratArchice_id', $idJenis)
+            ->where('SM_SuratArchice.DeleteAt', null)
+            ->orderBy('SM_SuratArchice.TimeStamp', 'DESC')
             ->findAll();
         // return $this->where('JenisSuratArchice_id', $idJenis)->findAll();
     }
@@ -64,5 +97,18 @@ class SuratMasukModel extends Model
         $data['id'] = generateIdentifier();
         d($data);
         return $this->db->table('SM_SuratArchice')->insert($data);
+    }
+
+    function updateSuratMasuk($id, $data)
+    {
+        return $this->update($id, $data);
+    }
+
+    function setdeletejenisSuratMasuk($idjenisSurat)
+    {
+        return $this
+            ->where('JenisSuratArchice_id', $idjenisSurat)
+            ->set(['JenisSuratArchice_id' => 0])
+            ->update();
     }
 }

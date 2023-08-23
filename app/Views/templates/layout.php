@@ -44,6 +44,6 @@ if (!empty($title)) {
     <?= $this->include('templates/sidebar') ?>
 </body>
 <?= $this->renderSection('jsF') ?>
-<script async src="<?= base_url('/'); ?>js/sidebarjs.js"></script>
+<script async src="<?= base_url('js/sidebarjs.js'); ?>"></script>
 
 </html>
