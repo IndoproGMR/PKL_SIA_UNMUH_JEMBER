@@ -42,6 +42,7 @@ $routes->get('/error_perm', 'Home::error_perm');
 $routes->get('/Error_Exception', 'Home::CustomError');
 $routes->get('/qr-validasi', 'SuratKeluarController::kameraQR');
 $routes->get('/testinfo', 'Home::TestInfo');
+$routes->get('/testinfo/data', 'Home::TestInfoput');
 // ! =========================================================================<<
 
 // ?

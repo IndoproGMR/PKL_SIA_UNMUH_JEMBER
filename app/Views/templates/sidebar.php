@@ -1,10 +1,12 @@
-<!-- Siidebar -->
-<div class="container">
+<!-- Sidebar -->
+<div class="containersidebar">
+
+    <!-- sidebar bar -->
     <div class="sidebar">
         <div class="header">
             <div class="list-item">
-                <a href="<?= base_url('/'); ?>">
-                    <img src="https://sia.unmuhjember.ac.id/<?= esc(userInfo()['FotoUser']) ?>" alt="Foto Profile" class="icon" loading='lazy'>
+                <a href="<?= base_url('/'); ?>" class="linkSidebar">
+                    <img src="https://sia.unmuhjember.ac.id/<?= esc(userInfo()['FotoUser']) ?>" alt="Foto Profile" class="fotouser" loading='lazy'>
                     <p class="description-header"><?= esc(userInfo()['NamaUser']) ?></p>
                 </a>
             </div>
@@ -180,6 +182,8 @@
 
         </div>
     </div>
+
+    <!-- main Conten -->
     <div class="main-content">
 
         <!-- Hamburger Menu -->

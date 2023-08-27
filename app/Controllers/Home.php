@@ -35,29 +35,17 @@ class Home extends BaseController
         $text = 'TTD.n.exist.db';
         d(resMas($text));
         d($text);
+        d(FlashMassage('', '', '', 'get'));
+        // d(FlashMassage('', '', '', 'get')['massage']);
+        // d(FlashMassage('', '', '', 'get')['type']);
+    }
 
-
-
-        // Helper('datacall');
-
-
-
-
-        // d(resMas('F.u.save.Archive.k.??'));
-        // d('F.u.save.Archive.k.??');
-
-        // d(resMas('F.u.save.Archive.k.n.exist.db.!'));
-        // d('F.u.save.Archive.k.n.exist.db');
-
-        // d(resMas('edit.surat.?'));
-        // d('edit.surat.?');
-
-        // d(resMas('ttd.valid.t.n.exist.db.!2'));
-        // d('ttd.valid.t.n.exist.db.!2');
-
-        // d(resMas('conn.e.db'));
-        // d('conn.e.db');
-        // $data = 'Tanda Tangan Valid tapi tidak ada di dalam Database!!!';
-        // return phpinfo();
+    public function TestInfoput()
+    {
+        $data = [
+            'test 1',
+            'test 2',
+        ];
+        return FlashMassage('/', $data, 'success');
     }
 }

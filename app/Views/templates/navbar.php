@@ -1,23 +1,23 @@
 <!-- Navbar -->
 
-<header>
+<navbar>
     <div class="logo">
-        <img src="<?= base_url('/'); ?>asset/logo/unmuh.png" alt="logo" class="image">
+        <img src="<?= base_url('/'); ?>asset/logo/unmuh.png" alt="logo">
     </div>
 
-    <div class="wrapper">
+    <div class="navbody">
         <div class="navbar">
-            <h1 class="title-one">Web Surat</h1>
-            <h1 class="title-two">Universitas Muhammadiyah Jember</h1>
+            <h2 class="title-one">Web Surat</h2>
+            <h2 class="title-two">Universitas Muhammadiyah Jember</h2>
         </div>
-        <div class="desc">
-            <h1><?= esc(userInfo()['NamaUser']) ?></h1>
+        <div class="navdesc">
+            <h3><?= esc(userInfo()['NamaUser']) ?></h3>
             <p><?= esc(userInfo()['namaLVL']) ?></p>
-            <p><a href="<?= base_url('/login'); ?>">LogOut</a></p>
+            <p><a class="logout" href="<?= base_url('/login'); ?>">LogOut</a></p>
         </div>
     </div>
     <!-- <img src="asset/user-4-fill (3).svg" alt="" class="user"> -->
-    <img src="https://sia.unmuhjember.ac.id/<?= esc(userInfo()['FotoUser']) ?>" alt="Foto Profile" class="user" loading='lazy'>
-</header>
+    <img src="https://sia.unmuhjember.ac.id/<?= esc(userInfo()['FotoUser']) ?>" alt="Foto Profile" class="userimg" loading='lazy'>
+</navbar>
 
 <!-- End Navbar -->
