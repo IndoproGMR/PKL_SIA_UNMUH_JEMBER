@@ -43,6 +43,7 @@ function in_group($group, int $secure = 0)
  * ['FotoUser']
  * ['NamaUser']
  * ['namaLVL']
+ * @return array
  */
 function userInfo()
 {
@@ -169,23 +170,23 @@ function FlashSuccess($link = '', $data = "something something has success", $mo
 }
 
 
-function FlashMessage($link = '', $data = ["something something has success"], $mode = 'set')
+function FlashMassage($link = '', $datainput = [], $type = 'unknown', $mode = 'set')
 {
     $session = \Config\Services::session();
-    // $session->setFlashdata('data', $data);
-    // return redirect()->to($link);
-
-
+    $data = [
+        'massage' => $datainput,
+        'type'    => $type
+    ];
 
     switch ($mode) {
         case 'set':
-            $session->setFlashdata('data', $data);
+            $session->setFlashdata('datamassage', $data);
             return redirect()->to($link);
             break;
 
         case 'get':
-            if ($session->getFlashdata('data') !== '') {
-                return $session->getFlashdata('data');
+            if ($session->getFlashdata('datamassage') !== '') {
+                return $session->getFlashdata('datamassage');
             }
             break;
 
