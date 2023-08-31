@@ -17,7 +17,7 @@ class SuratKeluarController extends BaseController
         PagePerm(['Mahasiswa', 'Calon Mahasiswa']);
         $model = model(SuratKeluraModel::class);
         $model2 = model(TandaTangan::class);
-        $data['datasurat'] = $model->cekNoSurat(userInfo()['id']);
+        $data['datasurat'] = $model->cekNoSurat(userInfo()['id'], true);
 
         foreach ($data['datasurat'] as $key => $value) {
             $data['surat'][$key] = $value['SuratIdentifier'];
@@ -31,7 +31,7 @@ class SuratKeluarController extends BaseController
         }
 
         // d($data);
-        return view('suratkeluar/status_surat', $data);
+        return view('suratkeluar/mahasiswa/semua_Status_TTD', $data);
     }
 
     // page minta surat 2 fungsi ada dropdown ada konten box untuk mengisi data
@@ -56,7 +56,7 @@ class SuratKeluarController extends BaseController
 
             $data['dataform'] = json_decode($data['datasurat']['form'], true);
         }
-        return view('suratkeluar/mintasurat', $data);
+        return view('suratkeluar/mahasiswa/Proses_Minta-TTD', $data);
     }
 
     // proses data untuk meminta
@@ -69,16 +69,24 @@ class SuratKeluarController extends BaseController
         $model3 = model(Jenissurat::class);
 
         $postdata = $this->request->getPost();
+        unset($postdata['LaB7Thol']);
+        // return d($postdata);
+        $seebyid = $model3->seebyID($idsurat);
+        d($seebyid);
+        // $dataform = json_decode($model3->seebyID($idsurat)['form'], 'array');
+        $dataform = json_decode($seebyid['form'], 'array');
+        // d($dataform);
+        // d($dataform2);
 
-        $dataform = json_decode($model3->seebyID($idsurat)['form'], 'array');
-
+        // !Validasi dan save gambar Start
         if (isset($dataform['tambahan'])) {
             if (in_array('foto', $dataform['tambahan'])) {
                 $validationRule = Validasi_Foto();
 
                 if (!$this->validate($validationRule)) {
-                    $data = ['errors' => $this->validator->getErrors()];
-                    return FlashException('Tidak Dapat Menambahkan Foto');
+                    $dataerror = $this->validator->getErrors();
+                    return FlashMassage('Surat/Minta-TandaTangan/' . $idsurat, $dataerror, 'fail');
+                    // return FlashException('Tidak Dapat Menambahkan Foto');
                 }
 
                 $img = $this->request->getFile('foto');
@@ -93,7 +101,8 @@ class SuratKeluarController extends BaseController
                     try {
                         $img->move($filepath, $filename);
                     } catch (\Throwable $th) {
-                        return FlashException('Tidak Dapat Menyimpan Foto');
+                        return FlashMassage('Surat/Minta-TandaTangan/' . $idsurat, [resMas('f.u.save.fl.db')], 'fail');
+                        // return FlashException('Tidak Dapat Menyimpan Foto');
                     }
 
                     // !Copy file ke folder Arhive
@@ -101,10 +110,9 @@ class SuratKeluarController extends BaseController
                     $fileTo = cekDir("../Z_Archive/" . $filepath) . "/" . $filename;
 
                     if (!copyFile($fileFrom, $fileTo)) {
-                        return FlashException('Tidak Dapat Menyimpan Foto ke safeplace');
+                        return FlashMassage('Surat/Minta-TandaTangan/' . $idsurat, [resMas('f.u.save.fl.server')], 'fail');
+                        // return FlashException('Tidak Dapat Menyimpan Foto ke safeplace');
                     }
-
-
 
                     $filepath = $filepath . '/' . $filename;
                 }
@@ -112,10 +120,27 @@ class SuratKeluarController extends BaseController
                 // d($postdata);
             }
         }
+        // !Validasi dan save gambar End
+
+        // !Validasi input Start
+        $dataerror = null;
+        foreach ($postdata as $key => $value) {
+            $validationRule = Validasi_Input($key);
+            // !ganti php.ini untuk menambah upload limit
+
+            if (!$this->validate($validationRule)) {
+                $dataerror = $this->validator->getErrors();
+            }
+        }
+
+        if (!$dataerror == null) {
+            return FlashMassage('/minta-surat/' . $idsurat, $dataerror, 'fail');
+        }
+        // !Validasi input End
+
 
 
         $dataformarray = json_decode(json_encode($postdata), true);
-        unset($dataformarray['LaB7Thol']);
 
 
         // !untuk menyimpan SuratKeluar
@@ -126,8 +151,14 @@ class SuratKeluarController extends BaseController
         $data['mshw_id'] = userInfo()['id'];
 
         // !untuk menyimpan TTD
-        $TTDdata['TTD'] = removeGroups(json_decode($model3->seebyID($data['JenisSurat_id'])['form'], true)['TTD']);
+        $TTDdata['TTD'] = removeGroups(json_decode($seebyid['form'], true)['TTD']);
         $TTDdata['SuratIdentifier'] = $data['SuratIdentifier'];
+
+        d($TTDdata);
+        d($data['JenisSurat_id']);
+        d($idsurat);
+
+
 
         /**
          * unutk TTDdata['status','hash','IdentifierSurat','Timestamp']
@@ -140,13 +171,13 @@ class SuratKeluarController extends BaseController
 
         // set ke dalam database
         if (!$model->addSuratKeluar($data)) {
-            return FlashException('Tidak Dapat Meminta Surat');
+            return FlashMassage('Surat/Minta-TandaTangan', [resMas('f.u.minta.surat')]);
         }
         if (!$model2->addTTD($ttdArray)) {
-            return FlashException('Tidak dapat Meminta TTD');
+            return FlashMassage('Surat/Minta-TandaTangan', [resMas('f.u.minta.ttd')]);
         }
 
-        return redirect()->to('/status-surat');
+        return FlashMassage('Surat/Status-TandaTangan', [resMas('s.u.minta.surat')], 'success');
     }
 
     // melihat riwayat surat yang sudah full ttd
@@ -169,7 +200,7 @@ class SuratKeluarController extends BaseController
             }
         }
 
-        return view('suratkeluar/riwayat_surat', $data);
+        return view('suratkeluar/mahasiswa/Semua_Riwayat-TTD', $data);
     }
     // !END Untuk Mahasiswa
 
@@ -183,45 +214,10 @@ class SuratKeluarController extends BaseController
         $jenissurat = model(Jenissurat::class);
         $data['jenissurat'] = $jenissurat->seeall(true);
 
-        return view('suratkeluar/semua_surat', $data);
+        return view('suratkeluar/pengajaran/Semua_Master-surat', $data);
     }
 
-    // untuk menambah jenis surat ke db
-    public function addJenisSuratProses()
-    {
-        PagePerm(['Dosen'], 'error_perm', false, 1);
-
-        $postdata = $this->request->getPost([
-            'inputisi',
-            'jenisSurat',
-            'diskripsi',
-        ]);
-
-        $dataform = $this->request->getPost();
-
-
-        unset($dataform['inputisi']);
-        unset($dataform['jenisSurat']);
-        unset($dataform['diskripsi']);
-        unset($dataform['LaB7Thol']);
-        unset($dataform['Za1koo5E']);
-
-        $data['json_data'] = ubahJSONkeSimpelJSON(json_encode($dataform, true));
-
-        d($data);
-        d($postdata);
-        d($dataform);
-
-        $model = model(Jenissurat::class);
-
-        if (!$model->addJenisSurat($postdata['jenisSurat'], $postdata['diskripsi'], $postdata['inputisi'], $data['json_data'])) {
-            return FlashException('Tidak dapat Menambahkan Surat ke dalam DataBase');
-        }
-
-        return redirect()->to('/bikin-surat');
-    }
-
-    // untuk mengisi jenis surat
+    // untuk mengisi jenis Master surat
     public function addJenisSurat()
     {
         PagePerm(['Dosen']);
@@ -229,29 +225,78 @@ class SuratKeluarController extends BaseController
         $jenissurat = model(Jenissurat::class);
         $data['level'] = $jenissurat->seegrouplvl();
         $data['ttd'] = $jenissurat->seeNamaPettd();
-        return view('suratkeluar/inputjenissurat', $data);
+        return view('suratKeluar/pengajaran/Input_Master-Surat', $data);
+    }
+
+    // untuk menambah jenis Master surat ke db
+    public function addJenisSuratProses()
+    {
+        PagePerm(['Dosen'], 'error_perm', false, 1);
+
+        $postdatasurat = $this->request->getPost(
+            [
+                'inputisi',
+                'jenisSurat',
+                'diskripsi'
+            ]
+        );
+
+        $postdataform = $this->request->getPost(
+            [
+                'input',
+                'tambahan',
+                'TTD'
+            ]
+        );
+
+        // !Validasi input Start
+        $postdatarequired = $this->request->getPost(
+            [
+                'inputisi',
+                'jenisSurat',
+                'diskripsi',
+                'TTD'
+            ]
+        );
+
+        $dataerror = null;
+        foreach ($postdatarequired as $key => $value) {
+            $validationRule = Validasi_Input($key);
+            // !ganti php.ini untuk menambah upload limit
+
+            if (!$this->validate($validationRule)) {
+                $dataerror = $this->validator->getErrors();
+            }
+        }
+
+        if (!$dataerror == null) {
+            return FlashMassage('/input/master-surat', $dataerror, 'warning');
+        }
+        // !Validasi input End
+
+        foreach ($postdataform as $key => $value) {
+            if ($value == null) {
+                unset($postdataform[$key]);
+            }
+        }
+
+        $data['json_data'] = json_encode($postdataform);
+
+        $model = model(Jenissurat::class);
+
+        if (!$model->addJenisSurat($postdatasurat['jenisSurat'], $postdatasurat['diskripsi'], $postdatasurat['inputisi'], $data['json_data'])) {
+            return FlashMassage('/input/master-surat', [resMas('f.u.save.jenis.surat.db')], 'fail');
+            // return FlashException('Tidak dapat Menambahkan Surat ke dalam DataBase');
+        }
+        return FlashMassage('/Staff/Master-Surat', [resMas('s.save.jenis.surat.db')], 'success');
     }
 
     // untuk melihat detail jenis surat
     public function detailJenisSurat($idsurat)
     {
         $model = model(Jenissurat::class);
-
         $data['datasurat'] = $model->seebyID($idsurat, 1);
-        // d($data);
-        return view('suratkeluar/detailjenissurat', $data);
-    }
-
-    public function updateJenisSuratToggleProses()
-    {
-        PagePerm(['Dosen'], 'error_perm', false, 1);
-        $postdata = $this->request->getPost(['id']);
-        $model = model(Jenissurat::class);
-
-        if (!$model->toggleshow($postdata['id'])) {
-            return FlashException('Tidak Men Toggle Surat');
-        }
-        return redirect()->to('/semua-surat');
+        return view('suratkeluar/pengajaran/Edit_Master_Surat', $data);
     }
 
     // untuk meng update jenis surat ke db
@@ -266,33 +311,52 @@ class SuratKeluarController extends BaseController
                 'diskripsi'
             ]
         );
+
+        // !Validasi input Start
+        $dataerror = null;
+        foreach ($postdata as $key => $value) {
+            $validationRule = Validasi_Input($key);
+
+            if (!$this->validate($validationRule)) {
+                $dataerror = $this->validator->getErrors();
+            }
+        }
+
+        if (!$dataerror == null) {
+            return FlashMassage('/Staff/Master-Surat', $dataerror, 'warning');
+        }
+        // !Validasi input End
+
         $model = model(Jenissurat::class);
         if (!$model->updateJenisSurat($postdata['id'], $postdata['jenisSurat'], $postdata['diskripsi'], $postdata['inputisi'])) {
-            return FlashException('Tidak dapat Mengupdate Surat ke Database');
+            return FlashMassage('/Staff/Master-Surat', [resMas('f.update.master.surat.db')], 'success');
         }
-        return redirect()->to('/semua-surat');
+        return FlashMassage('/Staff/Master-Surat', [resMas('s.update.master.surat')], 'success');
     }
+
+    // untuk menToggle visiblity master surat kepada mahasiswa
+    public function updateJenisSuratToggleProses()
+    {
+        PagePerm(['Dosen'], 'error_perm', false, 1);
+        $postdata = $this->request->getPost(['id']);
+        $model = model(Jenissurat::class);
+
+        if (!$model->toggleshow($postdata['id'])) {
+            return FlashMassage('/semua_master-surat', [resMas('f.update.surat')], 'fail');
+        }
+        return FlashMassage('/Staff/Master-Surat', [resMas('s.update.master.surat')], 'success');
+    }
+
+
 
     public function indexTanpaNoSurat()
     {
         PagePerm(['Dosen']);
         $model = model(SuratKeluraModel::class);
         $data['datasurat'] = $model->seeAllnoNoSurat();
-        // if (!$model->updateNoSurat(3, 'test3')) {
-        //     FlashException('Tidak dapat mengganti Nomer Surat');
-        // }
 
-
-        // foreach ($data['datasurat'] as $key => $value) {
-        // $data['surat'][$key] = $value['NoSurat'];
-        // $data['datasurat'][$key]['status'] = $model->cekStatusSurat($data['surat'][$key]);
-        // }
-
-        // $data['perluttd'] = count($data['datasurat']);
-
-
-        // d($data);
-        return view('suratkeluar/index_SuratTanpaNo', $data);
+        return view('suratkeluar/pengajaran/Semua_Surat-Tanpa-Nomer', $data);
+        // return view('suratkeluar/pengajaran/index_SuratTanpaNo', $data);
     }
 
     public function updateTanpaNoSurat()
@@ -302,32 +366,40 @@ class SuratKeluarController extends BaseController
         $dataSurat = $model->cekSuratByNo($postdata);
         $dataSurat['id'] = $postdata;
 
-
-        // d($dataSurat);
-        // d($postdata);
-
-        return view('suratKeluar/edit_suratMasuk', $dataSurat);
+        return view('suratKeluar/pengajaran/Edit_Surat-Tanpa-Nomer', $dataSurat);
     }
 
     public function updateTanpaNoSuratProses()
     {
         $postdata = $this->request->getPost(['id', 'NoSurat']);
         $model = model('SuratKeluraModel');
-        // $dataSurat = $model->cekSuratByNo($postdata['id']);
-        // $dataSurat['id'] = $postdata;
+
+        // !Validasi input Start
+        $dataerror = null;
+        foreach ($postdata as $key => $value) {
+            $validationRule = Validasi_Input($key);
+
+            if (!$this->validate($validationRule)) {
+                $dataerror = $this->validator->getErrors();
+            }
+        }
+
+        if (!$dataerror == null) {
+            return FlashMassage('Staff/Permintaan_TTD-Surat_Tanpa_NoSurat', $dataerror, 'warning');
+        }
+        // !Validasi input End
+
 
         $data = [
             'NoSurat' => $postdata['NoSurat']
         ];
         if (!$model->updateNoSurat($postdata['id'], $data)) {
-            // return "gagal mengubah nomer surat";
-            return FlashException('gagal mengubah nomer surat');
+            return FlashMassage('Staff/Permintaan_TTD-Surat_Tanpa_NoSurat', [resMas('f.save.surat')], 'fail');
         }
         // d($dataSurat);
         // d($postdata);
 
-        return FlashSuccess('semua-surat-tanpa_NoSurat');
-        // return view('suratKeluar/edit_suratMasuk', $dataSurat);
+        return FlashMassage('Staff/Permintaan_TTD-Surat_Tanpa_NoSurat', [resMas('s.save.surat')], 'success');
     }
 
     public function deleteTanpaNoSuratProses()
@@ -335,9 +407,12 @@ class SuratKeluarController extends BaseController
         $postdata = $this->request->getPost('id');
         $model = model('SuratKeluraModel');
         if (!$model->deleteSurat($postdata)) {
-            return FlashException('gagal menghapus Surat');
+            return FlashMassage('Staff/Permintaan_TTD-Surat_Tanpa_NoSurat', [resMas('f.update.surat')], 'fail');
+            // return FlashException('gagal menghapus Surat');
         }
-        return FlashSuccess('semua-surat-tanpa_NoSurat', 'berhasil menghapus Surat');
+
+        return FlashMassage('Staff/Permintaan_TTD-Surat_Tanpa_NoSurat', [resMas('S.delete.surat')], 'success');
+        // return FlashSuccess('semua-surat-tanpa_NoSurat', 'berhasil menghapus Surat');
     }
     // !END untuk pengajaran
 
@@ -350,14 +425,14 @@ class SuratKeluarController extends BaseController
         $model = model(TandaTangan::class);
         $data['datasurat'] = $model->cekStatusSuratTTD(userInfo());
 
-        foreach ($data['datasurat'] as $key => $value) {
-            $data['surat'][$key] = $value['SuratIdentifier'];
-            $data['datasurat'][$key]['status'] = $model->cekStatusSurat($data['surat'][$key]);
-        }
+        // foreach ($data['datasurat'] as $key => $value) {
+        //     $data['surat'][$key] = $value['SuratIdentifier'];
+        //     $data['datasurat'][$key]['status'] = $model->cekStatusSurat($data['surat'][$key]);
+        // }
 
         $data['perluttd'] = count($data['datasurat']);
         // d($data);
-        return view('suratkeluar/status_ttd', $data);
+        return view('suratkeluar/penandatangan/Semua_Perlu_TTD', $data);
     }
 
     public function TTDProses()
@@ -373,7 +448,7 @@ class SuratKeluarController extends BaseController
 
 
         if (!$data['TTD']['Status'] == 0) {
-            return FlashException('surat Sudah di Tanda Tangani');
+            return FlashException(resMas('f.u.save.ttd.k.ttd.done.exist'));
         }
 
         $enkripsi = new enkripsi_library;
@@ -386,14 +461,14 @@ class SuratKeluarController extends BaseController
 
 
         if (!Render_Qr($data['update']['hash'], $data['update']['qrcodeName'])) {
-            return FlashException('QRCode Tidak dapat dibuat');
+            return FlashMassage('/Surat_Perlu_TandaTangan', [resMas('f.u.make.qr')], 'fail');
         }
 
         if (!$model->updateTTD($postdata['id'], $data['update'])) {
-            return FlashException('Tidak Dapat Menyimpan Tanda Tangan Ke dalam Database');
+            return FlashMassage('/Surat_Perlu_TandaTangan', [resMas('f.u.save.ttd')], 'fail');
         }
 
-        return redirect()->to('/status-TTD');
+        return FlashMassage('/Surat_Perlu_TandaTangan', [resMas('s.save.ttd')], 'success');
     }
 
     public function indexRiwayatTTD()
@@ -402,7 +477,7 @@ class SuratKeluarController extends BaseController
         $model = model(TandaTangan::class);
         $data['datasurat'] = $model->cekStatusSuratTTD(userInfo(), 1);
 
-        return view('suratkeluar/riwayat_ttd', $data);
+        return view('suratkeluar/penandatangan/Semua_Riwayat_TTD', $data);
     }
     // !END untuk PenandaTangan
 

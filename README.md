@@ -1,4 +1,4 @@
-# PKL SIA UNMUH JEMBER
+no# PKL SIA UNMUH JEMBER
 
 ---
 
@@ -18,12 +18,37 @@ ___
 
 # hal yang harus di lakukan
 
-1. berikan email yang dipakai untuk login github
-2. login vscode pakai email tersebut lalu pull repo nya
-3. buat branch sesuai tugas nya
-4. lalu buat 1 file apa saja
-5. lalu push repo
-6. install composer
+1. clone repo
+2. lalu install menggunakan bash file
+```bash
+./installapp
+```
+3. isi .env
+```
+harus di isi:
+SUPERKEY,
+DATABASE,
+logo qr,
+api version,
+ENVIRONMENT di set ke development
+
+optional:
+SESSION,
+SECURITY,
+HONEYPOT,
+COOKIE
+```
+
+4. lalu jalankan server local php
+```bash
+php spark serve
+```
+5. lalu buka browser
+```url
+localhost:8080/
+```
+
+
 
 ---
 ## Version: (terakhir update)
@@ -64,8 +89,8 @@ ___
 - [x] Master Surat semua (R_PDF)  **(get:/semua-surat)**
 - [ ] Master Surat edit (R_U_D) (need:UI) **(get:/bikin-surat)**
 - [x] Master Surat Visiblity Toggle (U) **(post:/toggleshow-surat)**
-- [ ] set NomerSurat semua (R_PDF) (need:UI,backend)
-- [ ] set NomerSurat edit (R_U_D) (need:UI,backend)
+- [ ] set NomerSurat semua (R_PDF) (need:UI)
+- [ ] set NomerSurat edit (R_U_D) (need:UI)
 
 ##### PDF Surat
 - [ ] KOP Surat
@@ -79,7 +104,7 @@ ___
 - [ ] SuratMasuk edit (U_D) (need:UI)
 - [ ] SuratMasuk Preview (R_PDF) (need:UI)
 - [ ] SuratMasuk jenis buat (C_R) (need:UI)
-- [ ] SuratMasuk jenis edit (R_U_D) (need:UI )
+- [ ] SuratMasuk jenis edit (R_U_D) (need:UI)
 
 #### Quary (0/?)
 ##### Pengajaran

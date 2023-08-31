@@ -1,23 +1,26 @@
 <!-- Navbar -->
 
-<header>
+<navbar>
     <div class="logo">
-        <img src="<?= base_url('/'); ?>asset/logo/unmuh.png" alt="logo" class="image">
+        <!-- <img src="<?= base_url('/'); ?>asset/logo/small/unmuh-tiny.png" alt="logo"> -->
+        <img src="<?= base_url('/api/v1/image/logo'); ?>" alt="logo">
     </div>
 
-    <div class="wrapper">
+    <div class="navbody">
         <div class="navbar">
-            <h1 class="title-one">Web Surat</h1>
-            <h1 class="title-two">Universitas Muhammadiyah Jember</h1>
+            <p class="title one">Web Surat</p>
+            <p class="title two">Universitas Muhammadiyah Jember</p>
         </div>
-        <div class="desc">
-            <h1><?= esc(userInfo()['NamaUser']) ?></h1>
+        <div class="navdesc">
+            <h3><?= esc(userInfo()['NamaUser']) ?></h3>
             <p><?= esc(userInfo()['namaLVL']) ?></p>
-            <p><a href="<?= base_url('/login'); ?>">LogOut</a></p>
+            <p><a class="logout" href="<?= base_url('/login'); ?>">LogOut</a></p>
         </div>
     </div>
     <!-- <img src="asset/user-4-fill (3).svg" alt="" class="user"> -->
-    <img src="https://sia.unmuhjember.ac.id/<?= esc(userInfo()['FotoUser']) ?>" alt="Foto Profile" class="user" loading='lazy'>
-</header>
+    <!-- <img src="https://sia.unmuhjember.ac.id/<?= esc(userInfo()['FotoUser']) ?>" alt="Foto Profile" class="userimg" loading='lazy'> -->
+    <img src="https://sia.unmuhjember.ac.id/<?= esc(userInfo()['FotoUser']) ?>" alt="Foto Profile" class="fotouser" loading='lazy' onerror="this.src='asset/logo/error_img.png';">
+
+</navbar>
 
 <!-- End Navbar -->
