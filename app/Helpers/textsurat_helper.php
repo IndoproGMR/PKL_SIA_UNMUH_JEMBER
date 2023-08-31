@@ -220,26 +220,45 @@ function timeconverter(int $timestamp = 0, $jenis = 'yunani')
         'Saturday'  => 'Sabtu'
     ];
 
+    $monthsInIndonesia = [
+        'January'   => 'Januari',
+        'February'  => 'Februari',
+        'March'     => 'Maret',
+        'April'     => 'April',
+        'May'       => 'Mei',
+        'June'      => 'Juni',
+        'July'      => 'Juli',
+        'August'    => 'Agustus',
+        'September' => 'September',
+        'October'   => 'Oktober',
+        'November'  => 'November',
+        'December'  => 'Desember'
+    ];
 
+    $indonesianDay = $daysInIndonesian[$date->format('l')];
+    $indonesianMonth = " " . $monthsInIndonesia[$date->format('F')] . " ";
 
     switch ($jenis) {
             // ! tanggal yunani
         case 'yunani':
-            $indonesianDay = $daysInIndonesian[$date->format('l')];
-            $data = $indonesianDay . ', ' . $date->format('d F Y H:i:s');
+            // $indonesianDay = $daysInIndonesian[$date->format('l')];
+            // $indonesianMonth = " " . $monthsInIndonesia[$date->format('F')] . " ";
+            $data = $indonesianDay . ', ' . $date->format('d') . $indonesianMonth . $date->format('Y H:i:s');
             break;
         case 'yunanitgl':
-            $indonesianDay = $daysInIndonesian[$date->format('l')];
-            $data = $indonesianDay . ', ' . $date->format('d F Y');
+            // $indonesianDay = $daysInIndonesian[$date->format('l')];
+            // $indonesianMonth = " " . $monthsInIndonesia[$date->format('F')] . " ";
+            // $data = $indonesianDay . ', ' . $date->format('d F Y');
+            $data = $indonesianDay . ', ' . $date->format('d') . $indonesianMonth . $date->format('Y');;
             break;
 
             // ! tanggal hijriah
         case 'hijriah':
-            $indonesianDay = $daysInIndonesian[$Arabic->date('l', $timestamp, $correction)];
+            // $indonesianDay = $daysInIndonesian[$Arabic->date('l', $timestamp, $correction)];
             $data = $indonesianDay . $Arabic->date(', j F Y H:i:s', $timestamp, $correction);
             break;
         case 'hijriahtgl':
-            $indonesianDay = $daysInIndonesian[$Arabic->date('l', $timestamp, $correction)];
+            // $indonesianDay = $daysInIndonesian[$Arabic->date('l', $timestamp, $correction)];
             $data = $indonesianDay . $Arabic->date(', j F Y', $timestamp, $correction);
             break;
 

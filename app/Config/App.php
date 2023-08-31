@@ -147,6 +147,7 @@ class App extends BaseConfig
      * @deprecated use Config\Session::$driver instead.
      */
     public string $sessionDriver = FileHandler::class;
+    // !update ke 4.4.0 hapus yang di atas
 
     /**
      * --------------------------------------------------------------------------
@@ -249,6 +250,8 @@ class App extends BaseConfig
      * @deprecated use Config\Cookie::$prefix property instead.
      */
     public string $cookiePrefix = '';
+    // !update ke 4.4.0 hapus yang di atas
+    // public string $cookieSameSite = '';
 
     /**
      * --------------------------------------------------------------------------
@@ -351,6 +354,8 @@ class App extends BaseConfig
      * @deprecated Use `Config\Security` $tokenName property instead of using this property.
      */
     public string $CSRFTokenName = 'csrf_test_name';
+    // !update ke 4.4.0 hapus yang di atas
+
 
     /**
      * --------------------------------------------------------------------------
