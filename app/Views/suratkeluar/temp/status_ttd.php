@@ -7,9 +7,17 @@
 
 <div class="filter">
     <p class="first">Filter:</p>
-    <p class="third">Tanggal: <span class="waktu-sekarang"></span></p>
-</div>
+    <form>
+        <select>
+            <option>PKL</option>
+            <option>Surat Mahasiswa Aktif</option>
+            <option>Surat Dispen</option>
+        </select>
+        <input type="submit" value="Cari">
+    </form>
+    <p class="Time">Tanggal: <span class="waktu-sekarang"></span></p>
 
+</div>
 
 <div class="table-rown">
     <table>
@@ -17,6 +25,7 @@
             <tr>
                 <th>No.</th>
                 <th>Jenis Surat</th>
+                <th>Preview</th>
                 <th>Tanggal</th>
                 <th>Nomer</th>
                 <th>Status TTD</th>
@@ -28,9 +37,14 @@
                 <tr>
                     <td class="num"><?= esc($index + 1) ?></td>
                     <td><?= esc($key['namaJenisSurat']) ?></td>
+                    <td><?= TombolID('staff/Preview-Surat', $key['NoSurat'], 'Actions', 'Preview Surat', '_blank') ?></td>
                     <td><?= esc(timeconverter($key['TimeStamp'])) ?></td>
                     <td><?= esc($key['NoSurat']) ?></td>
-                    <td>(<?= esc($key['status']['sudah']) ?>/<?= esc($key['status']['totalTTD']) ?>)</td>
+
+                    <!-- Buat info bila surat telah tolak -->
+                    <td>(<?= esc($key['status']['sudah']) ?>/<?= esc($key['status']['totalTTD']) ?>)
+                        <?= TombolID('status-TTD', $key['idttd'], 'Actions', 'TandaTangan') ?>
+                    </td>
                 </tr>
             <?php endforeach ?>
         </tbody>

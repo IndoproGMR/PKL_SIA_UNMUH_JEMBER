@@ -135,7 +135,7 @@
 <h1 style="text-align: center;">Input isi Surat</h1>
 <hr>
 <br>
-<form action="<?= base_url('/bikin-surat'); ?>" method="post" id="inputisi">
+<form action="<?= base_url('/input-proses/master-surat'); ?>" method="post" id="inputisi">
     <?= csrf_field() ?>
 
     <textarea id="mytextarea" name="inputisi"></textarea>
@@ -208,10 +208,11 @@
 
         var delbox = document.createElement('input');
         var idinput = "input_" + id;
+        // var idinput = "input[]";
         var delval = "delinputbox(\"" + idinput + "\")";
 
         newField.setAttribute("id", idinput);
-        newField.setAttribute('name', idinput);
+        newField.setAttribute('name', "input[]");
         newField.setAttribute('type', 'text');
         newField.setAttribute('class', 'inputclass');
         newField.setAttribute("placeholder", "{{yang_akan_di_ubah}}");
@@ -230,10 +231,16 @@
     }
 
     function addfoto() {
-        var jumlahfoto = document.getElementsByName('tambahan_foto').length
+        const max = 1;
+        var countfoto = 0;
+        var jumlahfoto = document.getElementsByName('tambahan[]');
 
-        if (jumlahfoto > 0) {
-            return
+        for (var i = 0; i < jumlahfoto.length; i++) {
+            var elem = jumlahfoto[i];
+            countfoto++;
+            if (elem.value === 'foto' && countfoto == max) {
+                return;
+            }
         }
 
         var br = document.createElement("br");
@@ -245,7 +252,7 @@
 
         newField.setAttribute("readonly", "");
         newField.setAttribute("id", idfoto);
-        newField.setAttribute('name', 'tambahan_foto');
+        newField.setAttribute('name', 'tambahan[]');
         newField.setAttribute('type', 'text');
         newField.setAttribute('class', 'inputclass');
         newField.setAttribute('value', 'foto');
@@ -273,7 +280,7 @@
         var delval = "delinputbox(\"" + idttd + "\")";
 
         newField.setAttribute("id", "TTD_" + id);
-        newField.setAttribute('name', idttd);
+        newField.setAttribute('name', "TTD[]");
         newField.setAttribute('type', 'text');
         newField.setAttribute('class', 'inputclass');
         newField.setAttribute('readonly', '');
@@ -297,7 +304,7 @@
         var deleteinput = document.getElementById(id);
         var deletebutton = document.getElementById('del_' + id);
         var deletebr = document.getElementById('br_' + id);
-        console.log(deleteinput);
+        // console.log(deleteinput);
         formfield.removeChild(deleteinput);
         formfield.removeChild(deletebutton);
         formfield.removeChild(deletebr);

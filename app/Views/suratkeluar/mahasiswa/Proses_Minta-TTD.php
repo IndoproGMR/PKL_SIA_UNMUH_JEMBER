@@ -1,7 +1,6 @@
 <?= $this->extend('templates/layout.php') ?>
 
 <?= $this->section('style') ?>
-<link rel="stylesheet" href="<?= base_url('/'); ?>css/status.css">
 <style>
     .kontenerinput {
         padding: 15px;
@@ -15,21 +14,21 @@
 
 <?= $this->section('main') ?>
 
+
+
 <div class="filter">
     <p class="first">Filter:</p>
     <p class="second">Jenis Surat</p>
     <form>
-        <select name="jenissuratid" id="jenissuratid">
-            <?php foreach ($jenissurat as $datajenis) : ?>
-                <option value="<?= esc($datajenis['id']) ?>"><?= esc($datajenis['name']) ?></option>
-            <?php endforeach ?>
-        </select>
-        <button type="button" onclick="mintaa()">minta surat</button>
+        <?= view_cell('SelectOptionCell', [
+            'options'      => $jenissurat,
+            'nameselect'   => 'jenissuratid',
+            'idselect'     => 'jenissuratid',
+        ]) ?>
+        <input type="button" value="Cari" onclick="mintaa()">
     </form>
-    <p class="third">Tanggal: <span><?= esc(timeconverter(time())) ?></span></p>
+    <?= timedecor() ?>
 </div>
-
-
 
 
 <?php if ($minta == 1) : ?>
@@ -60,7 +59,7 @@
 
 <?= $this->section('jsF') ?>
 <script>
-    var url = "<?= base_url('minta-surat/'); ?>";
+    var url = "<?= base_url('/Surat/Minta-TandaTangan/'); ?>";
 
     function mintaa() {
         var idjenis = document.getElementById('jenissuratid').value;

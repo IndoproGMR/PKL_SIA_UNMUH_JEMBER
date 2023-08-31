@@ -6,7 +6,7 @@
         <div class="header">
             <div class="list-item">
                 <a href="<?= base_url('/'); ?>" class="linkSidebar">
-                    <img src="https://sia.unmuhjember.ac.id/<?= esc(userInfo()['FotoUser']) ?>" alt="Foto Profile" class="fotouser" loading='lazy'>
+                    <img src="https://sia.unmuhjember.ac.id/<?= esc(userInfo()['FotoUser']) ?>" alt="Foto Profile" class="fotouser" loading='lazy' onerror="this.src='asset/logo/error_img.png';">
                     <p class="description-header"><?= esc(userInfo()['NamaUser']) ?></p>
                 </a>
             </div>
@@ -29,7 +29,7 @@
                 <?= view_cell(
                     'SidebarLinkNotifCell',
                     [
-                        'link'      => 'status-surat',
+                        'link'      => 'Surat/Status-TandaTangan',
                         'linktext'  => 'Status Tanda Tangan',
                         'imagelink' => 'asset/svg/list-status.svg',
                     ]
@@ -38,8 +38,8 @@
                 <?= view_cell(
                     'SidebarLinkNotifCell',
                     [
-                        'link'      => 'minta-surat',
-                        'linktext'  => 'Buat Surat',
+                        'link'      => 'Surat/Minta-TandaTangan',
+                        'linktext'  => 'Minta TandaTangan',
                         'imagelink' => 'asset/svg/buat-surat.svg',
                     ]
                 ) ?>
@@ -48,8 +48,8 @@
                 <?= view_cell(
                     'SidebarLinkNotifCell',
                     [
-                        'link'      => 'riwayat-surat',
-                        'linktext'  => 'Riwayat',
+                        'link'      => 'Surat/riwayat-Minta-TandaTangan',
+                        'linktext'  => 'Riwayat Minta TandaTangan',
                         'imagelink' => 'asset/svg/history.svg',
                     ]
                 ) ?>
@@ -59,28 +59,27 @@
             <?php if (in_group(['Dosen', 'Kepala Keuangan'])) : ?>
                 <?php
                 $cache = \Config\Services::cache();
-                $namacache = userInfo()['id'];
+                $namacache = "notif_" . userInfo()['id'];
 
-                if (cache($namacache . '_perluNoSuratC') === null) {
-                    $model = model('SuratKeluraModel');
-                    $perluNoSurat = count($model->seeAllnoNoSurat());
-                    cache()->save($namacache . '_perluNoSuratC', $perluNoSurat, 30);
+                if (cache($namacache) === null) {
+                    $model1 = model('SuratKeluraModel');
+                    $model2 = model('TandaTangan');
+
+                    $cachedata['perluNoSurat'] = $model1->seeAllnoNoSuratCount();
+                    $cachedata['perluttd']     = $model2->cekStatusSuratTTDCount(userInfo());
+
+                    cache()->save($namacache, $cachedata, 30);
                 }
 
-                if (cache($namacache . '_TandaTanganc') === null) {
-                    $model = model('TandaTangan');
-                    $perluttd = count($model->cekStatusSuratTTD(userInfo()));
-                    cache()->save($namacache . '_TandaTanganc', $perluttd, 30);
-                }
 
-                $perluNoSurat = cache($namacache . '_perluNoSuratC');
-                $perluttd = cache($namacache . '_TandaTanganc');
+                $perluNoSurat = cache($namacache)['perluNoSurat'];
+                $perluttd     = cache($namacache)['perluttd'];
                 ?>
 
                 <?= view_cell(
                     'SidebarLinkNotifCell',
                     [
-                        'link'      => 'semua-surat-tanpa_NoSurat',
+                        'link'      => 'Staff/Permintaan_TTD-Surat_Tanpa_NoSurat',
                         'linktext'  => 'Status Surat Yang belum punya No.',
                         'imagelink' => 'asset/svg/list-status.svg',
                         'notif'     => $perluNoSurat,
@@ -90,8 +89,8 @@
                 <?= view_cell(
                     'SidebarLinkNotifCell',
                     [
-                        'link'      => 'semua-surat',
-                        'linktext'  => 'Semua Surat',
+                        'link'      => '/Staff/Master-Surat',
+                        'linktext'  => 'Semua Master Surat',
                         'imagelink' => 'asset/svg/list-menu.svg',
                         'notif'     => 0,
                     ]
@@ -100,8 +99,8 @@
                 <?= view_cell(
                     'SidebarLinkNotifCell',
                     [
-                        'link'      => 'bikin-surat',
-                        'linktext'  => 'Tambah Surat',
+                        'link'      => '/input/master-surat',
+                        'linktext'  => 'Tambah Master Surat',
                         'imagelink' => 'asset/svg/tambah.svg',
                         'notif'     => 0,
                     ]
@@ -142,7 +141,8 @@
                 <?= view_cell(
                     'SidebarLinkNotifCell',
                     [
-                        'link'      => 'status-TTD',
+                        // 'link'      => 'status-TTD',
+                        'link'      => 'Surat_Perlu_TandaTangan',
                         'linktext'  => 'Status Tanda Tangan',
                         'imagelink' => 'asset/svg/list-status.svg',
                         'notif'     => $perluttd,
@@ -152,7 +152,7 @@
                 <?= view_cell(
                     'SidebarLinkNotifCell',
                     [
-                        'link'      => 'riwayat-TTD',
+                        'link'      => 'Riwayat_TandaTangan',
                         'linktext'  => 'Riwayat Tanda Tangan',
                         'imagelink' => 'asset/svg/history.svg',
                         'notif'     => 0,
