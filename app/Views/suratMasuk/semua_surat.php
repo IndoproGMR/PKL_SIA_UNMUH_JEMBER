@@ -1,7 +1,7 @@
 <?= $this->extend('templates/layout.php') ?>
 
 <?= $this->section('style') ?>
-<link rel="stylesheet" href="<?= base_url('/'); ?>css/status.css">
+<link rel="stylesheet" href="<?= base_url('/'); ?>css/tablestyle.css">
 <?= $this->endSection() ?>
 
 <?= $this->section('main') ?>
@@ -21,10 +21,11 @@
             'firstoptions' => ['value' => 'all', 'name' => 'Semua Surat'],
             'selected'     => $filter,
         ]) ?>
-        <button type="submit">Cari surat</button>
+        <input type="submit" value="Cari surat">
     </form>
     </p>
-    <p class="third">Tanggal: <span><?= esc(timeconverter(time(), 'hijriahtgl')) ?></span></p>
+    <p class="Time">Tanggal: <span class="waktu-sekarang"></span></p>
+
 </div>
 
 <?php
@@ -41,6 +42,7 @@ dialog();
 
         <thead>
             <tr>
+                <th>No.</th>
                 <th>Jenis Surat</th>
                 <th>Diskripsi Surat</th>
                 <th>Nomer Surat</th>
@@ -50,9 +52,10 @@ dialog();
         </thead>
 
         <tbody>
-            <?php foreach ($surat as $value) : ?>
+            <?php foreach ($surat as $index => $value) : ?>
 
                 <tr>
+                    <td class="num"><?= esc($index + 1) ?></td>
                     <td>
                         <?php if ($value['JenisSurat'] == 'tidak diketahui') : ?>
                             <span style="background-color: red;padding: 5px; color: white;"><?= esc($value['JenisSurat']) ?></span>
@@ -78,7 +81,7 @@ dialog();
                         <?= view_cell('TombolIdCell', [
                             'link'              => 'staff/Surat-Archive',
                             'valueinput'        => $value['idSurat'],
-                            'tombolsubmitclass' => 'signature',
+                            'tombolsubmitclass' => 'Actions',
                             'textsubmit'        => 'Liat Surat',
                             'target'            => '_blank'
                         ]) ?>
@@ -86,7 +89,7 @@ dialog();
                         <?= view_cell('TombolIdCell', [
                             'link'              => 'detail_edit/archive-surat',
                             'valueinput'        => $value['idSurat'],
-                            'tombolsubmitclass' => 'signature',
+                            'tombolsubmitclass' => 'Actions',
                             'textsubmit'        => 'Edit Surat',
                             'target'            => '_self'
                         ]) ?>

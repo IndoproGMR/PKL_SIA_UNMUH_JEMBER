@@ -1,0 +1,191 @@
+td .signature1 {
+  display: inline-block;
+  margin: 5px;
+  padding: 5px 20px;
+  font-size: 14px;
+  text-decoration: none;
+  background-color: #06577a;
+  color: white;
+  border-radius: 20px;
+}
+
+td .tick1 {
+  width: 25px;
+  background-color: green;
+}
+
+td .unduh1 {
+  margin-left: 20px;
+  font-size: 14px;
+  padding: 5px 30px;
+  text-decoration: none;
+  background-color: #06577a;
+  color: white;
+  border-radius: 20px;
+}
+
+.intro {
+  display: flex;
+  width: 1000px;
+}
+
+.card {
+  width: 440px;
+  height: 433px;
+  background-color: #d9d9d9;
+}
+
+.card img {
+  margin-left: 132px;
+  margin-right: 132px;
+  margin-bottom: 129px;
+  margin-top: 129px;
+}
+
+.card-two {
+  margin-top: 50px;
+  width: 440px;
+  height: 443px;
+  background-color: #d9d9d9;
+}
+
+.card-two img {
+  margin-left: 132px;
+  margin-right: 132px;
+  margin-bottom: 129px;
+  margin-top: 129px;
+}
+
+.card-two h2 {
+  text-align: center;
+  margin-top: 30px;
+  margin-bottom: 30px;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.card-two p {
+  margin-left: 30px;
+  line-height: 50px;
+}
+
+.card-two input {
+  margin-left: 170px;
+}
+
+.card-two label {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.card-two .dext {
+  margin-top: 20px;
+  margin-left: 170px;
+}
+
+.card-two .dext a {
+  background-color: #06577a;
+  text-decoration: none;
+  color: #eaeaea;
+  padding: 5px 20px;
+  border-radius: 20px;
+}
+
+.card-tree {
+  margin-left: 80px;
+  margin-top: -40px;
+}
+
+.card-tree input {
+  background-color: #d9d9d9;
+  font-size: 18px;
+  border: none;
+  padding: 15px 70px;
+  border-radius: 7px;
+  box-sizing: border-box;
+}
+
+.card-four {
+  margin-top: 10px;
+  margin-left: 150px;
+  width: 200px;
+}
+
+.card-four button {
+  background-color: #b1d9ff;
+  text-align: center;
+  padding: 10px 50px;
+  border: none;
+  font-size: 16px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+.fluid-two .see .back {
+  background-color: #06577a;
+  color: white;
+  font-size: 16px;
+  text-decoration: none;
+  padding: 5px 50px;
+  border-radius: 20px;
+  margin-left: 50px;
+}
+
+.fluid {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.fluid-two {
+  width: 762px;
+  height: 528px;
+  background-color: #d9d9d9;
+}
+
+.fluid-two h1 {
+  text-align: center;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.text {
+  margin-top: 48px;
+  margin-left: 102px;
+  line-height: 50px;
+}
+
+.text p {
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.fluid-two .see {
+  text-align: center;
+  margin-top: 65px;
+}
+
+.fluid-two .see .look {
+  background-color: #06577a;
+  color: white;
+  font-size: 16px;
+  text-decoration: none;
+  padding: 5px 50px;
+  border-radius: 20px;
+}
+
+.flex-end {
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+.flex-end .end {
+  background-color: #06577a;
+  color: white;
+  font-size: 16px;
+  text-decoration: none;
+  padding: 5px 50px;
+  border-radius: 20px;
+}

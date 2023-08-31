@@ -1,5 +1,10 @@
 <?php
 
+function timedecor()
+{
+    return '<p class="Time">Tanggal: <span class="waktu-sekarang"></span></p>';
+}
+
 function display_error($validation, $inputform)
 {
     if ($validation->hasError($inputform)) {
@@ -8,6 +13,8 @@ function display_error($validation, $inputform)
         return false;
     }
 }
+
+
 
 
 /**
@@ -109,11 +116,10 @@ function Validasi_FilePDF()
     ];
 }
 
-function Validasi_Input()
+function Validasi_Input($field)
 {
     return [
-        'field_1' => [
-            'label'    => 'Field 1 Custom Name',
+        "$field" => [
             'rules'    => 'required',
             'errors'   => [
                 'required'    => '{field} is required.'
@@ -121,6 +127,7 @@ function Validasi_Input()
         ],
     ];
 }
+
 
 
 function dialog()
@@ -144,7 +151,7 @@ function dialogmessege()
         <div class="success-box">
         <span class="success-icon">&#10003;</span>
             <span class="success-message">' .
-            esc(FlashMessage("", "", "get")) .
+            esc(FlashMassage("", "", "get")) .
             '</span>
         </div>
         ');

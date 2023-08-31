@@ -6,6 +6,7 @@ use App\Models\AuthUserGroup;
 use App\Models\TandaTangan;
 use Faker\Extension\Helper;
 
+
 class Home extends BaseController
 {
     public function index()
@@ -13,6 +14,13 @@ class Home extends BaseController
         PagePerm([''], '/login', true);
 
         // return view('auth/Auth_login');
+        $options = [
+            'max-age'  => 300,
+            's-maxage' => 900,
+            'etag'     => 'abcde',
+        ];
+        $this->response->setCache($options);
+        $this->response->setCache();
         return view('home/index');
     }
 
@@ -32,32 +40,72 @@ class Home extends BaseController
         // $text = 'TTD.valid.t.n.exist.db.!2';
         // $data = 'Tanda Tangan Tidak ada Didalam Database!!!';
 
-        $text = 'TTD.n.exist.db';
-        d(resMas($text));
-        d($text);
+        // $text = 'TTD.n.exist.db';
+        // d(resMas($text));
+        // d($text);
+        // d(FlashMassage('', '', '', 'get'));
+        // d(FlashMassage('', '', '', 'get')['massage']);
+        // d(FlashMassage('', '', '', 'get')['type']);
+
+        $jenissurat = model(Jenissurat::class);
+        $data['level'] = $jenissurat->seegrouplvl();
+        $data['ttd'] = $jenissurat->seeNamaPettd();
+        return view('suratKeluar/pengajaran/input_master-surat', $data);
+    }
+
+    public function TestInfoProses()
+    {
+        $postdatasurat = $this->request->getPost(
+            [
+                'inputisi',
+                'jenisSurat',
+                'diskripsi',
+            ]
+        );
+        // d($postdatasurat);
+
+        $postdataform = $this->request->getPost(
+            [
+                'input',
+                'tambahan',
+                'TTD'
+            ]
+        );
+        // d($postdata);
+
+        $dataerror = null;
+        foreach ($postdatasurat as $key => $value) {
+            $validationRule = Validasi_Input($key);
+            // !ganti php.ini untuk menambah upload limit
+
+            if (!$this->validate($validationRule)) {
+                $dataerror = $this->validator->getErrors();
+            }
+        }
+
+        if (!$dataerror == null) {
+            return FlashMassage('/', $dataerror, 'warning');
+        }
+
+        // d($data);
 
 
+        foreach ($postdataform as $key => $value) {
+            if ($value == null) {
+                unset($postdata[$key]);
+            }
+        }
 
-        // Helper('datacall');
+        d($postdataform);
+        d(json_encode($postdataform));
+    }
 
-
-
-
-        // d(resMas('F.u.save.Archive.k.??'));
-        // d('F.u.save.Archive.k.??');
-
-        // d(resMas('F.u.save.Archive.k.n.exist.db.!'));
-        // d('F.u.save.Archive.k.n.exist.db');
-
-        // d(resMas('edit.surat.?'));
-        // d('edit.surat.?');
-
-        // d(resMas('ttd.valid.t.n.exist.db.!2'));
-        // d('ttd.valid.t.n.exist.db.!2');
-
-        // d(resMas('conn.e.db'));
-        // d('conn.e.db');
-        // $data = 'Tanda Tangan Valid tapi tidak ada di dalam Database!!!';
-        // return phpinfo();
+    public function TestInfoput()
+    {
+        $data = [
+            'test 1',
+            'test 2',
+        ];
+        return FlashMassage('/', $data, 'success');
     }
 }
