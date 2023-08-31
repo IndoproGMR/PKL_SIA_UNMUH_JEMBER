@@ -9,31 +9,38 @@ function resMas($errorCategory)
         'e'    => 'Error',
         'conn' => 'Koneksi',
 
-        'save'   => 'menyimpan',
-        'update' => 'mengupdate',
-        'edit'   => 'mengedit',
-        'delete' => 'menghapus',
+        'save'   => 'Menyimpan',
+        'update' => 'Mengupdate',
+        'edit'   => 'Mengedit',
+        'delete' => 'Menghapus',
+        'make'   => 'Membuat',
+        'done'   => 'Sudah',
 
-        'ttd'      => 'tanda tangan',
-        'surat'    => 'surat',
-        'jenis'    => 'jenis',
+        'ttd'      => 'Tanda Tangan',
+        'surat'    => 'Surat',
+        'jenis'    => 'Jenis',
+        'master'   => 'Master',
+        'minta'    => 'Meminta',
         'archive'  => 'Archive',
-        'validasi' => 'validasi',
+        'validasi' => 'Validasi',
         'db'       => 'di database',
-        'fl'       => 'file',
+        'server'   => 'di Server',
+        'fl'       => 'File',
+        'qr'       => 'QRCode',
 
 
         'exist' => 'ada',
         'valid' => 'valid',
+        'param' => 'parameter',
 
         'y' => 'iya',
         'n' => 'tidak',
 
-        'u' => 'Untuk',
-        'k' => 'karena',
-        't' => 'tapi',
-        'd' => 'dan',
-        'dt' => 'data',
+        'u'  => 'Untuk',
+        'k'  => 'Karena',
+        't'  => 'Tapi',
+        'd'  => 'dan',
+        'dt' => 'Data',
 
 
         '??' => 'Penyebab Yang Tidak Diketahui',
@@ -54,7 +61,7 @@ function resMas($errorCategory)
     return implode(' ', $errorMessageParts);
 }
 
-function datacallRespond($id)
+function datacallResponddep($id)
 {
     /**
      * validasi = v

@@ -6,6 +6,7 @@ use App\Models\AuthUserGroup;
 use App\Models\TandaTangan;
 use Faker\Extension\Helper;
 
+
 class Home extends BaseController
 {
     public function index()
@@ -13,6 +14,13 @@ class Home extends BaseController
         PagePerm([''], '/login', true);
 
         // return view('auth/Auth_login');
+        $options = [
+            'max-age'  => 300,
+            's-maxage' => 900,
+            'etag'     => 'abcde',
+        ];
+        $this->response->setCache($options);
+        $this->response->setCache();
         return view('home/index');
     }
 
@@ -29,22 +37,75 @@ class Home extends BaseController
 
     public function TestInfo()
     {
-        Helper('datacall');
-        d(resMas('F.u.save.Archive.k.??'));
-        d('F.u.save.Archive.k.??');
+        // $text = 'TTD.valid.t.n.exist.db.!2';
+        // $data = 'Tanda Tangan Tidak ada Didalam Database!!!';
 
-        d(resMas('F.u.save.Archive.k.n.exist.db.!'));
-        d('F.u.save.Archive.k.n.exist.db');
+        // $text = 'TTD.n.exist.db';
+        // d(resMas($text));
+        // d($text);
+        // d(FlashMassage('', '', '', 'get'));
+        // d(FlashMassage('', '', '', 'get')['massage']);
+        // d(FlashMassage('', '', '', 'get')['type']);
 
-        d(resMas('edit.surat.?'));
-        d('edit.surat.?');
+        $jenissurat = model(Jenissurat::class);
+        $data['level'] = $jenissurat->seegrouplvl();
+        $data['ttd'] = $jenissurat->seeNamaPettd();
+        return view('suratKeluar/pengajaran/input_master-surat', $data);
+    }
 
-        d(resMas('ttd.valid.t.n.exist.db.!2'));
-        d('ttd.valid.t.n.exist.db.!2');
+    public function TestInfoProses()
+    {
+        $postdatasurat = $this->request->getPost(
+            [
+                'inputisi',
+                'jenisSurat',
+                'diskripsi',
+            ]
+        );
+        // d($postdatasurat);
 
-        d(resMas('conn.e.db'));
-        d('conn.e.db');
-        // $data = 'Tanda Tangan Valid tapi tidak ada di dalam Database!!!';
-        // return phpinfo();
+        $postdataform = $this->request->getPost(
+            [
+                'input',
+                'tambahan',
+                'TTD'
+            ]
+        );
+        // d($postdata);
+
+        $dataerror = null;
+        foreach ($postdatasurat as $key => $value) {
+            $validationRule = Validasi_Input($key);
+            // !ganti php.ini untuk menambah upload limit
+
+            if (!$this->validate($validationRule)) {
+                $dataerror = $this->validator->getErrors();
+            }
+        }
+
+        if (!$dataerror == null) {
+            return FlashMassage('/', $dataerror, 'warning');
+        }
+
+        // d($data);
+
+
+        foreach ($postdataform as $key => $value) {
+            if ($value == null) {
+                unset($postdata[$key]);
+            }
+        }
+
+        d($postdataform);
+        d(json_encode($postdataform));
+    }
+
+    public function TestInfoput()
+    {
+        $data = [
+            'test 1',
+            'test 2',
+        ];
+        return FlashMassage('/', $data, 'success');
     }
 }

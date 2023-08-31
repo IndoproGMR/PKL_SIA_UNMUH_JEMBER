@@ -66,7 +66,6 @@ class SuratKeluar extends Migration
             'NoSurat' => [
                 'type'       => 'varchar',
                 'constraint' => 128,
-                'unique'     => true,
                 'default'    => 'Belum_Memiliki_No_Surat'
             ],
             'SuratIdentifier' => [
@@ -91,7 +90,7 @@ class SuratKeluar extends Migration
                 'constraint' => 20,
                 'default'    => 0
             ],
-            'deleteAt' => [
+            'DeleteAt' => [
                 'type'       => 'int',
                 'constraint' => 10,
                 'default'    => null

@@ -28,13 +28,13 @@ class Apiv1 extends ResourceController
             $data['dataJson'] = $validasienkripsi->validasiTTD($data['hashraw'], $data['nosurat']);
 
             $data['respond'] = [
-                'valid' => datacallRespond($data['dataJson']['valid'])
+                'valid' => resMas($data['dataJson']['valid'])
             ];
             return $this->respond($data['respond']);
         }
 
         $data['respond'] = [
-            'valid' => datacallRespond('e1')
+            'valid' => resMas('e.param.n.exist')
         ];
         return $this->respond($data['respond']);
     }
@@ -69,13 +69,81 @@ class Apiv1 extends ResourceController
         helper('datacall');
 
         $data['respond'] = [
-            'nosurat'       => datacallRespond('e'),
-            'JenisSurat'    => datacallRespond('e'),
-            'Mahasiswa'     => datacallRespond('e'),
-            'penandatangan' => datacallRespond('e'),
-            'TimeStamp'     => datacallRespond('e'),
-            'valid'         => datacallRespond('e1'),
+            'nosurat'       => resMas('e'),
+            'JenisSurat'    => resMas('e'),
+            'Mahasiswa'     => resMas('e'),
+            'penandatangan' => resMas('e'),
+            'TimeStamp'     => resMas('e'),
+            'valid'         => resMas('e.param.n.exist'),
         ];
         return $this->respond($data['respond']);
+    }
+
+    public function imagecache($imagename)
+    {
+        $image = \Config\Services::image();
+        // return 'asset/logo/unmuh.png';
+        $path = '';
+        $data['imagepath'] = match ($imagename) {
+            'logo'  => 'asset/logo/unmuh.png',
+            default => 'asset/logo/error_img.png',
+        };
+
+        $binary = readfile($data['imagepath']);
+        $options = [
+            'max-age'  => 2592000,
+            's-maxage' => 2592000,
+            'etag'     => 'abcde',
+        ];
+
+        return $this->response
+
+            ->setHeader('Content-Type', 'image/png')
+            ->setCache($options)
+            // ->setHeader('Content-Type', $file->getMimeType())
+            // ->setHeader('Content-disposition', 'inline; filename="' . $file->getBasename() . '"')
+            ->setStatusCode(200)
+            ->setBody($binary);
+        // return $data['imagepath'];
+    }
+
+    public function iconcache($iconname)
+    {
+        $image = \Config\Services::image();
+        // return 'asset/logo/unmuh.png';
+
+        $path = 'asset/svg/';
+        $data['iconpath'] = match ($iconname) {
+            'home'      => $path . 'home.svg',
+            'dashboard' => $path . 'dashboard-rounded.svg',
+
+            'history'  => $path . 'history.svg',
+            'tambah'   => $path . 'tambah.svg',
+            'buatSurat'   => $path . 'buat-surat.svg',
+
+            'listMenu'   => $path . 'list-menu.svg',
+            'listStatus' => $path . 'list-status.svg',
+
+            'qr-outline'        => $path . 'outline-qrcode.svg',
+            'qr-outline-scan'   => $path . 'outline-qr-code-scanner.svg',
+
+            default => 'asset/svg/tambah.svg',
+        };
+
+        $binary = readfile($data['iconpath']);
+        $options = [
+            'max-age'  => 2592000,
+            's-maxage' => 2592000,
+            'etag'     => 'abcde',
+        ];
+
+        return $this->response
+            ->setHeader('Content-Type', 'image/svg+xml')
+            ->setCache($options)
+            // ->setHeader('Content-Type', $file->getMimeType())
+            // ->setHeader('Content-disposition', 'inline; filename="' . $file->getBasename() . '"')
+            ->setStatusCode(200)
+            ->setBody($binary);
+        // return $data['imagepath'];
     }
 }

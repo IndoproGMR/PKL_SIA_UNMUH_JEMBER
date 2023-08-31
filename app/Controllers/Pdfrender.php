@@ -138,10 +138,10 @@ class Pdfrender extends BaseController
         PagePerm(['Dosen']);
 
 
-        $postdata = $this->request->getPost();
+        $postdata = $this->request->getPost('id');
 
         $model = model(SuratKeluraModel::class);
-        $dataSurat = $model->cekSuratByNo($postdata['id']);
+        $dataSurat = $model->cekSuratByNo($postdata);
 
         $dataJsonDecode = json_decode($dataSurat['DataTambahan'], true);
 
