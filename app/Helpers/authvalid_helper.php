@@ -48,15 +48,16 @@ function in_group($group, int $secure = 0)
 function userInfo()
 {
     $session = \Config\Services::session();
-    if (!$session->has('userdata')) {
-        return  [
-            'id'       => 'error',
-            'FotoUser' => 'img/level/personal.png',
-            'NamaUser' => 'mohon login',
-            'namaLVL'  => 'mohon login'
-        ];
+    if ($session->has('userdata')) {
+        return $session->get('userdata');
     }
-    return $session->get('userdata');
+
+    return  [
+        'id'       => 'error',
+        'FotoUser' => 'img/level/personal.png',
+        'NamaUser' => 'mohon login',
+        'namaLVL'  => 'mohon login'
+    ];
 }
 
 /**
@@ -89,6 +90,7 @@ function userInfo()
  */
 function PagePerm($group, $redirect = 'error_perm', $login = false, $secure = 0)
 {
+    // !cek login tanpa perlu melihat di grup mana
     if ($login) {
         if (userInfo()['id'] == 'error') {
             throw new \CodeIgniter\Router\Exceptions\RedirectException("$redirect");
@@ -96,6 +98,11 @@ function PagePerm($group, $redirect = 'error_perm', $login = false, $secure = 0)
         return;
     }
 
+    // !cek login dan melihat di grup mana
+    if (userInfo()['id'] == 'error') {
+        throw new \CodeIgniter\Router\Exceptions\RedirectException("$redirect");
+    }
+    // !cek melihat di grup mana
     if (!in_group($group, $secure)) {
         throw new \CodeIgniter\Router\Exceptions\RedirectException("$redirect");
     }
@@ -121,6 +128,39 @@ function PagePerm($group, $redirect = 'error_perm', $login = false, $secure = 0)
     //     "Rektorat"
     // ];
 }
+
+/**
+ * $type = fail,warning,success
+ * $datainput = ['data','data2']
+ * $mode = set,get
+ */
+function FlashMassage($link = '', $datainput = [], $type = 'unknown', $mode = 'set')
+{
+    $session = \Config\Services::session();
+    $data = [
+        'massage' => $datainput,
+        'type'    => $type
+    ];
+
+    switch ($mode) {
+        case 'set':
+            $session->setFlashdata('datamassage', $data);
+            return redirect()->to($link);
+            break;
+
+        case 'get':
+            if ($session->getFlashdata('datamassage') !== '') {
+                return $session->getFlashdata('datamassage');
+            }
+            break;
+
+        default:
+            return null;
+            break;
+    }
+}
+
+
 
 function FlashException($dataError = "Error Tidak Di Ketahui", $mode = 'set')
 {
@@ -160,33 +200,6 @@ function FlashSuccess($link = '', $data = "something something has success", $mo
         case 'get':
             if ($session->getFlashdata('data') !== '') {
                 return $session->getFlashdata('data');
-            }
-            break;
-
-        default:
-            return null;
-            break;
-    }
-}
-
-
-function FlashMassage($link = '', $datainput = [], $type = 'unknown', $mode = 'set')
-{
-    $session = \Config\Services::session();
-    $data = [
-        'massage' => $datainput,
-        'type'    => $type
-    ];
-
-    switch ($mode) {
-        case 'set':
-            $session->setFlashdata('datamassage', $data);
-            return redirect()->to($link);
-            break;
-
-        case 'get':
-            if ($session->getFlashdata('datamassage') !== '') {
-                return $session->getFlashdata('datamassage');
             }
             break;
 

@@ -11,13 +11,17 @@ if (!empty($title)) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="WebSite Surat Menyurat">
+    <meta name="theme-color" content="light">
+    <meta http-equiv="Cache-control" content="public">
 
     <title>
         <?= esc($titletext) ?>
     </title>
 
     <!-- global style -->
-    <link rel="stylesheet" href="<?= base_url('/'); ?>css/style.css">
+    <!-- <link rel="stylesheet" href="<?= base_url('/'); ?>css/style.css?max-age=315360"> -->
+    <link rel="stylesheet" href="<?= base_url('/css/style.css'); ?>">
 
     <!-- font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -59,7 +63,9 @@ if (!empty($title)) {
         const days = ['Minggu', 'Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu'];
         const day = days[now.getDay()];
 
-        const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        const months = [
+            'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'
+        ];
         const month = months[now.getMonth()];
 
         const date = now.getDate().toString().padStart(2, '0');

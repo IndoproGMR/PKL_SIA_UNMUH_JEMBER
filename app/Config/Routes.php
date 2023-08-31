@@ -42,6 +42,7 @@ $routes->get('/error_perm', 'Home::error_perm');
 $routes->get('/Error_Exception', 'Home::CustomError');
 $routes->get('/qr-validasi', 'SuratKeluarController::kameraQR');
 $routes->get('/testinfo', 'Home::TestInfo');
+$routes->post('/testinfo/proses', 'Home::TestInfoProses');
 $routes->get('/testinfo/data', 'Home::TestInfoput');
 // ! =========================================================================<<
 
@@ -57,13 +58,13 @@ $routes->get('/Admin-Panel', 'AdminPanelController::index');
 // !Mahasiswa ================================================================>>
 // *Surat Keluar ==============================================================>
 // ?index ======================================================================
-$routes->get('/minta-surat', 'SuratKeluarController::indexMintaSurat');
-$routes->get('/status-surat', 'SuratKeluarController::indexStatusSurat');
-$routes->get('/riwayat-surat', 'SuratKeluarController::indexRiwayatSurat');
+$routes->get('/Surat/Status-TandaTangan', 'SuratKeluarController::indexStatusSurat');
+$routes->get('/Surat/Minta-TandaTangan', 'SuratKeluarController::indexMintaSurat');
+$routes->get('/Surat/riwayat-Minta-TandaTangan', 'SuratKeluarController::indexRiwayatSurat');
 
 // ?penambahan =================================================================
-$routes->get('/minta-surat/(:any)', 'SuratKeluarController::indexMintaSurat/$1');
-$routes->post('/minta-surat/(:any)', 'SuratKeluarController::addMintaSuratProses/$1');
+$routes->get('/Surat/Minta-TandaTangan/(:any)', 'SuratKeluarController::indexMintaSurat/$1');
+$routes->post('/Surat/Minta-TandaTangan/(:any)', 'SuratKeluarController::addMintaSuratProses/$1');
 
 // ?PDF ========================================================================
 $routes->post('/Download/Surat', 'Pdfrender::DownloadSurat');
@@ -77,30 +78,32 @@ $routes->get('/Preview/(:any)', 'Pdfrender::PreviewJenisSurat/$1');
 
 // *Surat Keluar ==============================================================>
 // ?index ======================================================================
-$routes->get('/riwayat-TTD', 'SuratKeluarController::indexRiwayatTTD');
+$routes->get('/Staff/Permintaan_TTD-Surat_Tanpa_NoSurat', 'SuratKeluarController::indexTanpaNoSurat');
 
-$routes->get('/semua-surat', 'SuratKeluarController::indexJenisSurat');
-$routes->get('/semua-surat-tanpa_NoSurat', 'SuratKeluarController::indexTanpaNoSurat');
+$routes->get('/Staff/Master-Surat', 'SuratKeluarController::indexJenisSurat');
 
-$routes->post('/edit/surat-tanpa_NoSurat', 'SuratKeluarController::updateTanpaNoSurat');
-$routes->post('/edit-proses/surat-tanpa_NoSurat', 'SuratKeluarController::updateTanpaNoSuratProses');
+$routes->post('/Staff/Edit/Permintaan_TTD-Surat_Tanpa_NoSurat', 'SuratKeluarController::updateTanpaNoSurat');
+$routes->post('/Staff/Edit-proses/Permintaan_TTD-Surat_Tanpa_NoSurat', 'SuratKeluarController::updateTanpaNoSuratProses');
 
 $routes->post('/delete-proses/surat-tanpa_NoSurat', 'SuratKeluarController::deleteTanpaNoSuratProses');
 
 // ?penambahan =================================================================
-$routes->get('/bikin-surat', 'SuratKeluarController::addJenisSurat');
-$routes->post('/bikin-surat', 'SuratKeluarController::addJenisSuratProses');
+$routes->get('/input/master-surat', 'SuratKeluarController::addJenisSurat');
+$routes->post('/input-proses/master-surat', 'SuratKeluarController::addJenisSuratProses');
 
 // ?Toggle =====================================================================
 $routes->post('/toggleshow-surat', 'SuratKeluarController::updateJenisSuratToggleProses');
 
 // ?detail =====================================================================
-$routes->get('/detail-surat/(:any)', 'SuratKeluarController::detailJenisSurat/$1');
-$routes->post('/detail-surat', 'SuratKeluarController::updateJenisSuratProses');
+$routes->get('/Staff/detail/Master-Surat/(:any)', 'SuratKeluarController::detailJenisSurat/$1');
+$routes->post('/Staff/detail/Master-Surat', 'SuratKeluarController::updateJenisSuratProses');
 
 // ?PenandaTangan ==============================================================
-$routes->get('/status-TTD', 'SuratKeluarController::indexStatusTTD');
-$routes->post('/status-TTD', 'SuratKeluarController::TTDProses');
+$routes->get('/Surat_Perlu_TandaTangan', 'SuratKeluarController::indexStatusTTD');
+$routes->post('/TandaTangan-proses/Surat_Perlu_TandaTangan', 'SuratKeluarController::TTDProses');
+
+$routes->get('/Riwayat_TandaTangan', 'SuratKeluarController::indexRiwayatTTD');
+
 
 // ?PDF ========================================================================
 $routes->post('/staff/Preview-Surat', 'Pdfrender::staffPreviewSurat');
@@ -179,6 +182,8 @@ $routes->post('/login', 'Login::debuglogin');
 // ?tandatangan Qr validasi ====================================================
 $routes->get('/api/v1/validasi/qr', 'apiv1::validasiqr');
 $routes->get('/api/v1/validasi/qr/detail', 'apiv1::validasiqrdetail');
+$routes->get('/api/v1/image/(:segment)', 'apiv1::imagecache/$1');
+$routes->get('/api/v1/icon/(:segment)', 'apiv1::iconcache/$1');
 // *===========================================================================<
 // ! =========================================================================<<
 

@@ -3,6 +3,8 @@
   --bg-main: #eee;
   --bg-danger: #f00;
   --bg-danger-second: #f33;
+  --bg-green-action: #0bab0b;
+  --bg-green-action-second: #41f941;
 
   --clr-accent: #699bf7;
   --clr-accent-hover: #557ecb;
@@ -59,6 +61,14 @@
   background-color: var(--bg-danger) !important;
 }
 
+.green {
+  background-color: var(--bg-green-action) !important;
+}
+
+.green:hover {
+  background-color: var(--bg-green-action-second) !important;
+}
+
 .navdesc .logout {
   text-decoration: none;
   color: var(--clr-accent-hover);
@@ -79,6 +89,7 @@
   width: 500px;
   margin: 10px;
   box-shadow: 0 2px 5px #0000001a;
+  z-index: 100;
 }
 
 .closeDialog {
@@ -107,6 +118,13 @@ navbar {
   width: 100%;
   background-color: var(--clr-accent);
   display: flex;
+}
+
+.title {
+  /* background-color: red; */
+  margin: auto 0;
+  font-size: x-large;
+  font-weight: bolder;
 }
 
 .logo > img {
@@ -147,6 +165,104 @@ navbar > .userimg {
   width: 60px;
   border-radius: 100%;
   object-fit: cover;
+}
+
+/* !Mini Nav */
+.filter {
+  margin-top: 30px;
+  margin-bottom: 20px;
+  background-color: var(--clr-accent);
+  padding: 15px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.filter .first {
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+.filter .Time {
+  margin-left: auto;
+}
+
+.filter .Time span {
+  /* background-color: #06577a; */
+  background-color: var(--clr-buttom);
+  color: var(--txt-white);
+  padding: 5px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--clr-accent);
+}
+
+.filter .Time span:hover {
+  border: 1px solid var(--clr-buttom);
+}
+
+.filter select {
+  cursor: pointer;
+  font-weight: bold;
+  background-color: var(--clr-select);
+  width: 200px;
+  height: 30px;
+  margin-left: 10px;
+  padding: 5px 10px;
+  border: 1px solid var(--txt-black);
+  border-radius: 10px;
+}
+
+.filter select:hover {
+  background-color: var(--clr-select-hover);
+  border-radius: 3px;
+  transition: all ease-in-out 0.3s;
+}
+
+.filter option {
+  background-color: var(--clr-select-options);
+  font-size: 15px;
+}
+
+.filter form input[type="submit"] {
+  color: var(--txt-white);
+  display: inline-block;
+  text-decoration: none;
+  font-size: 14px;
+  padding: 5px 20px;
+  margin: 5px;
+  border-radius: 10px;
+  border: 1px solid var(--clr-buttom);
+  background-color: var(--clr-buttom);
+  font-weight: bold;
+}
+
+.filter form input[type="submit"]:hover {
+  color: var(--txt-black);
+  background-color: var(--clr-buttom-hover);
+  border: 1px solid var(--txt-black);
+  border-radius: 5px;
+  transition: all ease-in-out 0.3s;
+}
+
+.filter form input[type="button"] {
+  color: var(--txt-white);
+  display: inline-block;
+  text-decoration: none;
+  font-size: 14px;
+  padding: 5px 20px;
+  margin: 5px;
+  border-radius: 10px;
+  border: 1px solid var(--clr-buttom);
+  background-color: var(--clr-buttom);
+  font-weight: bold;
+}
+
+.filter form input[type="button"]:hover {
+  color: var(--txt-black);
+  background-color: var(--clr-buttom-hover);
+  border: 1px solid var(--txt-black);
+  border-radius: 5px;
+  transition: all ease-in-out 0.3s;
 }
 
 /* !SideBar */
@@ -225,6 +341,52 @@ navbar > .userimg {
   margin-right: 10px;
   width: 25px;
   height: 25px;
+}
+
+/* !SideBar Tooltip */
+.tooltip {
+  position: relative;
+  display: inline-block;
+  /* border-bottom: 1px dotted black; */
+}
+
+.sidebar.hide > .main .tooltip {
+  /* border-left: 1px dotted black; */
+  border-right: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 120px;
+  background-color: var(--clr-second-hover);
+  color: var(--txt-black);
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  border: 1px solid var(--txt-black);
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 100;
+
+  /* top: -5px; */
+  /* top: 0px; */
+  left: 115%;
+}
+
+.tooltip .tooltiptext::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 100%;
+  margin-top: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent var(--clr-second-hover) transparent transparent;
+}
+
+.sidebar.hide > .main .tooltip:hover .tooltiptext {
+  visibility: visible;
 }
 
 /* !SideBar Hide */
@@ -361,5 +523,26 @@ navbar > .userimg {
   }
   100% {
     transform: rotateZ(0);
+  }
+}
+
+/* !Mobile CSS */
+@media only screen and (max-width: 600px) {
+  .navdesc,
+  .userimg {
+    /* background-color: red; */
+    display: none;
+  }
+
+  .title {
+    /* background-color: red; */
+    margin: auto 0;
+    font-size: large;
+    font-weight: bolder;
+  }
+
+  .logo {
+    /* transform: scale(0.1 0.1); */
+    /* transform: scale(0.8, 0.8); */
   }
 }

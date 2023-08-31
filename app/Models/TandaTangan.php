@@ -167,6 +167,22 @@ class TandaTangan extends Model
 
         // return $db->query($sql)->getResult('array');
     }
+
+    function cekStatusSuratTTDCount($pendattg_id, $status = 0)
+    {
+        return $this
+            ->select('count("*") as total')
+            ->join('SK_ttd_SuratMasuk', '`SK_ttd_SuratMasuk`.`SuratIdentifier` = `SK_ttd`.`SuratIdentifier`')
+            ->join('SK_JenisSurat', '`SK_JenisSurat`.`id`=`SK_ttd_SuratMasuk`.`JenisSurat_id`')
+            ->where('`SK_ttd`.`Status`', $status)
+            ->where('`SK_ttd_SuratMasuk`.`NoSurat` != ', 'Belum_Memiliki_No_Surat')
+            ->where('SK_ttd_SuratMasuk.DeleteAt', null)
+            ->groupStart()
+            ->where('`SK_ttd`.`pendattg_id`', $pendattg_id['id'])
+            ->orWhere('`SK_ttd`.`pendattg_id`', $pendattg_id['namaLVL'])
+            ->groupEnd()
+            ->findAll()[0]['total'];
+    }
 }
 
 
