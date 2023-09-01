@@ -10,6 +10,7 @@ class SidebarLinkNotifCell extends Cell
     protected $linktext;
     protected $imagelink;
     protected $notif;
+    protected $shortcut;
 
 
     public function mount()
@@ -43,5 +44,10 @@ class SidebarLinkNotifCell extends Cell
             return $this->notif;
         }
         return 0;
+    }
+
+    public function getShortcutProperty()
+    {
+        return $this->shortcut;
     }
 }
