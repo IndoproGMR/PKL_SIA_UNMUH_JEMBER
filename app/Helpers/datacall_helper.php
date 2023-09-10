@@ -15,6 +15,8 @@ function resMas($errorCategory)
         'delete' => 'Menghapus',
         'make'   => 'Membuat',
         'done'   => 'Sudah',
+        'read'   => 'membaca',
+
 
         'ttd'      => 'Tanda Tangan',
         'surat'    => 'Surat',
@@ -36,6 +38,8 @@ function resMas($errorCategory)
         'y' => 'iya',
         'n' => 'tidak',
 
+
+        'dp' => 'dapat',
         'u'  => 'Untuk',
         'k'  => 'Karena',
         't'  => 'Tapi',

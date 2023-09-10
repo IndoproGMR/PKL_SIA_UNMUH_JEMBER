@@ -43,6 +43,7 @@ function in_group($group, int $secure = 0)
  * ['FotoUser']
  * ['NamaUser']
  * ['namaLVL']
+ * ['Gelar']
  * @return array
  */
 function userInfo()
@@ -56,7 +57,8 @@ function userInfo()
         'id'       => 'error',
         'FotoUser' => 'img/level/personal.png',
         'NamaUser' => 'mohon login',
-        'namaLVL'  => 'mohon login'
+        'namaLVL'  => 'mohon login',
+        'Gelar'    => ''
     ];
 }
 
@@ -183,7 +185,7 @@ function FlashException($dataError = "Error Tidak Di Ketahui", $mode = 'set')
 }
 
 
-function FlashSuccess($link = '', $data = "something something has success", $mode = 'set')
+function FlashSuccess1($link = '', $data = "something something has success", $mode = 'set')
 {
     $session = \Config\Services::session();
     // $session->setFlashdata('data', $data);

@@ -14,9 +14,9 @@ class AuthUserGroup extends Model
     // protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
-        'MhswID',
-        'Password',
-        'LevelID'
+        // 'MhswID',
+        // 'Password',
+        // 'LevelID'
     ];
 
 
@@ -78,6 +78,63 @@ class AuthUserGroup extends Model
         return false;
     }
 
+    function cekdoseninfo($iduser)
+    {
+        $db = \Config\Database::connect("siautama", false);
+        $builder = $db->table('level');
+        $hasil = $builder->select('
+        `level`.`Nama` AS namaLVL, 
+        COALESCE( `dosen`.`Nama`, `karyawan`.`Nama`) AS NamaUser, 
+        COALESCE(`dosen`.`Gelar`) AS Gelar ')
+            ->join('dosen', '`level`.`LevelID` = `dosen`.`LevelID`', 'left')
+            ->join('karyawan', '`level`.`LevelID` = `karyawan`.`LevelID`', 'left')
+            ->groupStart()
+            ->Where('`dosen`.`Login`', $iduser)
+            ->orWhere('`karyawan`.`Login`', $iduser)
+            ->limit(1)
+            ->groupEnd()->get()->getResultArray()[0];
+
+        if ($hasil['Gelar'] === null) {
+            $gelar = '';
+        } else {
+            $gelar = $hasil['Gelar'];
+        }
+
+        $dataUser = [
+            'namaLVL'   => $hasil['namaLVL'],
+            'NamaUser'  => $hasil['NamaUser'],
+            'Gelar'     => $gelar
+        ];
+        return $dataUser;
+    }
+
+    function cekmahasiswainfo($iduser)
+    {
+        $db = \Config\Database::connect("siautama", false);
+        $builder = $db->table('level');
+        $hasil = $builder->select('
+        `level`.`Nama` AS namaLVL, 
+        COALESCE(`mhsw`.`Nama`) AS NamaUser, 
+        COALESCE(`mhsw`.`Login`) AS LoginUser, 
+        COALESCE(`mhsw`.`Foto` ,`level`.`Simbol`) AS FotoUser')
+            ->join('mhsw', '`level`.`LevelID` = `mhsw`.`LevelID`', 'left')
+            ->groupStart()
+            ->where('`mhsw`.`Login`', $iduser)
+            ->limit(1)
+            ->groupEnd()->get()->getResultArray()[0];
+
+
+        $dataUser = [
+            'namaLVL'   => $hasil['namaLVL'],
+            'NamaUser'  => $hasil['NamaUser'],
+            'LoginUser' => $hasil['LoginUser'],
+            'FotoUser'  => $hasil['FotoUser']
+        ];
+
+        return $dataUser;
+    }
+
+
     function cekuserinfo($iduser)
     {
         $db = \Config\Database::connect("siautama", false);
@@ -86,7 +143,8 @@ class AuthUserGroup extends Model
         `level`.`Nama` AS namaLVL, 
         COALESCE(`mhsw`.`Nama` , `dosen`.`Nama`, `karyawan`.`Nama`) AS NamaUser, 
         COALESCE(`mhsw`.`Login`, `dosen`.`Login`, `karyawan`.`Login`) AS LoginUser, 
-        COALESCE(`mhsw`.`Foto` ,`level`.`Simbol`) AS FotoUser')
+        COALESCE(`mhsw`.`Foto` ,`level`.`Simbol`) AS FotoUser,
+        COALESCE(`dosen`.`Gelar`) AS Gelar ')
             ->join('mhsw', '`level`.`LevelID` = `mhsw`.`LevelID`', 'left')
             ->join('dosen', '`level`.`LevelID` = `dosen`.`LevelID`', 'left')
             ->join('karyawan', '`level`.`LevelID` = `karyawan`.`LevelID`', 'left')
@@ -96,7 +154,23 @@ class AuthUserGroup extends Model
             ->orWhere('`karyawan`.`Login`', $iduser)
             ->limit(1)
             ->groupEnd()->get()->getResultArray()[0];
-        return $hasil;
+
+
+        if ($hasil['Gelar'] === null) {
+            $gelar = '';
+        } else {
+            $gelar = $hasil['Gelar'];
+        }
+
+        $dataUser = [
+            'namaLVL'   => $hasil['namaLVL'],
+            'NamaUser'  => $hasil['NamaUser'],
+            'LoginUser' => $hasil['LoginUser'],
+            'FotoUser'  => $hasil['FotoUser'],
+            'Gelar'     => $gelar
+        ];
+
+        return $dataUser;
 
 
         // $sql = "SELECT `level`.`Nama` AS namaLVL, 

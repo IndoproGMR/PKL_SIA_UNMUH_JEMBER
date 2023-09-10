@@ -60,6 +60,7 @@ class SuratKeluraModel extends Model
         SK_ttd_SuratMasuk.DataTambahan,
         SK_ttd_SuratMasuk.TimeStamp,
         SK_ttd_SuratMasuk.mshw_id,
+        SK_ttd_SuratMasuk.SuratIdentifier,
         SK_JenisSurat.name,
         SK_JenisSurat.isiSurat,
         SK_JenisSurat.form,
@@ -85,23 +86,25 @@ class SuratKeluraModel extends Model
 
         if (!count($namaMHS) > 0) {
             helper('datacall');
-            $data['NoSurat']      = $surat[0]['NoSurat'];
-            $data['DataTambahan'] = base64_decode($surat[0]['DataTambahan']);
-            $data['TimeStamp']    = $surat[0]['TimeStamp'];
-            $data['namaMHS']      = $namaMHS[0]['Nama'];
-            $data['name']         = resMas('e');
-            $data['isiSurat']     = base64_decode($surat[0]['isiSurat']);
-            $data['form']         = base64_decode($surat[0]['form']);
+            $data['NoSurat']         = $surat[0]['NoSurat'];
+            $data['DataTambahan']    = base64_decode($surat[0]['DataTambahan']);
+            $data['TimeStamp']       = $surat[0]['TimeStamp'];
+            $data['namaMHS']         = $namaMHS[0]['Nama'];
+            $data['SuratIdentifier'] = $surat[0]['SuratIdentifier'];
+            $data['name']            = resMas('e');
+            $data['isiSurat']        = base64_decode($surat[0]['isiSurat']);
+            $data['form']            = base64_decode($surat[0]['form']);
             return $data;
         }
 
-        $data['NoSurat']      = $surat[0]['NoSurat'];
-        $data['DataTambahan'] = base64_decode($surat[0]['DataTambahan']);
-        $data['TimeStamp']    = $surat[0]['TimeStamp'];
-        $data['namaMHS']      = $namaMHS[0]['Nama'];
-        $data['name']         = $surat[0]['name'];
-        $data['isiSurat']     = base64_decode($surat[0]['isiSurat']);
-        $data['form']         = base64_decode($surat[0]['form']);
+        $data['NoSurat']         = $surat[0]['NoSurat'];
+        $data['DataTambahan']    = base64_decode($surat[0]['DataTambahan']);
+        $data['TimeStamp']       = $surat[0]['TimeStamp'];
+        $data['namaMHS']         = $namaMHS[0]['Nama'];
+        $data['SuratIdentifier'] = $surat[0]['SuratIdentifier'];
+        $data['name']            = $surat[0]['name'];
+        $data['isiSurat']        = base64_decode($surat[0]['isiSurat']);
+        $data['form']            = base64_decode($surat[0]['form']);
         return $data;
     }
 
