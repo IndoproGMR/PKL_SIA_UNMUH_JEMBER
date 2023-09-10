@@ -3,7 +3,6 @@
 namespace App\Controllers;
 
 use App\Models\AuthUserGroup;
-use App\Models\TandaTangan;
 use Faker\Extension\Helper;
 
 
@@ -13,15 +12,17 @@ class Home extends BaseController
     {
         PagePerm([''], '/login', true);
 
-        // return view('auth/Auth_login');
-        $options = [
-            'max-age'  => 300,
-            's-maxage' => 900,
-            'etag'     => 'abcde',
-        ];
-        $this->response->setCache($options);
-        $this->response->setCache();
         return view('home/index');
+    }
+
+    public function StaffHelp()
+    {
+        echo 'StaffHelp';
+    }
+
+    public function MahasiswaHelp()
+    {
+        echo 'MahasiswaHelp';
     }
 
     // !Error Page

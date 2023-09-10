@@ -7,9 +7,11 @@ use CodeIgniter\View\Cells\Cell;
 class SidebarLinkNotifCell extends Cell
 {
     protected $link;
+    protected $linkout;
     protected $linktext;
     protected $imagelink;
     protected $notif;
+    protected $target;
     protected $shortcut;
 
 
@@ -20,6 +22,11 @@ class SidebarLinkNotifCell extends Cell
     public function getLinkProperty()
     {
         return $this->link;
+    }
+
+    public function getLinkoutProperty()
+    {
+        return $this->linkout;
     }
 
     public function getLinktextProperty()
@@ -44,6 +51,11 @@ class SidebarLinkNotifCell extends Cell
             return $this->notif;
         }
         return 0;
+    }
+
+    public function getTargetProperty()
+    {
+        return $this->target;
     }
 
     public function getShortcutProperty()

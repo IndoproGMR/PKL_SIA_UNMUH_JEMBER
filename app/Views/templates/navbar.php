@@ -4,7 +4,6 @@
 
     <div class="logo">
         <img src="<?= base_url('/asset/logo/small/unmuh-tiny.png'); ?>" alt="logo" class="">
-        <!-- <img src="<?= base_url('/api/v1/image/logo'); ?>" alt="logo" class="cssdebug"> -->
     </div>
 
     <div class="navbody">
@@ -13,7 +12,7 @@
             <p class="title">Universitas Muhammadiyah Jember</p>
         </div>
         <div class="navdesc">
-            <h3><?= esc(userInfo()['NamaUser']) ?></h3>
+            <h3><?= esc(userInfo()['NamaUser']) ?> <?= esc(userInfo()['Gelar']) ?></h3>
             <p><?= esc(userInfo()['namaLVL']) ?></p>
             <p><a class="logout" href="<?= base_url('/login'); ?>">LogOut</a></p>
         </div>
