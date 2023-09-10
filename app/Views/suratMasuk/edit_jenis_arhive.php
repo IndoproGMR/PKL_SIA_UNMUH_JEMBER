@@ -36,7 +36,6 @@
 <?= $this->section('main') ?>
 
 
-<?php dialog(); ?>
 
 <form action="<?= base_url('/staff/edit-proses/JenisSurat'); ?>">
     <?= csrf_field() ?>

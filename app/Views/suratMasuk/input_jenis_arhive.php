@@ -36,7 +36,6 @@
 <?= $this->section('main') ?>
 
 
-<?php dialog(); ?>
 
 
 <form action="/input-jenis-archive-surat" id="inputJenisSurat" style="display: none;">
