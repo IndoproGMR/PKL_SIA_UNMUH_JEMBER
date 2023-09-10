@@ -37,7 +37,7 @@ class Jenissurat extends Model
     }
 
 
-    public function seebyID(String $id, int $showAll = 0)
+    public function seebyID($id, int $showAll = 0)
     {
         $data['error'] = 'y';
         if ($showAll == 1) {

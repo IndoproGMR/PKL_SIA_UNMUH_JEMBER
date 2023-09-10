@@ -5,18 +5,6 @@ function timedecor()
     return '<p class="Time">Tanggal: <span class="waktu-sekarang"></span></p>';
 }
 
-function display_error($validation, $inputform)
-{
-    if ($validation->hasError($inputform)) {
-        return "<span class='danger' style='color:#dc3545'>*" . $validation->getError($inputform) . "</span>";
-    } else {
-        return false;
-    }
-}
-
-
-
-
 /**
  * @param $target = _self,_blank
  */
@@ -54,30 +42,6 @@ function TombolIDcheck($yesno, $link, $valueinput, $confirmText = "Apakah Anda Y
                 '</label></form>';
             break;
     }
-}
-
-/**
- * @param target = _self,_blank
- */
-function TombolID(
-    $link,
-    $valueinput,
-    $submitclass = "",
-    $valuesubmit = "submit",
-    $target = "_self",
-    $method = "POST",
-    $formclass = "",
-    $confirmText = "Apakah Anda Yakin?",
-    $name = "id",
-) {
-    return '<form target="' . $target . '" action="' . base_url('/') . $link . '" method="' . $method . '" class="' . $formclass . '">' .
-        csrf_field() .
-        // hidden input
-        '<input hidden type="text" name="' . $name . '" value="' . $valueinput . '" >' .
-        // tombol
-        '<input type="submit" value="' . $valuesubmit . '" class="' . $submitclass . '" onclick="return confirm(\'' . $confirmText . '\');">' .
-        // '<input type="submit" value="' . $valuesubmit . '" class="' . $submitclass . '" onclick="if(confirm(\'' . $confirmText . '\')) window.location.reload();">' .
-        '</form>';
 }
 
 // !Validasi
@@ -126,34 +90,4 @@ function Validasi_Input($field)
             ]
         ],
     ];
-}
-
-
-
-function dialog()
-{
-    if (FlashSuccess('', '', 'get') !== null) {
-        echo ('
-        <div class="success-box">
-        <span class="success-icon">&#10003;</span>
-        <span class="success-message">' .
-            esc(FlashSuccess("", "", "get")) .
-            '</span>
-        </div>
-        ');
-    }
-}
-
-function dialogmessege()
-{
-    if (FlashSuccess('', '', 'get') !== null) {
-        echo ('
-        <div class="success-box">
-        <span class="success-icon">&#10003;</span>
-            <span class="success-message">' .
-            esc(FlashMassage("", "", "get")) .
-            '</span>
-        </div>
-        ');
-    }
 }

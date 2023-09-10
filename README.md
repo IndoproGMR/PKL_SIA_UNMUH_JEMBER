@@ -52,7 +52,7 @@ localhost:8080/
 
 ---
 ## Version: (terakhir update)
-- codeigniter = 4.3.7
+- codeigniter = 4.3.7 (next 4.4.0)
 - dompdf = 2.0.3
 - endroid/qr-code = 4.8.2
 - khaled.alshamaa/ar-php = 6.3.4
@@ -67,35 +67,48 @@ ___
 [Standarisasi](#Standarisasi)
 
 ## TODO:
+#### Help Dokumentasi
+##### Staff
+- [ ] Membuat Master Surat
+##### Mahasiswa
+- [ ] Meminta Surat
+
+#### Error feedback
+- [x] Validation error
+- [ ] Exceptions
+- [x] succes massage
+- [x] fail massage
+
 **Create_Read_Update_Delete_readPDF_MakeFile**
-#### Surat Keluar (7/17)
+#### Surat Keluar (8/18)
 ##### Semua user
 - [ ] cek QR (need:UI) **(get:/qr-validasi)**
 
 ##### Mahasiswa 
-- [ ] Minta Surat (R) (need:UI) **(get:/minta-surat)**
-- [ ] Minta Surat buat (C_R) (need:UI) **(get:/minta-surat/{id})** **(post:/minta-surat/{id})**
-- [ ] Semua Surat (R_PDF_MK) (BUG: pdf Tidak dapat Disave diserver) **(get:/riwayat-surat)**
-- [x] Melihat Status Surat (R) **(get:/status-surat)**
+- [ ] Minta Surat (R) (need:UI)
+- [ ] Minta Surat buat (C_R) (need:UI)
+- [x] Semua Surat (R_PDF_MK)
+- [x] Melihat Status Surat (R)
 
 ##### PenandaTangan
-- [x] Semua Yang belum di TandaTangan kan (R_PDF) **(get:/status-TTD)**
-- [x] TandaTangan Preview (PDF) **(post:/staff/Preview-Surat)**
-- [x] TandaTangan (U_MK) **(post:/status-TTD)**
-- [x] Semua Yang sudah di TandaTangan kan (R_PDF) **(get:/riwayat-TTD)**
+- [x] Semua Yang belum di TandaTangan kan (R_PDF)
+- [x] TandaTangan Preview (PDF)
+- [x] TandaTangan (U_MK)
+- [x] Semua Yang sudah di TandaTangan kan (R_PDF)
 
 ##### Pengajaran
-- [ ] Master Surat Buat (C) (need:UI) **(get:/bikin-surat)** **(post:/bikin-surat)**
-- [x] Master Surat semua (R_PDF)  **(get:/semua-surat)**
-- [ ] Master Surat edit (R_U_D) (need:UI) **(get:/bikin-surat)**
-- [x] Master Surat Visiblity Toggle (U) **(post:/toggleshow-surat)**
-- [ ] set NomerSurat semua (R_PDF) (need:UI)
+- [ ] Master Surat Buat (C) (need:UI)
+- [x] Master Surat semua (R_PDF) 
+- [ ] Test Master Surat (R) (need:UI)
+- [ ] Master Surat edit (R_U_D) (need:UI)
+- [x] Master Surat Visiblity Toggle (U)
+- [x] set NomerSurat semua (R_PDF) (need:UI)
 - [ ] set NomerSurat edit (R_U_D) (need:UI)
 
 ##### PDF Surat
 - [ ] KOP Surat
 - [ ] layout
-- [ ] tandatangan
+- [x] tandatangan
 
 #### Surat Masuk (1/6)
 ##### Pengajaran
@@ -137,7 +150,7 @@ ___
 
 ---
 
-- [ ] framework
+- [x] framework
 - [ ] Data flow
 - [ ] Database
 - [ ] Backend Login dan auth

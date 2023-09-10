@@ -6,6 +6,7 @@ use App\Controllers\BaseController;
 use App\Libraries\enkripsi_library;
 use App\Models\AuthUserGroup;
 
+// $GLOBALS['loginUI'] = 'public';
 $GLOBALS['loginUI'] = 'debug';
 
 class Login extends BaseController
@@ -58,6 +59,7 @@ class Login extends BaseController
             return view("login", $data);
         }
         return view("auth/Auth_login", $data);
+        // return view("auth/Auth_login-figma", $data);
     }
 
     public function debuglogin()
@@ -79,13 +81,17 @@ class Login extends BaseController
             $session->destroy();
             return redirect()->to('error_perm');
         }
+
         $datauser = $model->cekuserinfo($postdata['dataLogin']);
+
         $data['userdata'] = [
-            'id' => $datauser['LoginUser'],
+            'id'       => $datauser['LoginUser'],
             'NamaUser' => $datauser['NamaUser'],
             'FotoUser' => $datauser['FotoUser'],
-            'namaLVL' => $datauser['namaLVL']
+            'namaLVL'  => $datauser['namaLVL'],
+            'Gelar'    => $datauser['Gelar']
         ];
+
         $session->set($data);
         return redirect()->to('/');
     }
