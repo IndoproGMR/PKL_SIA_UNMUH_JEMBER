@@ -8,6 +8,10 @@
 </head>
 
 <style>
+    .isi {
+        margin-bottom: 20px;
+    }
+
     .konterner-utama {
         display: flex;
     }
@@ -21,25 +25,28 @@
 
     table {
         width: 100%;
+        border-spacing: 30px;
     }
 
     img {
-        width: 100px;
+        width: 150px;
         height: auto;
 
         /* aspect-ratio: 1; */
     }
 
     td {
-        padding: 10px;
+        padding: 20px;
+        /* background-color: red; */
+
         /* background-color: #ff0000; */
         /* margin-bottom: 20px; */
         /* margin: 150px; */
     }
 
     .kontenerttd {
-        padding: 5px;
-        margin: 15px;
+        /* padding: 5px; */
+        /* margin: 15px; */
     }
 
     .centertext {
@@ -47,81 +54,56 @@
     }
 
     .underline {
+        /* color: red; */
         text-decoration: underline;
+    }
+
+    .ttdKontener {
+        display: flex;
+        /* background-color: red; */
+
+    }
+
+    .ttd {
+        width: 200px;
+        margin: 10px;
+        /* background-color: green; */
     }
 </style>
 
 <body>
     <!-- START Kop Surat -->
-    <?php if ($kop == 1) : ?>
-        <?= $this->include('surat/_kopsurat1'); ?>
+    <?php
+
+    use PhpParser\Node\Identifier;
+
+    if ($kop == 1) : ?>
         <!-- kop surat 1 -->
+        <?= $this->include('surat/_kopsurat1'); ?>
     <?php elseif ($kop == 2) : ?>
-        <?= $this->include('surat/_kopsurat2'); ?>
         <!-- kop surat 2 -->
+        <?= $this->include('surat/_kopsurat2'); ?>
     <?php else : ?>
-        <?= $this->include('surat/_kopsurat'); ?>
         <!-- kop surat default -->
+        <?= $this->include('surat/_kopsurat'); ?>
     <?php endif ?>
     <!-- END Kop Surat -->
 
     <!-- START isi Surat -->
-    <?= $isi ?>
+    <div class="isi">
+        <?= $isi ?>
+    </div>
     <!-- END isi Surat -->
-    <!-- <pagebreak /> -->
 
     <?php
-    $data = [
-        0 => [
-            'tgly'     => '7/6/2028',
-            'tglh'     => '2/17/2097',
-            'jabatan'  => 'dosen',
-            'ttd'      => 'asset/logo/error_img.png',
-            'nama'     => 'Carlos Chapman',
-            'no'       => '466'
-        ],
-        1 => [
-            'tgly'     => '9/14/2116',
-            'tglh'     => '9/10/2108',
-            'jabatan'  => 'dosen',
-            'ttd'      => 'asset/logo/error_img.png',
-            'nama'     => 'Estella McGuire',
-            'no'       => '585'
-        ],
-        2 => [
-            'tgly'     => '7/18/2032',
-            'tglh'     => '9/8/2079',
-            'jabatan'  => 'dosen',
-            'ttd'      => 'asset/logo/error_img.png',
-            'nama'     => 'Stanley Jimenez',
-            'no'       => '456'
-        ],
-        3 => [
-            'tgly'     => '4/19/2077',
-            'tglh'     => '7/14/2047',
-            'jabatan'  => 'dosen',
-            'ttd'      => 'asset/logo/error_img.png',
-            'nama'     => 'Shawn Watson',
-            'no'       => '518'
-        ],
-        4 => [
-            'tgly'     => '11/19/2070',
-            'tglh'     => '12/6/2031',
-            'jabatan'  => 'dosen',
-            'ttd'      => 'asset/logo/error_img.png',
-            'nama'     => 'Josie Wells',
-            'no'       => '941'
-        ],
-
-    ];
-
+    // d($ttd);
     $index = 0;
     $perbaris = 2;
 
     ?>
     <div class="kontenerttd">
         <table>
-            <?php foreach ($data as $key) : ?>
+            <?php foreach ($ttd as $key) : ?>
                 <?php $index++ ?>
 
                 <?php if ($index % $perbaris == 1) : ?>
@@ -129,12 +111,16 @@
                     <?php endif ?>
 
                     <td class="centertext">
-                        <p class="underline"><?= $key['tglh']; ?></p>
-                        <p><?= $key['tgly']; ?></p>
-                        <p><strong><?= $key['jabatan']; ?></strong></p>
-                        <p><img src="<?= $key['ttd']; ?>" alt=""></p>
-                        <p class="underline"><strong><?= $key['nama']; ?></strong></p>
-                        <p><Strong><span>NIP/NPK : </span></Strong><span><?= $key['no']; ?></span></p>
+                        <?= view_cell('TandaTanganCell', [
+                            'time' => $key['TimeStamp'],
+                            'foto' => $key['path'],
+
+                            'nama'    => $key['NamaPenanda'],
+                            'jabatan' => $key['namaLVL'],
+
+                            'nip'   => true,
+                            'nomer' => '034720',
+                        ]) ?>
                     </td>
 
                     <?php if ($index % $perbaris == 0) : ?>
@@ -144,6 +130,12 @@
             <?php endforeach ?>
         </table>
     </div>
+
+
+
+
+
+
 
 
 </body>

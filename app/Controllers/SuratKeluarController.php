@@ -460,7 +460,7 @@ class SuratKeluarController extends BaseController
         $data['update']['pendattg_id'] = userInfo()['id'];
 
 
-        if (!Render_Qr($data['update']['hash'], $data['update']['qrcodeName'])) {
+        if (!Render_Qr($data['update']['hash'], $data['update']['qrcodeName'], userInfo()['id'])) {
             return FlashMassage('/Surat_Perlu_TandaTangan', [resMas('f.u.make.qr')], 'fail');
         }
 
@@ -485,9 +485,9 @@ class SuratKeluarController extends BaseController
     public function kameraQR()
     {
         $data['nocam'] = false;
+        $nocam = $this->request->getGet('nocam');
 
-        if (isset($_GET["nocam"])) {
-            $nocam = $_GET["nocam"];
+        if ($nocam !== null) {
             if ($nocam == "true") {
                 $data['nocam'] = true;
             }

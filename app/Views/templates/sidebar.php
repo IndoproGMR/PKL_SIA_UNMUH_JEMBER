@@ -9,7 +9,7 @@
                     <div class="fotouser">
                         <img src="https://sia.unmuhjember.ac.id/<?= esc(userInfo()['FotoUser']) ?>" alt="Foto Profile" class="" loading='lazy' onerror="this.src='asset/logo/error_img.png';">
                     </div>
-                    <p class="description-header"><?= esc(userInfo()['NamaUser']) ?></p>
+                    <p class="description-header"><?= esc(userInfo()['NamaUser']) ?> <?= esc(userInfo()['Gelar']) ?></p>
                 </a>
             </div>
         </div>
@@ -204,6 +204,53 @@
                     'imagelink' => 'asset/svg/qrcode-solid.svg',
                     'notif'     => 0,
                     'shortcut'  => 'g'
+                ]
+            ) ?>
+
+            <?php if (in_group(['Mahasiswa'])) : ?>
+
+                <?= view_cell(
+                    'SidebarLinkNotifCell',
+                    [
+                        'link'      => 'help',
+                        'linktext'  => 'Help',
+                        'imagelink' => 'asset/svg/circle-info-solid.svg',
+                        'notif'     => 0,
+                        'shortcut'  => '',
+                        'target'    => '_blank'
+                    ]
+                ) ?>
+
+            <?php endif ?>
+
+            <?php if (in_group(['Dosen', 'Kepala Keuangan'])) : ?>
+
+                <?= view_cell(
+                    'SidebarLinkNotifCell',
+                    [
+                        'link'      => 'Staff/help',
+                        'linkout'   => '',
+
+                        'linktext'  => 'Help',
+                        'imagelink' => 'asset/svg/circle-info-solid.svg',
+                        'notif'     => 0,
+                        'shortcut'  => '',
+                        'target'    => '_blank'
+                    ]
+                ) ?>
+
+            <?php endif ?>
+
+
+            <?= view_cell(
+                'SidebarLinkNotifCell',
+                [
+                    'linkout'   => 'https://sia.unmuhjember.ac.id/',
+                    'linktext'  => 'Sia Unmuh',
+                    'imagelink' => 'asset/svg/globe-solid.svg',
+                    'notif'     => 0,
+                    'shortcut'  => '',
+                    'target'    => '_blank'
                 ]
             ) ?>
 

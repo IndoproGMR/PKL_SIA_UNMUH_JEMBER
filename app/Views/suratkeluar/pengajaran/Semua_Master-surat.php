@@ -39,6 +39,7 @@
                     <?php endif ?>
 
                     <td>
+
                         <?= view_cell('TombolIdCell', [
                             'link'              => '/Staff/detail/Master-Surat/' . $key['id'],
                             'valueinput'        => $key['id'],
@@ -46,6 +47,7 @@
                             'textsubmit'        => 'Edit Surat',
                             'method'            => 'get'
                         ]) ?>
+
                         <?= view_cell('TombolIdCell', [
                             'link'              => '/staff/Preview/' . $key['id'],
                             'valueinput'        => $key['id'],
@@ -54,6 +56,16 @@
                             'target'            => '_blank',
                             'method'            => 'get'
                         ]) ?>
+
+                        <?= view_cell('TombolIdCell', [
+                            'link'              => '/Staff/test/Master-Surat/' . $key['id'],
+                            'valueinput'        => $key['id'],
+                            'tombolsubmitclass' => 'Actions',
+                            'textsubmit'        => 'Test Surat',
+                            'target'            => '_blank',
+                            'method'            => 'get'
+                        ]) ?>
+
                     </td>
                 </tr>
             <?php endforeach ?>
