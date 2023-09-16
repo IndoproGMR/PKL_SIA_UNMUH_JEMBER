@@ -20,7 +20,7 @@
     <!-- <img src="asset/user-4-fill (3).svg" alt="" class="user"> -->
     <!-- <img src="https://sia.unmuhjember.ac.id/<?= esc(userInfo()['FotoUser']) ?>" alt="Foto Profile" class="userimg" loading='lazy'> -->
     <div class="userimg ">
-        <img src="https://sia.unmuhjember.ac.id/<?= esc(userInfo()['FotoUser']) ?>" alt="Foto Profile" class="" loading='lazy' onerror="this.src='asset/logo/error_img.png';">
+        <img src="https://sia.unmuhjember.ac.id/<?= esc(userInfo()['FotoUser']) ?>" alt="Foto Profile" class="" loading='lazy' onerror="this.src='<?= base_url('asset/logo/error_img.png') ?>';">
     </div>
 
 </navbar>

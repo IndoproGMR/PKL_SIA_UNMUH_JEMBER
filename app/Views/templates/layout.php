@@ -22,7 +22,6 @@ if (!empty($title)) {
     <!-- global style -->
     <link rel="stylesheet" href="<?= base_url('/css/style.css'); ?>">
 
-
     <!-- font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -56,6 +55,22 @@ if (!empty($title)) {
 
 <!-- global JavaScript -->
 <script>
+    function consolwarning() {
+        const mas = '⚠️ Warning: Anda Tidak Seharusnya Membuka Console';
+
+        const styles = [
+            'background-color: #ffc107',
+            'color: #333',
+            'font-size: 32px',
+            'font-weight: bold',
+            'padding: 8px',
+            'border-radius: 4px',
+        ];
+
+        console.log(`%c${mas}`, styles.join(';'));
+    }
+    consolwarning();
+
     // !Jam ====================================================================
     const waktuElement = document.getElementsByClassName('waktu-sekarang')[0];
 

@@ -1,10 +1,10 @@
 <?php
-if (FlashMassage('', '', '', 'get') === null) {
+if (FlashMassage('', [], '', 'get') === null) {
     return;
 }
 
-$type = FlashMassage('', '', '', 'get')['type'];
-$massages = FlashMassage('', '', '', 'get')['massage'];
+$type = FlashMassage('', [], '', 'get')['type'];
+$massages = FlashMassage('', [], '', 'get')['massage'];
 ?>
 
 

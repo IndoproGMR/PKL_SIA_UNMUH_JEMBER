@@ -38,6 +38,8 @@ class Home extends BaseController
 
     public function TestInfo()
     {
+        d($this->request->getIPAddress());
+        // d(FCPATH);
         // $text = 'TTD.valid.t.n.exist.db.!2';
         // $data = 'Tanda Tangan Tidak ada Didalam Database!!!';
 
@@ -48,10 +50,10 @@ class Home extends BaseController
         // d(FlashMassage('', '', '', 'get')['massage']);
         // d(FlashMassage('', '', '', 'get')['type']);
 
-        $jenissurat = model(Jenissurat::class);
-        $data['level'] = $jenissurat->seegrouplvl();
-        $data['ttd'] = $jenissurat->seeNamaPettd();
-        return view('suratKeluar/pengajaran/input_master-surat', $data);
+        // $jenissurat = model(Jenissurat::class);
+        // $data['level'] = $jenissurat->seegrouplvl();
+        // $data['ttd'] = $jenissurat->seeNamaPettd();
+        // return view('suratKeluar/pengajaran/input_master-surat', $data);
     }
 
     public function TestInfoProses()
