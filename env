@@ -42,6 +42,8 @@ logoqr = 'asset/logo/unmuh.png'
 # APP
 #--------------------------------------------------------------------
 
+AppVersion = 'Beta 0.5'
+
 # app.baseURL = ''
 # If you have trouble with `.`, you could also use `_`.
 # app_baseURL = ''

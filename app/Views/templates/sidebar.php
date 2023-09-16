@@ -261,6 +261,8 @@
             ) ?>
 
         </div>
+        <br>
+        <h5>Web Version: Beta 0.5</h5>
     </div>
 
     <!-- main Conten -->
