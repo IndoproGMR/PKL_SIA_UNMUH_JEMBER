@@ -20,13 +20,14 @@ if (!empty($title)) {
     </title>
 
     <!-- global style -->
-    <!-- <link rel="stylesheet" href="<?= base_url('/'); ?>css/style.css?max-age=315360"> -->
     <link rel="stylesheet" href="<?= base_url('/css/style.css'); ?>">
 
     <!-- font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Global Script -->
+    <!-- <script src="https://kit.fontawesome.com/a2450cb534.js" crossorigin="anonymous"></script> -->
 
     <!-- spesifik javascript Head -->
     <?= $this->renderSection('jsH') ?>
@@ -54,6 +55,22 @@ if (!empty($title)) {
 
 <!-- global JavaScript -->
 <script>
+    function consolwarning() {
+        const mas = '⚠️ Warning: Anda Tidak Seharusnya Membuka Console';
+
+        const styles = [
+            'background-color: #ffc107',
+            'color: #333',
+            'font-size: 32px',
+            'font-weight: bold',
+            'padding: 8px',
+            'border-radius: 4px',
+        ];
+
+        console.log(`%c${mas}`, styles.join(';'));
+    }
+    consolwarning();
+
     // !Jam ====================================================================
     const waktuElement = document.getElementsByClassName('waktu-sekarang')[0];
 

@@ -1,7 +1,6 @@
 <?= $this->extend('templates/layout.php') ?>
 <?= $this->section('style') ?>
 <!-- masukan style nya -->
-<!-- <link rel="stylesheet" href="css/dashboard.css"> -->
 <style>
   .card {
     margin: 50px;

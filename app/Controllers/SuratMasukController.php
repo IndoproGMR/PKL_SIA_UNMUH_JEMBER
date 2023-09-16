@@ -6,6 +6,8 @@ use App\Controllers\BaseController;
 use App\Models\JenisSuratMasukModel;
 use App\Models\SuratMasukModel;
 
+// !Update FlashMassage
+
 class SuratMasukController extends BaseController
 {
     public function indexArchiveSurat()
@@ -99,9 +101,10 @@ class SuratMasukController extends BaseController
         // d($dataSimpan);
         $model = model(SuratMasukModel::class);
         if (!$model->addSuratMasuk($dataSimpan)) {
-            return FlashException('Tidak dapat menginputkan Surat kedatabase');
+            return FlashMassage('/input-archive-surat', [resMas('f')]);
+            // return FlashException('Tidak dapat menginputkan Surat kedatabase');
         }
-        return FlashSuccess('/input-archive-surat', 'Berhasil Menyimpan Surat');
+        return FlashMassage('/input-archive-surat', [resMas('s.save.surat')]);
     }
 
     public function updateArchiveSurat()
@@ -157,9 +160,13 @@ class SuratMasukController extends BaseController
         // d($postdata);
         // d($data);
         if (!$model->updateSuratMasuk($postdata['id'], $data)) {
-            return FlashException('Gagal Meng update Surat');
+            return FlashMassage('/input-archive-surat', [resMas('f')]);
+
+            // return FlashException('Gagal Meng update Surat');
         }
-        return FlashSuccess('semua-archive-surat', 'berhasil Meng Update Surat');
+        return FlashMassage('/input-archive-surat', [resMas('f')]);
+
+        // return FlashSuccess('semua-archive-surat', 'berhasil Meng Update Surat');
     }
 
     public function deleteArchiveSuratProses()
@@ -178,18 +185,25 @@ class SuratMasukController extends BaseController
         $filepathTemp = WRITEPATH . "/temp/" . $dataSurat['NamaFile'];
         cekDir(WRITEPATH . '/temp/ArhiveSurat/pdf');
         if (!moveFile($filepathZ_archive, $filepathTemp)) {
-            return 'gagal memindahkan file ke temp';
+            return FlashMassage('/input-archive-surat', [resMas('f')]);
+
+            // return 'gagal memindahkan file ke temp';
         }
 
         if (!deleteFile($filepathWrite)) {
-            return 'gagal menghapus file main folder';
+            return FlashMassage('/input-archive-surat', [resMas('f')]);
+
+            // return 'gagal menghapus file main folder';
         }
 
         if (!$model->deleteSuratMasuk($postdata)) {
-            return 'gagal menghapus surat';
+            return FlashMassage('/input-archive-surat', [resMas('f')]);
+            // return 'gagal menghapus surat';
         }
 
-        return FlashSuccess('/input-archive-surat', 'Berhasil Menghapus Surat');
+        return FlashMassage('/input-archive-surat', [resMas('f')]);
+
+        // return FlashSuccess('/input-archive-surat', 'Berhasil Menghapus Surat');
     }
 
     // !Jenis Surat
@@ -221,9 +235,13 @@ class SuratMasukController extends BaseController
         ];
         $model = model(JenisSuratMasukModel::class);
         if (!$model->addJenisSurat($dataSimpan)) {
-            return FlashException('Tidak dapat Meminta Mengisi Jenis Surat');
+            return FlashMassage('/input-archive-surat', [resMas('f')]);
+
+            // return FlashException('Tidak dapat Meminta Mengisi Jenis Surat');
         }
-        return FlashSuccess('/input-jenis-archive-surat', 'Berbahasil Menyimpan Jenis Surat');
+        return FlashMassage('/input-archive-surat', [resMas('f')]);
+
+        // return FlashSuccess('/input-jenis-archive-surat', 'Berbahasil Menyimpan Jenis Surat');
     }
 
     public function updateJenisArchiveSurat()
@@ -257,9 +275,13 @@ class SuratMasukController extends BaseController
         $model = model('JenisSuratMasukModel');
 
         if (!$model->updateJenisSurat($postdata['id'], $data)) {
-            return FlashException('Tidak dapat Meminta Mengisi Jenis Surat');
+            return FlashMassage('/input-archive-surat', [resMas('f')]);
+
+            // return FlashException('Tidak dapat Meminta Mengisi Jenis Surat');
         }
-        return FlashSuccess('/input-jenis-archive-surat', 'Berbahasil Menyimpan Jenis Surat');
+        return FlashMassage('/input-archive-surat', [resMas('f')]);
+
+        // return FlashSuccess('/input-jenis-archive-surat', 'Berbahasil Menyimpan Jenis Surat');
     }
 
     public function deleteJenisArchiveSuratProses()
@@ -274,12 +296,18 @@ class SuratMasukController extends BaseController
 
 
         if (!$model2->setdeletejenisSuratMasuk($postdata)) {
-            return FlashException('Tidak dapat delete Surat ke 0');
+            return FlashMassage('/input-archive-surat', [resMas('f')]);
+
+            // return FlashException('Tidak dapat delete Surat ke 0');
         }
 
         if (!$model->setdeleteJenisSurat($postdata)) {
-            return FlashException('Tidak dapat Meminta Mengisi Jenis Surat');
+            return FlashMassage('/input-archive-surat', [resMas('f')]);
+
+            // return FlashException('Tidak dapat Meminta Mengisi Jenis Surat');
         }
-        return FlashSuccess('/input-jenis-archive-surat', 'Berbahasil Menyimpan Jenis Surat');
+        return FlashMassage('/input-jenis-archive-surat', [resMas('s.save')]);
+
+        // return FlashSuccess('/input-jenis-archive-surat', 'Berbahasil Menyimpan Jenis Surat');
     }
 }

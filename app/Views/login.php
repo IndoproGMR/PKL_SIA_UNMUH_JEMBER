@@ -31,14 +31,12 @@
 <h3>Login Sebagai</h3>
 <table>
     <tr>
-        <th>login</th>
-        <th>password</th>
+        <th>Username</th>
         <th>login</th>
     </tr>
     <?php foreach ($datacoba as $key => $value) : ?>
         <tr>
             <td><?= $value['login'] ?></td>
-            <td><?= $value['password'] ?></td>
             <td>
                 <form action="" method="post">
                     <?= csrf_field() ?>

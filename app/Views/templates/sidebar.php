@@ -4,10 +4,12 @@
     <!-- sidebar bar -->
     <div class="sidebar">
         <div class="header">
-            <div class="list-item">
+            <div class="list-item ">
                 <a href="<?= base_url('/'); ?>" class="linkSidebar">
-                    <img src="https://sia.unmuhjember.ac.id/<?= esc(userInfo()['FotoUser']) ?>" alt="Foto Profile" class="fotouser" loading='lazy' onerror="this.src='asset/logo/error_img.png';">
-                    <p class="description-header"><?= esc(userInfo()['NamaUser']) ?></p>
+                    <div class="fotouser">
+                        <img src="https://sia.unmuhjember.ac.id/<?= esc(userInfo()['FotoUser']) ?>" alt="Foto Profile" class="" loading='lazy' onerror="this.src='<?= base_url('asset/logo/error_img.png') ?>';">
+                    </div>
+                    <p class="description-header"><?= esc(userInfo()['NamaUser']) ?> <?= esc(userInfo()['Gelar']) ?></p>
                 </a>
             </div>
         </div>
@@ -18,20 +20,24 @@
                 'SidebarLinkNotifCell',
                 [
                     'linktext'  => 'Dashboard',
+                    'imagelink' => 'asset/svg/house-solid.svg',
+                    'shortcut'  => 'h'
                 ]
             ) ?>
 
 
             <?php
-
             if (in_group(['Mahasiswa'])) : ?>
+
+                <hr class="line">
 
                 <?= view_cell(
                     'SidebarLinkNotifCell',
                     [
                         'link'      => 'Surat/Status-TandaTangan',
                         'linktext'  => 'Status Tanda Tangan',
-                        'imagelink' => 'asset/svg/list-status.svg',
+                        'imagelink' => 'asset/svg/list-check-solid.svg',
+                        'shortcut'  => ''
                     ]
                 ) ?>
 
@@ -40,7 +46,8 @@
                     [
                         'link'      => 'Surat/Minta-TandaTangan',
                         'linktext'  => 'Minta TandaTangan',
-                        'imagelink' => 'asset/svg/buat-surat.svg',
+                        'imagelink' => 'asset/svg/pen-solid.svg',
+                        'shortcut'  => ''
                     ]
                 ) ?>
 
@@ -50,7 +57,8 @@
                     [
                         'link'      => 'Surat/riwayat-Minta-TandaTangan',
                         'linktext'  => 'Riwayat Minta TandaTangan',
-                        'imagelink' => 'asset/svg/history.svg',
+                        'imagelink' => 'asset/svg/clock-rotate-left-solid.svg',
+                        'shortcut'  => ''
                     ]
                 ) ?>
             <?php endif ?>
@@ -76,13 +84,16 @@
                 $perluttd     = cache($namacache)['perluttd'];
                 ?>
 
+                <hr class="line">
+
                 <?= view_cell(
                     'SidebarLinkNotifCell',
                     [
                         'link'      => 'Staff/Permintaan_TTD-Surat_Tanpa_NoSurat',
-                        'linktext'  => 'Status Surat Yang belum punya No.',
-                        'imagelink' => 'asset/svg/list-status.svg',
+                        'linktext'  => 'Status Surat Yang Belum Punya No.',
+                        'imagelink' => 'asset/svg/list-check-solid.svg',
                         'notif'     => $perluNoSurat,
+                        'shortcut'  => ''
                     ]
                 ) ?>
 
@@ -91,28 +102,30 @@
                     [
                         'link'      => '/Staff/Master-Surat',
                         'linktext'  => 'Semua Master Surat',
-                        'imagelink' => 'asset/svg/list-menu.svg',
+                        'imagelink' => 'asset/svg/list-ul-solid.svg',
                         'notif'     => 0,
+                        'shortcut'  => ''
                     ]
                 ) ?>
-
                 <?= view_cell(
                     'SidebarLinkNotifCell',
                     [
                         'link'      => '/input/master-surat',
                         'linktext'  => 'Tambah Master Surat',
-                        'imagelink' => 'asset/svg/tambah.svg',
-                        'notif'     => 0,
+                        'imagelink' => 'asset/svg/pen-solid.svg',
+                        'shortcut'  => ''
                     ]
                 ) ?>
+
+                <hr class="line">
 
                 <?= view_cell(
                     'SidebarLinkNotifCell',
                     [
                         'link'      => 'semua-archive-surat',
-                        'linktext'  => 'semua archive Surat',
-                        'imagelink' => 'asset/svg/list-menu.svg',
-                        'notif'     => 0,
+                        'linktext'  => 'Semua Archive Surat',
+                        'imagelink' => 'asset/svg/server-solid.svg',
+                        'shortcut'  => ''
                     ]
                 ) ?>
 
@@ -120,23 +133,13 @@
                     'SidebarLinkNotifCell',
                     [
                         'link'      => 'input-archive-surat',
-                        'linktext'  => 'Input semua archive Surat',
-                        'imagelink' => 'asset/svg/tambah.svg',
-                        'notif'     => 0,
+                        'linktext'  => 'Input Archive Surat',
+                        'imagelink' => 'asset/svg/pen-solid.svg',
+                        'shortcut'  => ''
                     ]
                 ) ?>
 
-                <?= view_cell(
-                    'SidebarLinkNotifCell',
-                    [
-                        'link'      => '',
-                        'linktext'  => 'Query',
-                        'imagelink' => 'asset/svg/tambah.svg',
-                        'notif'     => 0,
-                    ]
-                ) ?>
-
-
+                <hr class="line">
 
                 <?= view_cell(
                     'SidebarLinkNotifCell',
@@ -144,8 +147,9 @@
                         // 'link'      => 'status-TTD',
                         'link'      => 'Surat_Perlu_TandaTangan',
                         'linktext'  => 'Status Tanda Tangan',
-                        'imagelink' => 'asset/svg/list-status.svg',
+                        'imagelink' => 'asset/svg/signature-solid.svg',
                         'notif'     => $perluttd,
+                        'shortcut'  => ''
                     ]
                 ) ?>
 
@@ -154,33 +158,111 @@
                     [
                         'link'      => 'Riwayat_TandaTangan',
                         'linktext'  => 'Riwayat Tanda Tangan',
-                        'imagelink' => 'asset/svg/history.svg',
+                        'imagelink' => 'asset/svg/clock-rotate-left-solid.svg',
                         'notif'     => 0,
+                        'shortcut'  => ''
                     ]
                 ) ?>
+
+                <hr class="line">
+
+                <?= view_cell(
+                    'SidebarLinkNotifCell',
+                    [
+                        'link'      => '',
+                        'linktext'  => 'Query',
+                        'imagelink' => 'asset/svg/database-solid.svg',
+                        'shortcut'  => ''
+                    ]
+                ) ?>
+
+                <hr class="line">
 
                 <?= view_cell(
                     'SidebarLinkNotifCell',
                     [
                         'link'      => 'Admin-Panel',
                         'linktext'  => 'Admin Panel',
-                        'imagelink' => 'asset/svg/history.svg',
-                        'notif'     => 0,
+                        'imagelink' => 'asset/svg/user-gear-solid.svg',
+                        'shortcut'  => ''
                     ]
                 ) ?>
             <?php endif ?>
+
+            <?php if (in_group(['Administrator'])) : ?>
+                <hr class="line">
+
+                <?= view_cell(
+                    'SidebarLinkNotifCell',
+                    [
+                        'link'      => 'Admin-Panel',
+                        'linktext'  => 'Admin Panel',
+                        'imagelink' => 'asset/svg/user-gear-solid.svg',
+                        'shortcut'  => ''
+                    ]
+                ) ?>
+            <?php endif ?>
+
+
+            <hr class="line">
 
             <?= view_cell(
                 'SidebarLinkNotifCell',
                 [
                     'link'      => 'qr-validasi',
                     'linktext'  => 'Cek Surat',
-                    'imagelink' => 'asset/svg/outline-qrcode.svg',
-                    'notif'     => 0,
+                    'imagelink' => 'asset/svg/qrcode-solid.svg',
+                    'shortcut'  => 'g'
+                ]
+            ) ?>
+
+            <?php if (in_group(['Mahasiswa'])) : ?>
+
+                <?= view_cell(
+                    'SidebarLinkNotifCell',
+                    [
+                        'link'      => 'help',
+                        'linktext'  => 'Help',
+                        'imagelink' => 'asset/svg/circle-info-solid.svg',
+                        'shortcut'  => '',
+                        'target'    => '_blank'
+                    ]
+                ) ?>
+
+            <?php endif ?>
+
+            <?php if (in_group(['Dosen', 'Kepala Keuangan'])) : ?>
+
+                <?= view_cell(
+                    'SidebarLinkNotifCell',
+                    [
+                        'link'      => 'Staff/help',
+                        'linkout'   => '',
+
+                        'linktext'  => 'Help',
+                        'imagelink' => 'asset/svg/circle-info-solid.svg',
+                        'shortcut'  => '',
+                        'target'    => '_blank'
+                    ]
+                ) ?>
+
+            <?php endif ?>
+
+
+            <?= view_cell(
+                'SidebarLinkNotifCell',
+                [
+                    'linkout'   => 'https://sia.unmuhjember.ac.id/',
+                    'linktext'  => 'Sia Unmuh',
+                    'imagelink' => 'asset/svg/globe-solid.svg',
+                    'shortcut'  => '',
+                    'target'    => '_blank'
                 ]
             ) ?>
 
         </div>
+        <br>
+        <h5>Web Version: Beta 0.5</h5>
     </div>
 
     <!-- main Conten -->

@@ -19,11 +19,13 @@ class SuratKeluarController extends BaseController
         $model2 = model(TandaTangan::class);
         $data['datasurat'] = $model->cekNoSurat(userInfo()['id'], true);
 
+        // cek status setiap surat
         foreach ($data['datasurat'] as $key => $value) {
             $data['surat'][$key] = $value['SuratIdentifier'];
             $data['datasurat'][$key]['status'] = $model2->cekStatusSurat($data['surat'][$key]);
         }
 
+        // bila status yang belum sudah 0 maka hapus dari array
         foreach ($data['datasurat'] as $key => $value) {
             if ($value['status']['belum'] == '0') {
                 unset($data['datasurat'][$key]);
@@ -72,7 +74,7 @@ class SuratKeluarController extends BaseController
         unset($postdata['LaB7Thol']);
         // return d($postdata);
         $seebyid = $model3->seebyID($idsurat);
-        d($seebyid);
+        // d($seebyid);
         // $dataform = json_decode($model3->seebyID($idsurat)['form'], 'array');
         $dataform = json_decode($seebyid['form'], 'array');
         // d($dataform);
@@ -122,20 +124,21 @@ class SuratKeluarController extends BaseController
         }
         // !Validasi dan save gambar End
 
+
         // !Validasi input Start
-        $dataerror = null;
-        foreach ($postdata as $key => $value) {
-            $validationRule = Validasi_Input($key);
-            // !ganti php.ini untuk menambah upload limit
+        // $dataerror = null;
+        // foreach ($postdata as $key => $value) {
+        //     $validationRule = Validasi_Input($key);
+        //     // !ganti php.ini untuk menambah upload limit
 
-            if (!$this->validate($validationRule)) {
-                $dataerror = $this->validator->getErrors();
-            }
-        }
+        //     if (!$this->validate($validationRule)) {
+        //         $dataerror = $this->validator->getErrors();
+        //     }
+        // }
 
-        if (!$dataerror == null) {
-            return FlashMassage('/minta-surat/' . $idsurat, $dataerror, 'fail');
-        }
+        // if (!$dataerror == null) {
+        //     return FlashMassage('/minta-surat/' . $idsurat, $dataerror, 'fail');
+        // }
         // !Validasi input End
 
 
@@ -225,7 +228,7 @@ class SuratKeluarController extends BaseController
         $jenissurat = model(Jenissurat::class);
         $data['level'] = $jenissurat->seegrouplvl();
         $data['ttd'] = $jenissurat->seeNamaPettd();
-        return view('suratKeluar/pengajaran/Input_Master-Surat', $data);
+        return view('suratkeluar/pengajaran/Input_Master-Surat', $data);
     }
 
     // untuk menambah jenis Master surat ke db
@@ -448,7 +451,7 @@ class SuratKeluarController extends BaseController
 
 
         if (!$data['TTD']['Status'] == 0) {
-            return FlashException(resMas('f.u.save.ttd.k.ttd.done.exist'));
+            return FlashMassage('/Surat_Perlu_TandaTangan', [resMas('f.u.save.ttd.k.ttd.done.exist')], 'fail');
         }
 
         $enkripsi = new enkripsi_library;
@@ -460,10 +463,9 @@ class SuratKeluarController extends BaseController
         $data['update']['pendattg_id'] = userInfo()['id'];
 
 
-        if (!Render_Qr($data['update']['hash'], $data['update']['qrcodeName'])) {
+        if (!Render_Qr($data['update']['hash'], $data['update']['qrcodeName'], userInfo()['id'])) {
             return FlashMassage('/Surat_Perlu_TandaTangan', [resMas('f.u.make.qr')], 'fail');
         }
-
         if (!$model->updateTTD($postdata['id'], $data['update'])) {
             return FlashMassage('/Surat_Perlu_TandaTangan', [resMas('f.u.save.ttd')], 'fail');
         }
@@ -485,9 +487,9 @@ class SuratKeluarController extends BaseController
     public function kameraQR()
     {
         $data['nocam'] = false;
+        $nocam = $this->request->getGet('nocam');
 
-        if (isset($_GET["nocam"])) {
-            $nocam = $_GET["nocam"];
+        if ($nocam !== null) {
             if ($nocam == "true") {
                 $data['nocam'] = true;
             }

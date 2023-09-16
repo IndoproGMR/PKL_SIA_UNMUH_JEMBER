@@ -39,21 +39,36 @@
                     <?php endif ?>
 
                     <td>
+
                         <?= view_cell('TombolIdCell', [
                             'link'              => '/Staff/detail/Master-Surat/' . $key['id'],
                             'valueinput'        => $key['id'],
                             'tombolsubmitclass' => 'Actions',
                             'textsubmit'        => 'Edit Surat',
+                            'confirmdialog'     => true,
                             'method'            => 'get'
                         ]) ?>
+
                         <?= view_cell('TombolIdCell', [
                             'link'              => '/staff/Preview/' . $key['id'],
                             'valueinput'        => $key['id'],
                             'tombolsubmitclass' => 'Actions',
                             'textsubmit'        => 'Preview Surat',
                             'target'            => '_blank',
+                            'confirmdialog'     => false,
                             'method'            => 'get'
                         ]) ?>
+
+                        <?= view_cell('TombolIdCell', [
+                            'link'              => '/Staff/test/Master-Surat/' . $key['id'],
+                            'valueinput'        => $key['id'],
+                            'tombolsubmitclass' => 'Actions',
+                            'textsubmit'        => 'Test Surat',
+                            'target'            => '_blank',
+                            'confirmdialog'     => false,
+                            'method'            => 'get'
+                        ]) ?>
+
                     </td>
                 </tr>
             <?php endforeach ?>
