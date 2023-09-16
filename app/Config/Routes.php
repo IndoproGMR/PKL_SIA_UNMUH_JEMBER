@@ -41,6 +41,10 @@ $routes->get('/', 'Home::index');
 $routes->get('/error_perm', 'Home::error_perm');
 $routes->get('/Error_Exception', 'Home::CustomError');
 $routes->get('/qr-validasi', 'SuratKeluarController::kameraQR');
+
+$routes->get('/Staff/help', 'Home::StaffHelp');
+$routes->get('/help', 'Home::MahasiswaHelp');
+
 $routes->get('/testinfo', 'Home::TestInfo');
 $routes->post('/testinfo/proses', 'Home::TestInfoProses');
 $routes->get('/testinfo/data', 'Home::TestInfoput');
@@ -51,6 +55,14 @@ $routes->get('/testinfo/data', 'Home::TestInfoput');
 // !Admin Panel ==============================================================>>
 // ?index ======================================================================
 $routes->get('/Admin-Panel', 'AdminPanelController::index');
+$routes->post('/Admin-Panel/login', 'AdminPanelController::loginAdminProses');
+
+
+$routes->get('/Admin-Panel/Masukan-akun', 'AdminPanelController::createNewuser');
+$routes->post('/Admin-Panel/Masukan-akun/step2', 'AdminPanelController::createNewuser');
+
+$routes->get('/Admin-Panel/join', 'AdminPanelController::newUser');
+$routes->post('/Admin-Panel/join', 'AdminPanelController::newUser');
 // ! =========================================================================<<
 
 // ?
@@ -108,6 +120,10 @@ $routes->get('/Riwayat_TandaTangan', 'SuratKeluarController::indexRiwayatTTD');
 // ?PDF ========================================================================
 $routes->post('/staff/Preview-Surat', 'Pdfrender::staffPreviewSurat');
 $routes->get('/staff/Preview/(:any)', 'Pdfrender::staffPreviewJenisSurat/$1');
+
+$routes->get('/Staff/test/Master-Surat/(:any)', 'Pdfrender::staffTestJenisSurat/$1');
+$routes->get('/Staff/test-proses/Master-Surat', 'Pdfrender::staffTestJenisSuratProses');
+
 
 // *===========================================================================<
 

@@ -3,7 +3,6 @@
 namespace App\Controllers;
 
 use App\Models\AuthUserGroup;
-use App\Models\TandaTangan;
 use Faker\Extension\Helper;
 
 
@@ -13,15 +12,17 @@ class Home extends BaseController
     {
         PagePerm([''], '/login', true);
 
-        // return view('auth/Auth_login');
-        $options = [
-            'max-age'  => 300,
-            's-maxage' => 900,
-            'etag'     => 'abcde',
-        ];
-        $this->response->setCache($options);
-        $this->response->setCache();
         return view('home/index');
+    }
+
+    public function StaffHelp()
+    {
+        echo 'StaffHelp';
+    }
+
+    public function MahasiswaHelp()
+    {
+        echo 'MahasiswaHelp';
     }
 
     // !Error Page
@@ -37,6 +38,8 @@ class Home extends BaseController
 
     public function TestInfo()
     {
+        d($this->request->getIPAddress());
+        // d(FCPATH);
         // $text = 'TTD.valid.t.n.exist.db.!2';
         // $data = 'Tanda Tangan Tidak ada Didalam Database!!!';
 
@@ -47,10 +50,10 @@ class Home extends BaseController
         // d(FlashMassage('', '', '', 'get')['massage']);
         // d(FlashMassage('', '', '', 'get')['type']);
 
-        $jenissurat = model(Jenissurat::class);
-        $data['level'] = $jenissurat->seegrouplvl();
-        $data['ttd'] = $jenissurat->seeNamaPettd();
-        return view('suratKeluar/pengajaran/input_master-surat', $data);
+        // $jenissurat = model(Jenissurat::class);
+        // $data['level'] = $jenissurat->seegrouplvl();
+        // $data['ttd'] = $jenissurat->seeNamaPettd();
+        // return view('suratKeluar/pengajaran/input_master-surat', $data);
     }
 
     public function TestInfoProses()

@@ -33,7 +33,13 @@ class SuratKeluraModel extends Model
         $timefilter = time() - $timefilter;
         if ($showall) {
             return $this
-                ->select('SK_JenisSurat.name as namaJenisSurat,SK_ttd_SuratMasuk.NoSurat,SK_ttd_SuratMasuk.TimeStamp,SK_ttd_SuratMasuk.SuratIdentifier')
+                ->select('
+                SK_JenisSurat.name as namaJenisSurat,
+                SK_ttd_SuratMasuk.NoSurat,
+                SK_ttd_SuratMasuk.TimeStamp,
+                SK_ttd_SuratMasuk.SuratIdentifier
+                ')
+                ->where('SK_ttd_SuratMasuk.DeleteAt', null)
                 ->where('mshw_id', $iduser)
                 ->where('SK_ttd_SuratMasuk.TimeStamp >', $timefilter)
                 ->join('SK_JenisSurat', 'SK_JenisSurat.id=SK_ttd_SuratMasuk.JenisSurat_id')
@@ -41,9 +47,15 @@ class SuratKeluraModel extends Model
                 ->find();
         }
         return $this
-            ->select('SK_JenisSurat.name as namaJenisSurat,SK_ttd_SuratMasuk.NoSurat,SK_ttd_SuratMasuk.TimeStamp,SK_ttd_SuratMasuk.SuratIdentifier')
-            ->where('NoSurat !=', 'Belum_Memiliki_No_Surat')
-            ->where('mshw_id', $iduser)
+            ->select('
+            SK_JenisSurat.name as namaJenisSurat,
+            SK_ttd_SuratMasuk.NoSurat,
+            SK_ttd_SuratMasuk.TimeStamp,
+            SK_ttd_SuratMasuk.SuratIdentifier
+            ')
+            ->where('SK_ttd_SuratMasuk.DeleteAt', null)
+            ->where('SK_ttd_SuratMasuk.NoSurat !=', 'Belum_Memiliki_No_Surat')
+            ->where('SK_ttd_SuratMasuk.mshw_id', $iduser)
             ->where('SK_ttd_SuratMasuk.TimeStamp >', $timefilter)
             ->join('SK_JenisSurat', 'SK_JenisSurat.id=SK_ttd_SuratMasuk.JenisSurat_id')
             ->orderBy('SK_ttd_SuratMasuk.TimeStamp', 'DESC')
@@ -60,6 +72,7 @@ class SuratKeluraModel extends Model
         SK_ttd_SuratMasuk.DataTambahan,
         SK_ttd_SuratMasuk.TimeStamp,
         SK_ttd_SuratMasuk.mshw_id,
+        SK_ttd_SuratMasuk.SuratIdentifier,
         SK_JenisSurat.name,
         SK_JenisSurat.isiSurat,
         SK_JenisSurat.form,
@@ -85,23 +98,25 @@ class SuratKeluraModel extends Model
 
         if (!count($namaMHS) > 0) {
             helper('datacall');
-            $data['NoSurat']      = $surat[0]['NoSurat'];
-            $data['DataTambahan'] = base64_decode($surat[0]['DataTambahan']);
-            $data['TimeStamp']    = $surat[0]['TimeStamp'];
-            $data['namaMHS']      = $namaMHS[0]['Nama'];
-            $data['name']         = resMas('e');
-            $data['isiSurat']     = base64_decode($surat[0]['isiSurat']);
-            $data['form']         = base64_decode($surat[0]['form']);
+            $data['NoSurat']         = $surat[0]['NoSurat'];
+            $data['DataTambahan']    = base64_decode($surat[0]['DataTambahan']);
+            $data['TimeStamp']       = $surat[0]['TimeStamp'];
+            $data['namaMHS']         = $namaMHS[0]['Nama'];
+            $data['SuratIdentifier'] = $surat[0]['SuratIdentifier'];
+            $data['name']            = resMas('e');
+            $data['isiSurat']        = base64_decode($surat[0]['isiSurat']);
+            $data['form']            = base64_decode($surat[0]['form']);
             return $data;
         }
 
-        $data['NoSurat']      = $surat[0]['NoSurat'];
-        $data['DataTambahan'] = base64_decode($surat[0]['DataTambahan']);
-        $data['TimeStamp']    = $surat[0]['TimeStamp'];
-        $data['namaMHS']      = $namaMHS[0]['Nama'];
-        $data['name']         = $surat[0]['name'];
-        $data['isiSurat']     = base64_decode($surat[0]['isiSurat']);
-        $data['form']         = base64_decode($surat[0]['form']);
+        $data['NoSurat']         = $surat[0]['NoSurat'];
+        $data['DataTambahan']    = base64_decode($surat[0]['DataTambahan']);
+        $data['TimeStamp']       = $surat[0]['TimeStamp'];
+        $data['namaMHS']         = $namaMHS[0]['Nama'];
+        $data['SuratIdentifier'] = $surat[0]['SuratIdentifier'];
+        $data['name']            = $surat[0]['name'];
+        $data['isiSurat']        = base64_decode($surat[0]['isiSurat']);
+        $data['form']            = base64_decode($surat[0]['form']);
         return $data;
     }
 

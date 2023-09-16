@@ -1,4 +1,4 @@
-no# PKL SIA UNMUH JEMBER
+# PKL SIA UNMUH JEMBER
 
 ---
 
@@ -19,9 +19,12 @@ ___
 # hal yang harus di lakukan
 
 1. clone repo
+```bash
+gh repo clone IndoproGMR/PKL_SIA_UNMUH_JEMBER
+```
 2. lalu install menggunakan bash file
 ```bash
-./installapp
+bash installapp
 ```
 3. isi .env
 ```
@@ -33,10 +36,7 @@ api version,
 ENVIRONMENT di set ke development
 
 optional:
-SESSION,
-SECURITY,
-HONEYPOT,
-COOKIE
+SESSION
 ```
 
 4. lalu jalankan server local php
@@ -47,16 +47,23 @@ php spark serve
 ```url
 localhost:8080/
 ```
-
-
+6. Update
+```bash
+git pull
+```
+7. 
+```
+copy file enkripsi_libary kedalam App\Libraries
+```
 
 ---
 ## Version: (terakhir update)
-- codeigniter = 4.3.7
+- codeigniter = 4.3.7 (next 4.4.1)
 - dompdf = 2.0.3
 - endroid/qr-code = 4.8.2
 - khaled.alshamaa/ar-php = 6.3.4
 - mpdf/mpdf = 8.1.6
+- tinymce = 6.6.2 (next = 6.7.0)
 - instascan = 1.0.0
 - html5-qrcode = 2.3.8
 - php = +8.0 (next +8.1)
@@ -67,41 +74,55 @@ ___
 [Standarisasi](#Standarisasi)
 
 ## TODO:
+#### Help Dokumentasi
+##### Staff
+- [ ] Membuat Master Surat
+##### Mahasiswa
+- [ ] Meminta Surat
+
+#### Error feedback
+- [ ] Exceptions (need:UI)
+- [ ] permissions error (need:UI)
+- [x] Validation error
+- [x] succes fail massage
+
 **Create_Read_Update_Delete_readPDF_MakeFile**
-#### Surat Keluar (7/17)
+#### Surat Keluar (8/18)
 ##### Semua user
-- [ ] cek QR (need:UI) **(get:/qr-validasi)**
+- [ ] cek QR (need:UI)
 
 ##### Mahasiswa 
-- [ ] Minta Surat (R) (need:UI) **(get:/minta-surat)**
-- [ ] Minta Surat buat (C_R) (need:UI) **(get:/minta-surat/{id})** **(post:/minta-surat/{id})**
-- [ ] Semua Surat (R_PDF_MK) (BUG: pdf Tidak dapat Disave diserver) **(get:/riwayat-surat)**
-- [x] Melihat Status Surat (R) **(get:/status-surat)**
+- [ ] Minta Surat (R) (need:UI)
+- [ ] Minta Surat buat (C_R) (need:UI)
+- [x] Semua Surat (R_PDF_MK)
+- [x] Melihat Status Surat (R)
+- [ ] Mendownload surat (bug: tidak dapat membuat file qr baru)
 
 ##### PenandaTangan
-- [x] Semua Yang belum di TandaTangan kan (R_PDF) **(get:/status-TTD)**
-- [x] TandaTangan Preview (PDF) **(post:/staff/Preview-Surat)**
-- [x] TandaTangan (U_MK) **(post:/status-TTD)**
-- [x] Semua Yang sudah di TandaTangan kan (R_PDF) **(get:/riwayat-TTD)**
+- [x] Semua Yang belum di TandaTangan kan (R_PDF)
+- [x] TandaTangan Preview (PDF)
+- [ ] TandaTangan (U_MK)
+- [x] Semua Yang sudah di TandaTangan kan (R_PDF)
 
 ##### Pengajaran
-- [ ] Master Surat Buat (C) (need:UI) **(get:/bikin-surat)** **(post:/bikin-surat)**
-- [x] Master Surat semua (R_PDF)  **(get:/semua-surat)**
-- [ ] Master Surat edit (R_U_D) (need:UI) **(get:/bikin-surat)**
-- [x] Master Surat Visiblity Toggle (U) **(post:/toggleshow-surat)**
-- [ ] set NomerSurat semua (R_PDF) (need:UI)
+- [ ] Master Surat Buat (C) (need:UI)
+- [x] Master Surat semua (R_PDF) 
+- [ ] Test Master Surat (R_PDF) (need:UI)
+- [ ] Master Surat edit (R_U_D) (need:UI)
+- [x] Master Surat Visiblity Toggle (U)
+- [x] set NomerSurat semua (R_PDF) (need:UI)
 - [ ] set NomerSurat edit (R_U_D) (need:UI)
 
 ##### PDF Surat
 - [ ] KOP Surat
 - [ ] layout
-- [ ] tandatangan
+- [x] tandatangan
 
 #### Surat Masuk (1/6)
 ##### Pengajaran
 - [x] SuratMasuk semua (R)
 - [ ] SuratMasuk input (C_MK) (need:UI)
-- [ ] SuratMasuk edit (U_D) (need:UI)
+- [ ] SuratMasuk edit (U_D) (need:UI) (bug: tidak dapat reload saat update)
 - [ ] SuratMasuk Preview (R_PDF) (need:UI)
 - [ ] SuratMasuk jenis buat (C_R) (need:UI)
 - [ ] SuratMasuk jenis edit (R_U_D) (need:UI)
@@ -112,6 +133,10 @@ ___
 - [ ] Table (need:backend)
 
 #### Admin Panel (0/?)
+##### Akun
+- [x] Login
+- [X] Membuat akun baru
+- [ ] cek ke amanan
 ##### Admin
 - [ ] Analastik storage server surat (R)
 - [ ] Delete temp file (R_D)
@@ -137,7 +162,7 @@ ___
 
 ---
 
-- [ ] framework
+- [x] framework
 - [ ] Data flow
 - [ ] Database
 - [ ] Backend Login dan auth
@@ -217,16 +242,16 @@ dataArray
 suratJson
 
 ### File
-#### dav made
-menggunakan Under_Score dan garis-tengah
+#### dev made
+menggunakan Under_Score dan garis-tengah\
 
-KELOMPOK-FUNGSI-NAMA_NAMA
-contoh:
-Mahasiswa-Index-Minta_Surat
-Mahasiswa-Input-Minta_Surat
-Pengajaran-Input-Master_Surat
-Pengajaran-Edit-Master_Surat
-Pengajaran-Detail-Master_Surat
+KELOMPOK-FUNGSI-NAMA_NAMA\
+contoh:\
+Mahasiswa-Index-Minta_Surat\
+Mahasiswa-Input-Minta_Surat\
+Pengajaran-Input-Master_Surat\
+Pengajaran-Edit-Master_Surat\
+Pengajaran-Detail-Master_Surat\
 #### user made
 menggunakan Under_Score dan garis-tengah
 
@@ -239,10 +264,10 @@ menggunakan CamelCase
 ### URL
 menggunakan Under_Score dan garis-tengah dan Garis/Miring
 
-KELOMPOK_KELOMPOK/FUNGSI_FUNGSI/NAMA-NAMA/{ID}
-contoh:
-Staff/Preview/Surat/TandaTangan
-Staff/Preview/Master_Surat/{Id}
+KELOMPOK_KELOMPOK/FUNGSI_FUNGSI/NAMA-NAMA/{ID}\
+contoh:\
+Staff/Preview/Surat/TandaTangan\
+Staff/Preview/Master_Surat/{Id}\
 
 ### Error massage
 #### lvl 1 (kondisi)
@@ -273,14 +298,14 @@ no = tidak
 ? = Penyebab Tidak diketahui
 
 #### contoh:
-f.save.TTD
+f.save.TTD\
 gagal untuk menyimpan tanda tangan
 
-f.save.Archive.no.valid
+f.save.Archive.no.valid\
 gagal untuk menyimpan Archive karena tidak valid
 
-f.save.Archive.exist.database
+f.save.Archive.exist.database\
 gagal untuk menyimpan Archive karena ada di database
 
-f.save.TTD.validasi.f
+f.save.TTD.validasi.f\
 gagal untuk menyimpan tanda tangan karena validasi gagal

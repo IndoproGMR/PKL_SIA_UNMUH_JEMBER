@@ -3,8 +3,8 @@
 use App\Models\AuthUserGroup;
 
 /**
- * $group array
- * $secure
+ * @param array $group 
+ * @param int $secure
  * 0 = cek dari session user
  * 1 = cek dari database
  */
@@ -38,11 +38,27 @@ function in_group($group, int $secure = 0)
 }
 
 /**
+ * @return bool
+ */
+function in_admin()
+{
+    $model = model('AdminPanel');
+    return $model->cekAdmin(userInfo()['id']);
+    // panggil fungsi di admin panel model cek apakah userinfo()['id'] itu ada didalam db auth_admin-panel
+    // userInfo()['namaLVL'] == 'Administrator'
+    // if () {
+    // return true;
+    // };
+    // return false;
+}
+
+/**
  * output
  * ['id']
  * ['FotoUser']
  * ['NamaUser']
  * ['namaLVL']
+ * ['Gelar']
  * @return array
  */
 function userInfo()
@@ -56,12 +72,25 @@ function userInfo()
         'id'       => 'error',
         'FotoUser' => 'img/level/personal.png',
         'NamaUser' => 'mohon login',
-        'namaLVL'  => 'mohon login'
+        'namaLVL'  => 'mohon login',
+        'Gelar'    => ''
     ];
 }
 
 /**
- * $group = [
+ * @return bool
+ */
+function userAdmin()
+{
+    $session = \Config\Services::session();
+    if ($session->has('admin')) {
+        return $session->get('admin');
+    }
+    return false;
+}
+
+/**
+ * @param array $group = [
  *   "Superuser",
  *   "Administrator",
  *   "Aplikan",
@@ -82,13 +111,14 @@ function userInfo()
  *   "Executive Information System",
  *   "Rektorat"
  *   ];
- * $redirect kirim laman bila tidak memiliki perm
- * $login bila true user harus login tidak memandang level group
- * $secure
+ * 
+ * @param string $redirect kirim laman bila tidak memiliki perm
+ * @param bool $login bila true user harus login tidak memandang level group
+ * @param int $secure
  * 0 = cek dari session user
  * 1 = cek daro database
  */
-function PagePerm($group, $redirect = 'error_perm', $login = false, $secure = 0)
+function PagePerm(array $group, string $redirect = 'error_perm', bool $login = false, int $secure = 0)
 {
     // !cek login tanpa perlu melihat di grup mana
     if ($login) {
@@ -130,11 +160,12 @@ function PagePerm($group, $redirect = 'error_perm', $login = false, $secure = 0)
 }
 
 /**
- * $type = fail,warning,success
- * $datainput = ['data','data2']
- * $mode = set,get
+ * @param string $type = fail,warning,success
+ * @param array $datainput = ['data','data2']
+ * @param string $type = fail,warning,success.unknown
+ * @param string $mode = set,get
  */
-function FlashMassage($link = '', $datainput = [], $type = 'unknown', $mode = 'set')
+function FlashMassage(string $link = '', array $datainput = [], $type = 'unknown', string $mode = 'set')
 {
     $session = \Config\Services::session();
     $data = [
@@ -145,6 +176,7 @@ function FlashMassage($link = '', $datainput = [], $type = 'unknown', $mode = 's
     switch ($mode) {
         case 'set':
             $session->setFlashdata('datamassage', $data);
+
             return redirect()->to($link);
             break;
 
@@ -160,8 +192,6 @@ function FlashMassage($link = '', $datainput = [], $type = 'unknown', $mode = 's
     }
 }
 
-
-
 function FlashException($dataError = "Error Tidak Di Ketahui", $mode = 'set')
 {
     $session = \Config\Services::session();
@@ -169,38 +199,12 @@ function FlashException($dataError = "Error Tidak Di Ketahui", $mode = 'set')
     switch ($mode) {
         case 'set':
             $session->setFlashdata('error', $dataError);
-            return redirect()->to('/Error_Exception');
+            throw new \CodeIgniter\Router\Exceptions\RedirectException("/Error_Exception");
+            // return redirect()->to('/Error_Exception');
             break;
 
         case 'get':
             return $session->getFlashdata('error');
-            break;
-
-        default:
-            return null;
-            break;
-    }
-}
-
-
-function FlashSuccess($link = '', $data = "something something has success", $mode = 'set')
-{
-    $session = \Config\Services::session();
-    // $session->setFlashdata('data', $data);
-    // return redirect()->to($link);
-
-
-
-    switch ($mode) {
-        case 'set':
-            $session->setFlashdata('data', $data);
-            return redirect()->to($link);
-            break;
-
-        case 'get':
-            if ($session->getFlashdata('data') !== '') {
-                return $session->getFlashdata('data');
-            }
             break;
 
         default:

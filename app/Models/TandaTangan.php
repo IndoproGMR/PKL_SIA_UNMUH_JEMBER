@@ -24,13 +24,24 @@ class TandaTangan extends Model
         'TimeStamp',
     ];
 
+    function seeallbyIdenti($Identi)
+    {
+        return $this->where('SuratIdentifier', $Identi)->findAll();
+    }
+
+
     function cekvalidasi($nosurat, $data)
     {
         $data = $this
-            ->select('SK_ttd.NoSurat,SK_ttd.TimeStamp,SK_ttd.pendattg_id,SK_ttd_SuratMasuk.mshw_id,SK_JenisSurat.name as jenisSurat')
-            ->join('SK_ttd_SuratMasuk', 'SK_ttd_SuratMasuk.NoSurat = SK_ttd.NoSurat')
+            ->select('
+            SK_ttd_SuratMasuk.NoSurat,
+            SK_ttd.TimeStamp,
+            SK_ttd.pendattg_id,
+            SK_ttd_SuratMasuk.mshw_id,
+            SK_JenisSurat.name as jenisSurat')
+            ->join('SK_ttd_SuratMasuk', 'SK_ttd_SuratMasuk.SuratIdentifier = SK_ttd.SuratIdentifier')
             ->join('SK_JenisSurat', 'SK_JenisSurat.id = SK_ttd_SuratMasuk.JenisSurat_id')
-            ->where('SK_ttd.NoSurat', $nosurat)
+            ->where('SK_ttd_SuratMasuk.NoSurat', $nosurat)
             ->where('SK_ttd.hash', $data)
             ->find();
 
@@ -38,11 +49,11 @@ class TandaTangan extends Model
             return $data[0];
         } else {
             $data = [
-                'NoSurat'     => resMas('e'),
-                'TimeStamp'   => resMas('e'),
-                'pendattg_id' => resMas('e'),
-                'mshw_id'     => resMas('e'),
-                'jenisSurat'  => resMas('e'),
+                'NoSurat'     => 'e',
+                'TimeStamp'   => 'e',
+                'pendattg_id' => 'e',
+                'mshw_id'     => 'e',
+                'jenisSurat'  => 'e',
                 'valid'       => 'TTD.n.exist.db'
             ];
             return $data;

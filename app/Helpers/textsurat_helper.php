@@ -192,7 +192,7 @@ function ubaharray($array)
  * yunanitgl  = Monday, 03 July 2023
  * 
  * hijriah    = Monday, 14 Dhu al-Hijjah 1444 22:53:43
- * hijriahrgl = Monday, 14 Dhu al-Hijjah 1444
+ * hijriahtgl = Monday, 14 Dhu al-Hijjah 1444
  */
 
 function timeconverter(int $timestamp = 0, $jenis = 'yunani')
@@ -286,11 +286,11 @@ function cekDir($dir)
 function cekFile($file)
 {
     try {
-        file_exists($file);
+        return file_exists($file);
     } catch (\Throwable $th) {
         return false;
     }
-    return true;
+    return false;
 }
 
 function generateIdentifier(int $length = 16, $mode = 'haxtime')
