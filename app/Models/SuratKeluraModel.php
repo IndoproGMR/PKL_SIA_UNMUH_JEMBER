@@ -33,7 +33,13 @@ class SuratKeluraModel extends Model
         $timefilter = time() - $timefilter;
         if ($showall) {
             return $this
-                ->select('SK_JenisSurat.name as namaJenisSurat,SK_ttd_SuratMasuk.NoSurat,SK_ttd_SuratMasuk.TimeStamp,SK_ttd_SuratMasuk.SuratIdentifier')
+                ->select('
+                SK_JenisSurat.name as namaJenisSurat,
+                SK_ttd_SuratMasuk.NoSurat,
+                SK_ttd_SuratMasuk.TimeStamp,
+                SK_ttd_SuratMasuk.SuratIdentifier
+                ')
+                ->where('SK_ttd_SuratMasuk.DeleteAt', null)
                 ->where('mshw_id', $iduser)
                 ->where('SK_ttd_SuratMasuk.TimeStamp >', $timefilter)
                 ->join('SK_JenisSurat', 'SK_JenisSurat.id=SK_ttd_SuratMasuk.JenisSurat_id')
@@ -41,9 +47,15 @@ class SuratKeluraModel extends Model
                 ->find();
         }
         return $this
-            ->select('SK_JenisSurat.name as namaJenisSurat,SK_ttd_SuratMasuk.NoSurat,SK_ttd_SuratMasuk.TimeStamp,SK_ttd_SuratMasuk.SuratIdentifier')
-            ->where('NoSurat !=', 'Belum_Memiliki_No_Surat')
-            ->where('mshw_id', $iduser)
+            ->select('
+            SK_JenisSurat.name as namaJenisSurat,
+            SK_ttd_SuratMasuk.NoSurat,
+            SK_ttd_SuratMasuk.TimeStamp,
+            SK_ttd_SuratMasuk.SuratIdentifier
+            ')
+            ->where('SK_ttd_SuratMasuk.DeleteAt', null)
+            ->where('SK_ttd_SuratMasuk.NoSurat !=', 'Belum_Memiliki_No_Surat')
+            ->where('SK_ttd_SuratMasuk.mshw_id', $iduser)
             ->where('SK_ttd_SuratMasuk.TimeStamp >', $timefilter)
             ->join('SK_JenisSurat', 'SK_JenisSurat.id=SK_ttd_SuratMasuk.JenisSurat_id')
             ->orderBy('SK_ttd_SuratMasuk.TimeStamp', 'DESC')

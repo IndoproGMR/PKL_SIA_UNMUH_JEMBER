@@ -45,6 +45,8 @@ function Render_Qr(String $dataqr, String $savefile, String $userInfoId)
 
         $result->saveToFile(FCPATH . $lokasi);
     } catch (Exception $e) {
+        // d($e->getMessage());
+        FlashException($e->getMessage());
         return false;
     }
     return true;
@@ -79,7 +81,11 @@ function Render_mpdf(String $htmlpage, String $saveorview, String $namapdf)
 
         case '01':
             // no save but view
-            return $mpdf->Output($namapdf, 'I');
+            try {
+                return $mpdf->Output($namapdf, 'I');
+            } catch (Exception $e) {
+                FlashException($e->getMessage());
+            }
             break;
 
         case '10':
@@ -96,14 +102,18 @@ function Render_mpdf(String $htmlpage, String $saveorview, String $namapdf)
 
         case '11':
             // save and view
-            if (!cekFile($lokasi)) {
-                $mpdf->OutputFile($lokasi);
-            }
+            try {
+                if (!cekFile($lokasi)) {
+                    $mpdf->OutputFile($lokasi);
+                }
 
-            if (!cekFile($lokasiZ)) {
-                $mpdf->OutputFile($lokasiZ);
+                if (!cekFile($lokasiZ)) {
+                    $mpdf->OutputFile($lokasiZ);
+                }
+                return $mpdf->Output($namapdf, 'I');
+            } catch (Exception $e) {
+                FlashException($e->getMessage());
             }
-            return $mpdf->Output($namapdf, 'I');
             break;
 
         default:
