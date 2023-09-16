@@ -3,17 +3,19 @@ echo "instaling dependency"
 echo " "
 composer install
 
-sleep 5s
+read -p "Update dependency ? (Y/n) : " update
+if [[ $update == "Y" ]]; then
 echo " "
 echo "Updateting dependency"
 echo " "
 composer update
+fi
 
 sleep 5s
 echo " "
 echo "copying dependency to public"
 echo " "
-./copyvendor
+bash copyvendor
 
 sleep 5s
 read -p "buat file env baru ? (Y/n) : " envbaru

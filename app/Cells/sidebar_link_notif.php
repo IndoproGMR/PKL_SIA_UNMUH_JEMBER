@@ -12,7 +12,7 @@
             <img src="<?= base_url("$imagelink"); ?>" alt="icon" class="icon" loading='lazy'>
             <span class="description"><?= esc($linktext) ?></span>
             <!-- Notifikasi -->
-            <?php if ($notif !== 0) : ?>
+            <?php if ($notif > 0) : ?>
                 <span class="badge bounce"><?= esc($notif) ?></span>
             <?php endif ?>
             </a>

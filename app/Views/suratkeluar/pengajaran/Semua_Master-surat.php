@@ -45,6 +45,7 @@
                             'valueinput'        => $key['id'],
                             'tombolsubmitclass' => 'Actions',
                             'textsubmit'        => 'Edit Surat',
+                            'confirmdialog'     => true,
                             'method'            => 'get'
                         ]) ?>
 
@@ -54,6 +55,7 @@
                             'tombolsubmitclass' => 'Actions',
                             'textsubmit'        => 'Preview Surat',
                             'target'            => '_blank',
+                            'confirmdialog'     => false,
                             'method'            => 'get'
                         ]) ?>
 
@@ -63,6 +65,7 @@
                             'tombolsubmitclass' => 'Actions',
                             'textsubmit'        => 'Test Surat',
                             'target'            => '_blank',
+                            'confirmdialog'     => false,
                             'method'            => 'get'
                         ]) ?>
 

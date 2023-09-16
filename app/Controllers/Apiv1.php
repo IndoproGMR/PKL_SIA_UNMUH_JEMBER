@@ -75,7 +75,8 @@ class Apiv1 extends ResourceController
             $data['respond']['JenisSurat']    = $data['dataJson']['jenisSurat'];
             $data['respond']['Mahasiswa']     = $Mahasiswa['NamaUser'];
             $data['respond']['penandatangan'] = $penandatangan['NamaUser'] . ' ' . $penandatangan['Gelar'];
-            $data['respond']['TimeStamp']     = timeconverter($data['dataJson']['TimeStamp']);
+            // $data['respond']['TimeStamp']     = timeconverter($data['dataJson']['TimeStamp']);
+            $data['respond']['TimeStamp']     = 30;
             $data['respond']['valid']         = $data['dataJson']['valid'];
 
             return $this->respond($data['respond']);

@@ -39,6 +39,7 @@
                             'tombolsubmitclass' => 'Actions',
                             'textsubmit'        => 'Tanda Tangani Surat',
                             'target'            => '_self',
+                            'method'            => 'post'
                         ]) ?>
                     </td>
                     <td>
