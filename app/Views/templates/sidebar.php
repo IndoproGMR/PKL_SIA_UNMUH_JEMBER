@@ -7,7 +7,7 @@
             <div class="list-item ">
                 <a href="<?= base_url('/'); ?>" class="linkSidebar">
                     <div class="fotouser">
-                        <img src="https://sia.unmuhjember.ac.id/<?= esc(userInfo()['FotoUser']) ?>" alt="Foto Profile" class="" loading='lazy' onerror="this.src='asset/logo/error_img.png';">
+                        <img src="https://sia.unmuhjember.ac.id/<?= esc(userInfo()['FotoUser']) ?>" alt="Foto Profile" class="" loading='lazy' onerror="this.src='<?= base_url('asset/logo/error_img.png') ?>';">
                     </div>
                     <p class="description-header"><?= esc(userInfo()['NamaUser']) ?> <?= esc(userInfo()['Gelar']) ?></p>
                 </a>
@@ -113,7 +113,6 @@
                         'link'      => '/input/master-surat',
                         'linktext'  => 'Tambah Master Surat',
                         'imagelink' => 'asset/svg/pen-solid.svg',
-                        'notif'     => 0,
                         'shortcut'  => ''
                     ]
                 ) ?>
@@ -126,7 +125,6 @@
                         'link'      => 'semua-archive-surat',
                         'linktext'  => 'Semua Archive Surat',
                         'imagelink' => 'asset/svg/server-solid.svg',
-                        'notif'     => 0,
                         'shortcut'  => ''
                     ]
                 ) ?>
@@ -137,7 +135,6 @@
                         'link'      => 'input-archive-surat',
                         'linktext'  => 'Input Archive Surat',
                         'imagelink' => 'asset/svg/pen-solid.svg',
-                        'notif'     => 0,
                         'shortcut'  => ''
                     ]
                 ) ?>
@@ -175,7 +172,6 @@
                         'link'      => '',
                         'linktext'  => 'Query',
                         'imagelink' => 'asset/svg/database-solid.svg',
-                        'notif'     => 0,
                         'shortcut'  => ''
                     ]
                 ) ?>
@@ -188,11 +184,25 @@
                         'link'      => 'Admin-Panel',
                         'linktext'  => 'Admin Panel',
                         'imagelink' => 'asset/svg/user-gear-solid.svg',
-                        'notif'     => 0,
                         'shortcut'  => ''
                     ]
                 ) ?>
             <?php endif ?>
+
+            <?php if (in_group(['Administrator'])) : ?>
+                <hr class="line">
+
+                <?= view_cell(
+                    'SidebarLinkNotifCell',
+                    [
+                        'link'      => 'Admin-Panel',
+                        'linktext'  => 'Admin Panel',
+                        'imagelink' => 'asset/svg/user-gear-solid.svg',
+                        'shortcut'  => ''
+                    ]
+                ) ?>
+            <?php endif ?>
+
 
             <hr class="line">
 
@@ -202,7 +212,6 @@
                     'link'      => 'qr-validasi',
                     'linktext'  => 'Cek Surat',
                     'imagelink' => 'asset/svg/qrcode-solid.svg',
-                    'notif'     => 0,
                     'shortcut'  => 'g'
                 ]
             ) ?>
@@ -215,7 +224,6 @@
                         'link'      => 'help',
                         'linktext'  => 'Help',
                         'imagelink' => 'asset/svg/circle-info-solid.svg',
-                        'notif'     => 0,
                         'shortcut'  => '',
                         'target'    => '_blank'
                     ]
@@ -233,7 +241,6 @@
 
                         'linktext'  => 'Help',
                         'imagelink' => 'asset/svg/circle-info-solid.svg',
-                        'notif'     => 0,
                         'shortcut'  => '',
                         'target'    => '_blank'
                     ]
@@ -248,7 +255,6 @@
                     'linkout'   => 'https://sia.unmuhjember.ac.id/',
                     'linktext'  => 'Sia Unmuh',
                     'imagelink' => 'asset/svg/globe-solid.svg',
-                    'notif'     => 0,
                     'shortcut'  => '',
                     'target'    => '_blank'
                 ]

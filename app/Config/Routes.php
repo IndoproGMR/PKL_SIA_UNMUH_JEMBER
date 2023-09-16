@@ -55,6 +55,14 @@ $routes->get('/testinfo/data', 'Home::TestInfoput');
 // !Admin Panel ==============================================================>>
 // ?index ======================================================================
 $routes->get('/Admin-Panel', 'AdminPanelController::index');
+$routes->post('/Admin-Panel/login', 'AdminPanelController::loginAdminProses');
+
+
+$routes->get('/Admin-Panel/Masukan-akun', 'AdminPanelController::createNewuser');
+$routes->post('/Admin-Panel/Masukan-akun/step2', 'AdminPanelController::createNewuser');
+
+$routes->get('/Admin-Panel/join', 'AdminPanelController::newUser');
+$routes->post('/Admin-Panel/join', 'AdminPanelController::newUser');
 // ! =========================================================================<<
 
 // ?
