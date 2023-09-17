@@ -25,9 +25,7 @@
                 ]
             ) ?>
 
-
-            <?php
-            if (in_group(['Mahasiswa'])) : ?>
+            <?php if (in_group(['Mahasiswa'])) : ?>
 
                 <hr class="line">
 
@@ -262,7 +260,7 @@
 
         </div>
         <br>
-        <h5>Web Version: Beta 0.5</h5>
+        <h5 class="Version">Web Version: Beta 0.5</h5>
     </div>
 
     <!-- main Conten -->

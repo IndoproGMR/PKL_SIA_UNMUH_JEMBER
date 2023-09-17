@@ -4,7 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Libraries\enkripsi_library;
-use App\Models\AuthUserGroup;
+
 
 // $GLOBALS['loginUI'] = 'public';
 $GLOBALS['loginUI'] = 'debug';
@@ -17,6 +17,9 @@ class Login extends BaseController
     {
         $session = \Config\Services::session();
         $session->destroy();
+
+        helper('cookie');
+        delete_cookie('API');
 
         $data['datacoba'] = [
             '1' => [
@@ -69,12 +72,13 @@ class Login extends BaseController
             'dataLogin',
             'dataPassword'
         ]);
-        $model = model(AuthUserGroup::class);
+        $model = model('AuthUserGroup');
 
 
         // ! Algoritma password
         /////
         // !
+
 
 
         if (!$model->proseslogin($postdata['dataLogin'], $postdata['dataPassword'])) {
@@ -93,6 +97,10 @@ class Login extends BaseController
         ];
 
         $session->set($data);
+
+        // d($data);
+
+        // return;
         return redirect()->to('/');
     }
 

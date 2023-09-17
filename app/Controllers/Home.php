@@ -3,7 +3,9 @@
 namespace App\Controllers;
 
 use App\Models\AuthUserGroup;
-use Faker\Extension\Helper;
+use CodeIgniter\Cookie\Cookie;
+use CodeIgniter\Cookie\CookieStore;
+use CodeIgniter\HTTP\Response;
 
 
 class Home extends BaseController
@@ -11,6 +13,29 @@ class Home extends BaseController
     public function index()
     {
         PagePerm([''], '/login', true);
+
+        if (userInfo()['namaLVL'] !== 'Mahasiswa') {
+            helper('cookie');
+
+            if (is_null(get_cookie('API'))) {
+
+                $pinAPI = hash256(generateIdentifier(), 64);
+
+                $cookie = new Cookie(
+                    'API',
+                    $pinAPI,
+                    [
+                        'max-age' => 3600 * 1,
+                    ]
+                );
+                set_cookie($cookie);
+
+                $model2 = Model('TempPin');
+                if (!$model2->buatPinAPI($pinAPI)) {
+                    FlashMassage('/', ['API Key error']);
+                }
+            }
+        }
 
         return view('home/index');
     }
@@ -39,6 +64,8 @@ class Home extends BaseController
     public function TestInfo()
     {
         d($this->request->getIPAddress());
+
+
         // d(FCPATH);
         // $text = 'TTD.valid.t.n.exist.db.!2';
         // $data = 'Tanda Tangan Tidak ada Didalam Database!!!';

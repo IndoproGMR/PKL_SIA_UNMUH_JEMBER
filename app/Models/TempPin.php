@@ -22,6 +22,32 @@ class TempPin extends Model
         'expired'
     ];
 
+    function buatPinAPI($pin1)
+    {
+        $TimeStamp = getUnixTimeStamp();
+        $exp = $TimeStamp + (3600 * 3);
+
+        // $this->where('expired < ', $TimeStamp)->delete();
+
+        $data = [
+            'id_akun_pembuat' => userInfo()['id'],
+            'pin1'            => $pin1,
+            'TimeStamp'       => $TimeStamp,
+            'expired'         => $exp
+        ];
+        return $this->insert($data, true);
+    }
+
+    function cekPinAPI($pin1)
+    {
+        $data = $this->where('pin1', $pin1)->findAll(2);
+
+        if (count($data) == 1) {
+            return true;
+        }
+        return false;
+    }
+
     function buatPin($pin1)
     {
         $TimeStamp = getUnixTimeStamp();

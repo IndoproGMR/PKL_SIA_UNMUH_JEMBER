@@ -307,18 +307,29 @@ navbar {
 }
 
 /* !SideBar */
+.Version {
+  position: relative;
+  /* background-color: red; */
+  bottom: 1px;
+  /* align-self: flex-end; Mengatur posisi versi ke paling bawah */
+  margin-bottom: 10px; /* Spasi antara versi dan bagian bawah sidebar */
+}
+
 .containersidebar {
   display: flex;
   min-height: 100vh;
 }
 
 .sidebar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  /* height: 100%; */
+
   background-color: var(--clr-second);
   width: 260px;
   padding: 25px;
-  display: flex;
   box-sizing: border-box;
-  flex-direction: column;
   transition: all ease-in 0.3s;
 }
 
@@ -396,6 +407,10 @@ navbar {
 .sidebar.hide > .main .tooltip {
   /* border-left: 1px dotted black; */
   border-right: 1px dotted black;
+}
+
+.sidebar.hide > .Version {
+  display: none;
 }
 
 .tooltip .tooltiptext {

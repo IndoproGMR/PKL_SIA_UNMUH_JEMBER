@@ -177,4 +177,22 @@ class SuratKeluraModel extends Model
     {
         return $this->update($id, ['DeleteAt' => getUnixTimeStamp()]);
     }
+
+    function cekExistNoSurat($noSurat)
+    {
+        $data = $this->where('NoSurat', $noSurat)->findAll(2);
+        helper('datacall');
+        if (count($data) > 0) {
+            $data = [
+                'status'  => '1',
+                'massage' => resMas('num.surat.exist.db')
+            ];
+            return $data;
+        }
+        $data = [
+            'status'  => '0',
+            'massage' => resMas('num.surat.n.exist.db')
+        ];
+        return $data;
+    }
 }

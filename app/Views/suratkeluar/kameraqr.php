@@ -82,14 +82,15 @@
 
 <br>
 
-<p class="detailhide">No Surat: <span id="no-surat"></span></p>
-<p class="detailhide">Mahasiswa: <span id="Mahasiswa"></span></p>
-<p class="detailhide">Penandatangan: <span id="Penandatangan"></span></p>
-<p class="detailhide">timestamp: <span id="timestamp"></span></p>
-<p class="detailhide">JenisSurat: <span id="JenisSurat"></span></p>
+<div class="detailhide">
+    <p>No Surat: <span id="no-surat"></span></p>
+    <p>Mahasiswa: <span id="Mahasiswa"></span></p>
+    <p>Penandatangan: <span id="Penandatangan"></span></p>
+    <p>timestamp: <span id="timestamp"></span></p>
+    <p>JenisSurat: <span id="JenisSurat"></span></p>
+</div>
 
-
-
+<input hidden type="text" class="inputNoSurat">
 
 
 
@@ -102,26 +103,27 @@
     const url_apidetail = "<?= base_url(getenv('urlapi') . "/validasi/qr/detail") ?>";
 
     <?php if (!$nocam) : ?>
-        Instascan.Camera.getCameras().then(function(cameras) {
-            if (cameras.length > 0) {
-                var selectopt = document.getElementById('kamera')
-                for (let index = 0; index < cameras.length; index++) {
+        Instascan.Camera.getCameras()
+            .then(function(cameras) {
+                if (cameras.length > 0) {
+                    var selectopt = document.getElementById('kamera')
+                    for (let index = 0; index < cameras.length; index++) {
+                        const opt = document.createElement('option');
+                        opt.value = index;
+                        opt.textContent = cameras[index].name;
+                        selectopt.appendChild(opt);
+                    }
+                    jalankancamera();
+                } else {
                     const opt = document.createElement('option');
-                    opt.value = index;
-                    opt.textContent = cameras[index].name;
+                    opt.value = 0;
+                    opt.textContent = "No cameras found.";
                     selectopt.appendChild(opt);
+                    console.error("No cameras found.");
                 }
-                jalankancamera();
-            } else {
-                const opt = document.createElement('option');
-                opt.value = 0;
-                opt.textContent = "No cameras found.";
-                selectopt.appendChild(opt);
-                console.error("No cameras found.");
-            }
-        }).catch(function(e) {
-            console.error(e);
-        });
+            }).catch(function(e) {
+                console.error(e);
+            });
 
 
         function jalankancamera() {
@@ -174,9 +176,11 @@
             })
             .then((data) => {
                 var valid = document.getElementById("valid").textContent = data.valid;
-                console.log(data.valid);
+                // console.log(data.valid);
                 // return data.valid;
-            })
+            }).catch(function(error) {
+                console.error("Terjadi kesalahan:", error);
+            });
     };
 
     function detail(url) {
@@ -190,7 +194,7 @@
 
 
         url = url + "?nosurat=" + nosurat + "&qrcode=" + qrcode
-        console.log(url);
+        // console.log(url);
 
         fetch(url)
             .then((response) => {
@@ -198,7 +202,7 @@
             })
             .then((data) => {
                 var valid = data.valid;
-                console.log(valid);
+                // console.log(valid);
                 // document.getElementById("valid").textContent = data.valid;
                 // document.getElementById("valid").textContent = cek(url_api);
                 document.getElementById("no-surat").textContent = data.nosurat;
@@ -206,8 +210,11 @@
                 document.getElementById("Penandatangan").textContent = data.penandatangan;
                 document.getElementById("timestamp").textContent = data.TimeStamp;
                 document.getElementById("JenisSurat").textContent = data.JenisSurat;
+                document.getElementsByClassName('inputNoSurat')[0].value = data.nosurat;
                 // console.log(data);
-            })
+            }).catch(function(error) {
+                console.error("Terjadi kesalahan:", error);
+            });
     };
 
     function deleteclass(namaclass, count) {

@@ -31,6 +31,8 @@ class Apiv1 extends ResourceController
             return $this->respond($data['respond']);
         }
 
+        helper('datacall');
+
         $data['respond'] = [
             'valid' => resMas('e.param.n.exist')
         ];
@@ -46,7 +48,7 @@ class Apiv1 extends ResourceController
 
         if ($dataGet['nosurat'] !== null && $dataGet['qrcode'] !== null) {
 
-            helper('datacall');
+            helper(['textsurat', 'datacall']);
 
             $validasienkripsi = new enkripsi_library;
 
@@ -75,10 +77,14 @@ class Apiv1 extends ResourceController
             $data['respond']['JenisSurat']    = $data['dataJson']['jenisSurat'];
             $data['respond']['Mahasiswa']     = $Mahasiswa['NamaUser'];
             $data['respond']['penandatangan'] = $penandatangan['NamaUser'] . ' ' . $penandatangan['Gelar'];
-            // $data['respond']['TimeStamp']     = timeconverter($data['dataJson']['TimeStamp']);
-            $data['respond']['TimeStamp']     = 30;
+            $data['respond']['TimeStamp']     = timeconverter($data['dataJson']['TimeStamp']);
+            // $data['respond']['TimeStamp']     = 30;
             $data['respond']['valid']         = $data['dataJson']['valid'];
 
+            // d($data);
+            // d($Mahasiswa);
+            // d($penandatangan);
+            // return;
             return $this->respond($data['respond']);
         }
         helper('datacall');
@@ -92,6 +98,36 @@ class Apiv1 extends ResourceController
             'valid'         => resMas('e.param.n.exist'),
         ];
         return $this->respond($data['respond']);
+    }
+
+    function cekNoSurat()
+    {
+        $dataGet = $this->request->getGet(['nosurat', 'token']);
+        helper('datacall');
+
+        $data = [
+            'status'  => '2',
+            'massage' => resMas('e')
+        ];
+
+        if (is_null($dataGet['nosurat']) || is_null($dataGet['token'])) {
+
+            $data = [
+                'status'  => '2',
+                'massage' => 'API PARAM ERROR'
+            ];
+            return $this->respond($data);
+        }
+
+        $model2 = model('TempPin');
+
+        if (!$model2->cekPinAPI($dataGet['token'])) {
+            return $this->respond($data);
+        }
+
+        $model = model('SuratKeluraModel');
+        $dataSurat['respond'] = $model->cekExistNoSurat(base64_decode($dataGet['nosurat']));
+        return $this->respond($dataSurat['respond']);
     }
 
     public function imagecache($imagename)
