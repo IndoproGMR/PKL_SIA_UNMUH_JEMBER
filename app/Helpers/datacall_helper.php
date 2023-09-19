@@ -36,6 +36,7 @@ function resMas(string $errorCategory)
         'exist' => 'ada',
         'valid' => 'valid',
         'param' => 'parameter',
+        'perm'  => 'Permission',
 
         'y' => 'iya',
         'n' => 'tidak',
@@ -53,6 +54,7 @@ function resMas(string $errorCategory)
         '?'  => '?',
         '!'  => '!',
         '!2' => '!!',
+        ':' => ':',
     ];
 
     $errorParts = explode('.', $errorCategory);

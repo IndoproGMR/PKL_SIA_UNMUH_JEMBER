@@ -5,7 +5,7 @@ namespace App\Controllers;
 use App\Libraries\enkripsi_library;
 use CodeIgniter\API\ResponseTrait;
 use CodeIgniter\RESTful\ResourceController;
-
+use Config\Services;
 
 class Apiv1 extends ResourceController
 {
@@ -17,25 +17,24 @@ class Apiv1 extends ResourceController
             'qrcode'
         ]);
 
-        if ($dataGet['nosurat'] !== null && $dataGet['qrcode'] !== null) {
-
+        if (is_null($dataGet['nosurat']) || is_null($dataGet['qrcode'])) {
             helper('datacall');
 
-            $validasienkripsi = new enkripsi_library;
-            $data['dataJson'] = $validasienkripsi->validasiTTD($dataGet['qrcode'], $dataGet['nosurat']);
-
             $data['respond'] = [
-                'valid' => $data['dataJson']['valid']
+                'valid' => resMas('e.param.n.exist')
             ];
-
-            return $this->respond($data['respond']);
+            return $this->respond($data['respond'], 400, 'invalid_request');
         }
 
         helper('datacall');
 
+        $validasienkripsi = new enkripsi_library;
+        $data['dataJson'] = $validasienkripsi->validasiTTD($dataGet['qrcode'], $dataGet['nosurat']);
+
         $data['respond'] = [
-            'valid' => resMas('e.param.n.exist')
+            'valid' => $data['dataJson']['valid']
         ];
+
         return $this->respond($data['respond']);
     }
 
@@ -102,32 +101,50 @@ class Apiv1 extends ResourceController
 
     function cekNoSurat()
     {
-        $dataGet = $this->request->getGet(['nosurat', 'token']);
+        $token = $this->request->getHeaderLine('X-token');
+
+        // $dataa = $this->request-
         helper('datacall');
 
-        $data = [
-            'status'  => '2',
-            'massage' => resMas('e')
-        ];
 
-        if (is_null($dataGet['nosurat']) || is_null($dataGet['token'])) {
-
+        // cek Token
+        if (is_null($token) || $token == 'null') {
             $data = [
-                'status'  => '2',
+                'massage_status'  => '1',
+                'massage' => resMas('f.:.perm.n.valid')
+            ];
+            // return $this->respond($data, 401, 'access_denied');
+            return $this->failUnauthorized();
+        }
+
+
+
+        $dataGet = $this->request->getGet(['NoSurat']);
+
+        if (is_null($dataGet['NoSurat'])) {
+            $data = [
+                'massage_status'  => '2',
                 'massage' => 'API PARAM ERROR'
             ];
-            return $this->respond($data);
+
+            // return $this->respond($data);
+            return $this->fail($data);
         }
 
         $model2 = model('TempPin');
 
-        if (!$model2->cekPinAPI($dataGet['token'])) {
-            return $this->respond($data);
+        if (!$model2->cekPinAPI($token)) {
+            $data = [
+                'massage_status'  => '-1',
+                'massage' => resMas('f.n')
+            ];
+            // return $this->respond($data);
+            return $this->failUnauthorized();
         }
 
         $model = model('SuratKeluraModel');
-        $dataSurat['respond'] = $model->cekExistNoSurat(base64_decode($dataGet['nosurat']));
-        return $this->respond($dataSurat['respond']);
+        $dataSurat['respond'] = $model->cekExistNoSurat(base64_decode($dataGet['NoSurat']));
+        return $this->respond($dataSurat['respond'], 200);
     }
 
     public function imagecache($imagename)

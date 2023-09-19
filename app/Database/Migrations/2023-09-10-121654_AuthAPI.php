@@ -103,6 +103,12 @@ class AuthAPI extends Migration
                 'constraint' => 10,
                 'default'    => null
             ],
+
+            'JenisPin' => [
+                'type'       => 'varchar',
+                'constraint' => 20
+            ],
+
         ];
         $this->forge->addField($fields);
         $this->forge->addKey('id', true);

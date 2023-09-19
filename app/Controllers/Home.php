@@ -2,10 +2,8 @@
 
 namespace App\Controllers;
 
-use App\Models\AuthUserGroup;
 use CodeIgniter\Cookie\Cookie;
-use CodeIgniter\Cookie\CookieStore;
-use CodeIgniter\HTTP\Response;
+
 
 
 class Home extends BaseController
@@ -14,7 +12,7 @@ class Home extends BaseController
     {
         PagePerm([''], '/login', true);
 
-        if (userInfo()['namaLVL'] !== 'Mahasiswa') {
+        if (!in_group(['Mahasiswa'])) {
             helper('cookie');
 
             if (is_null(get_cookie('API'))) {
@@ -25,7 +23,7 @@ class Home extends BaseController
                     'API',
                     $pinAPI,
                     [
-                        'max-age' => 3600 * 1,
+                        'max-age' => 3600 * 3,
                     ]
                 );
                 set_cookie($cookie);

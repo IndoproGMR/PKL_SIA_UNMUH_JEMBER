@@ -10,7 +10,7 @@ class SuratKeluraModel extends Model
     protected $table            = 'SK_ttd_SuratMasuk';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
-    // protected $returnType       = 'array';
+    protected $returnType       = 'array';
     // protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
@@ -184,13 +184,13 @@ class SuratKeluraModel extends Model
         helper('datacall');
         if (count($data) > 0) {
             $data = [
-                'status'  => '1',
+                'massage_status'  => '1',
                 'massage' => resMas('num.surat.exist.db')
             ];
             return $data;
         }
         $data = [
-            'status'  => '0',
+            'massage_status'  => '0',
             'massage' => resMas('num.surat.n.exist.db')
         ];
         return $data;

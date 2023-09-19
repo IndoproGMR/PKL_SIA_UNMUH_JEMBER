@@ -55,8 +55,8 @@ class Filters extends BaseConfig
      * with a method you don’t expect could bypass the filter.
      */
     public array $methods = [
-        'post' => ['throttle'],
-        'get'  => ['throttle'],
+        'post' => ['refreshlimiter'],
+        'get'  => ['refreshlimiter'],
     ];
 
     /**
@@ -67,8 +67,8 @@ class Filters extends BaseConfig
      * 'isLoggedIn' => ['before' => ['account/*', 'profiles/*']]
      */
     public array $filters = [
-        'throttle'       => ['before' => ['/api/*']],
         'loginlimiter'   => ['before' => ['/login']],
+        'throttle'       => ['before' => ['/api/*']],
         'refreshlimiter' => ['before' => ['/*']],
     ];
 }

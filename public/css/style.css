@@ -770,3 +770,25 @@ navbar {
   /* transform: scale(0.8, 0.8); */
   /* } */
 }
+
+.Actions {
+  display: inline-block;
+  text-decoration: none;
+  font-size: 14px;
+  padding: 5px 20px;
+  margin: 5px;
+  border-radius: 10px;
+  border: 1px solid var(--clr-buttom);
+  background-color: var(--clr-buttom);
+  color: var(--txt-white);
+  font-weight: bold;
+}
+
+.Actions:hover {
+  color: var(--txt-black);
+  background-color: var(--clr-buttom-hover);
+  border: 1px solid var(--txt-black);
+  border-radius: 5px;
+
+  transition: all ease-in-out 0.3s;
+}

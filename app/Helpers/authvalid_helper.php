@@ -7,8 +7,9 @@ use App\Models\AuthUserGroup;
  * @param int $secure
  * 0 = cek dari session user
  * 1 = cek dari database
+ * @return bool
  */
-function in_group($group, int $secure = 0)
+function in_group(array $group, int $secure = 0)
 {
     $AuthUserGroup = model(AuthUserGroup::class);
     switch ($secure) {

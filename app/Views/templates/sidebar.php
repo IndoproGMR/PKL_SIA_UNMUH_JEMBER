@@ -222,7 +222,7 @@
                         'link'      => 'help',
                         'linktext'  => 'Help',
                         'imagelink' => 'asset/svg/circle-info-solid.svg',
-                        'shortcut'  => '',
+                        'shortcut'  => '?',
                         'target'    => '_blank'
                     ]
                 ) ?>
@@ -235,11 +235,9 @@
                     'SidebarLinkNotifCell',
                     [
                         'link'      => 'Staff/help',
-                        'linkout'   => '',
-
                         'linktext'  => 'Help',
                         'imagelink' => 'asset/svg/circle-info-solid.svg',
-                        'shortcut'  => '',
+                        'shortcut'  => '?',
                         'target'    => '_blank'
                     ]
                 ) ?>
