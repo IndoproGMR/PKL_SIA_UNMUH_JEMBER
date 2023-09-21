@@ -4,8 +4,6 @@ namespace App\Controllers;
 
 use CodeIgniter\Cookie\Cookie;
 
-
-
 class Home extends BaseController
 {
     public function index()
@@ -15,8 +13,8 @@ class Home extends BaseController
         if (!in_group(['Mahasiswa'])) {
             helper('cookie');
 
+            // cek apakah browser memiliki cookie API
             if (is_null(get_cookie('API'))) {
-
                 $pinAPI = hash256(generateIdentifier(), 64);
 
                 $cookie = new Cookie(
@@ -26,10 +24,11 @@ class Home extends BaseController
                         'max-age' => 3600 * 3,
                     ]
                 );
-                set_cookie($cookie);
 
-                $model2 = Model('TempPin');
-                if (!$model2->buatPinAPI($pinAPI)) {
+                // set ke browser
+                set_cookie($cookie);;
+                // Set ke Redis
+                if (!setCacheData($pinAPI, 'AUTH_API_X-Token', 3600 * 3, '')) {
                     FlashMassage('/', ['API Key error']);
                 }
             }
@@ -59,6 +58,12 @@ class Home extends BaseController
         return view('home/customError');
     }
 
+    public function maintenance()
+    {
+        return 'server in maintenance stat';
+    }
+
+    // ! TEST
     public function TestInfo()
     {
         d($this->request->getIPAddress());

@@ -23,36 +23,6 @@ class TempPin extends Model
         'JenisPin'
     ];
 
-    function buatPinAPI($pin1)
-    {
-        $TimeStamp = getUnixTimeStamp();
-        $exp = $TimeStamp + (3600 * 3);
-
-        $this->where('expired < ', $TimeStamp)->delete();
-
-        $data = [
-            'id_akun_pembuat' => userInfo()['id'],
-            'pin1'            => $pin1,
-            'TimeStamp'       => $TimeStamp,
-            'expired'         => $exp,
-            'JenisPin'        => 'API'
-        ];
-        return $this->insert($data, true);
-    }
-
-    function cekPinAPI($pin1)
-    {
-        $data = $this
-            ->where('pin1', $pin1)
-            ->where('JenisPin', 'API')
-            ->findAll(2);
-
-        if (count($data) == 1) {
-            return true;
-        }
-        return false;
-    }
-
     function buatPin($pin1)
     {
         $TimeStamp = getUnixTimeStamp();

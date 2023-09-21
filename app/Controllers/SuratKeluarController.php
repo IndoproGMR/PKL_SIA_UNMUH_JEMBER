@@ -8,6 +8,8 @@ use App\Models\TandaTangan;
 use App\Libraries\enkripsi_library;
 use App\Models\SuratKeluraModel;
 
+// $cache = \Config\Services::cache();
+
 class SuratKeluarController extends BaseController
 {
     // !START Untuk Mahasiswa
@@ -15,24 +17,32 @@ class SuratKeluarController extends BaseController
     public function indexStatusSurat()
     {
         PagePerm(['Mahasiswa', 'Calon Mahasiswa']);
-        $model = model(SuratKeluraModel::class);
-        $model2 = model(TandaTangan::class);
-        $data['datasurat'] = $model->cekNoSurat(userInfo()['id'], true);
 
-        // cek status setiap surat
-        foreach ($data['datasurat'] as $key => $value) {
-            $data['surat'][$key] = $value['SuratIdentifier'];
-            $data['datasurat'][$key]['status'] = $model2->cekStatusSurat($data['surat'][$key]);
-        }
+        $namacache = "Query_indexStatusSurat_";
+        if (cekCacheData($namacache)) {
 
-        // bila status yang belum sudah 0 maka hapus dari array
-        foreach ($data['datasurat'] as $key => $value) {
-            if ($value['status']['belum'] == '0') {
-                unset($data['datasurat'][$key]);
+            $model = model('SuratKeluraModel');
+            $model2 = model('TandaTangan');
+            $data['datasurat'] = $model->cekNoSurat(userInfo()['id'], true);
+
+            // cek status setiap surat
+            foreach ($data['datasurat'] as $key => $value) {
+                $data['surat'][$key] = $value['SuratIdentifier'];
+                $data['datasurat'][$key]['status'] = $model2->cekStatusSurat($data['surat'][$key]);
             }
+
+            // bila status yang belum sudah 0 maka hapus dari array
+            foreach ($data['datasurat'] as $key => $value) {
+                if ($value['status']['belum'] == '0') {
+                    unset($data['datasurat'][$key]);
+                }
+            }
+
+            setCacheData($namacache, $data, 120);
+        } else {
+            $data = getCachaData($namacache);
         }
 
-        // d($data);
         return view('suratkeluar/mahasiswa/semua_Status_TTD', $data);
     }
 
@@ -41,23 +51,32 @@ class SuratKeluarController extends BaseController
     {
         PagePerm(['Mahasiswa', 'Calon Mahasiswa']);
 
-        $model = model(Jenissurat::class);
-        $data['jenissurat'] = $model->seeall();
-        $data['minta'] = 0;
-
-        if (!is_null($idsurat)) {
-            $data['minta'] = 1;
+        $namacache = "Query_indexMintaSurat_";
+        if (cekCacheData($namacache)) {
 
             $model = model(Jenissurat::class);
-            $data['datasurat'] = $model->seebyID($idsurat);
+            $data['jenissurat'] = $model->seeall();
+            $data['minta'] = 0;
 
-            // cek apakah id yang diminta ada di db ?
-            if ($data['datasurat']['error'] == 'y') {
-                return redirect()->to('/minta-surat');
+            if (!is_null($idsurat)) {
+                $data['minta'] = 1;
+
+                $model = model(Jenissurat::class);
+                $data['datasurat'] = $model->seebyID($idsurat);
+
+                // cek apakah id yang diminta ada di db ?
+                if ($data['datasurat']['error'] == 'y') {
+                    return redirect()->to('/minta-surat');
+                }
+
+                $data['dataform'] = json_decode($data['datasurat']['form'], true);
             }
 
-            $data['dataform'] = json_decode($data['datasurat']['form'], true);
+            setCacheData($namacache, $data);
+        } else {
+            $data = getCachaData($namacache);
         }
+
         return view('suratkeluar/mahasiswa/Proses_Minta-TTD', $data);
     }
 
@@ -188,19 +207,26 @@ class SuratKeluarController extends BaseController
     {
         PagePerm(['Mahasiswa', 'Calon Mahasiswa']);
 
-        $model = model(SuratKeluraModel::class);
-        $model2 = model(TandaTangan::class);
-        $data['datasurat'] = $model->cekNoSurat(userInfo()['id']);
+        $namacache = "Query_indexRiwayatSurat_";
+        if (cekCacheData($namacache)) {
+            $model = model('SuratKeluraModel');
+            $model2 = model('TandaTangan');
+            $data['datasurat'] = $model->cekNoSurat(userInfo()['id']);
 
-        foreach ($data['datasurat'] as $key => $value) {
-            $data['surat'][$key] = $value['SuratIdentifier'];
-            $data['datasurat'][$key]['status'] = $model2->cekStatusSurat($data['surat'][$key]);
-        }
-
-        foreach ($data['datasurat'] as $key => $value) {
-            if ($value['status']['belum'] !== '0') {
-                unset($data['datasurat'][$key]);
+            foreach ($data['datasurat'] as $key => $value) {
+                $data['surat'][$key] = $value['SuratIdentifier'];
+                $data['datasurat'][$key]['status'] = $model2->cekStatusSurat($data['surat'][$key]);
             }
+
+            foreach ($data['datasurat'] as $key => $value) {
+                if ($value['status']['belum'] !== '0') {
+                    unset($data['datasurat'][$key]);
+                }
+            }
+
+            setCacheData($namacache, $data, 120);
+        } else {
+            $data = getCachaData($namacache);
         }
 
         return view('suratkeluar/mahasiswa/Semua_Riwayat-TTD', $data);
@@ -214,8 +240,17 @@ class SuratKeluarController extends BaseController
     {
         PagePerm(['Dosen']);
 
-        $jenissurat = model(Jenissurat::class);
-        $data['jenissurat'] = $jenissurat->seeall(true);
+        $namacache = "Query_indexJenisSurat_";
+        if (cekCacheData($namacache)) {
+
+            $jenissurat = model('Jenissurat');
+            $data['jenissurat'] = $jenissurat->seeall(true);
+
+            setCacheData($namacache, $data);
+        } else {
+            $data = getCachaData($namacache);
+        }
+
 
         return view('suratkeluar/pengajaran/Semua_Master-surat', $data);
     }
@@ -291,6 +326,11 @@ class SuratKeluarController extends BaseController
             return FlashMassage('/input/master-surat', [resMas('f.u.save.jenis.surat.db')], 'fail');
             // return FlashException('Tidak dapat Menambahkan Surat ke dalam DataBase');
         }
+
+
+        $prefix = "Query_indexJenisSurat_";
+        delCacheData($prefix);
+
         return FlashMassage('/Staff/Master-Surat', [resMas('s.save.jenis.surat.db')], 'success');
     }
 
@@ -334,6 +374,10 @@ class SuratKeluarController extends BaseController
         if (!$model->updateJenisSurat($postdata['id'], $postdata['jenisSurat'], $postdata['diskripsi'], $postdata['inputisi'])) {
             return FlashMassage('/Staff/Master-Surat', [resMas('f.update.master.surat.db')], 'success');
         }
+
+        $prefix = "Query_indexJenisSurat_";
+        delCacheData($prefix);
+
         return FlashMassage('/Staff/Master-Surat', [resMas('s.update.master.surat')], 'success');
     }
 
@@ -347,6 +391,10 @@ class SuratKeluarController extends BaseController
         if (!$model->toggleshow($postdata['id'])) {
             return FlashMassage('/semua_master-surat', [resMas('f.update.surat')], 'fail');
         }
+
+        $prefix = "Query_indexJenisSurat_";
+        delCacheData($prefix);
+
         return FlashMassage('/Staff/Master-Surat', [resMas('s.update.master.surat')], 'success');
     }
 
@@ -355,11 +403,18 @@ class SuratKeluarController extends BaseController
     public function indexTanpaNoSurat()
     {
         PagePerm(['Dosen']);
-        $model = model(SuratKeluraModel::class);
-        $data['datasurat'] = $model->seeAllnoNoSurat();
+
+        $prefix = "Query_indexTanpaNoSurat_";
+        if (cekCacheData($prefix)) {
+            $model = model('SuratKeluraModel');
+            $data['datasurat'] = $model->seeAllnoNoSurat();
+
+            setCacheData($prefix, $data['datasurat']);
+        } else {
+            $data['datasurat'] = getCachaData($prefix);
+        }
 
         return view('suratkeluar/pengajaran/Semua_Surat-Tanpa-Nomer', $data);
-        // return view('suratkeluar/pengajaran/index_SuratTanpaNo', $data);
     }
 
     public function updateTanpaNoSurat()
@@ -399,8 +454,9 @@ class SuratKeluarController extends BaseController
         if (!$model->updateNoSurat($postdata['id'], $data)) {
             return FlashMassage('Staff/Permintaan_TTD-Surat_Tanpa_NoSurat', [resMas('f.save.surat')], 'fail');
         }
-        // d($dataSurat);
-        // d($postdata);
+
+        $prefix = "Query_indexTanpaNoSurat_";
+        delCacheData($prefix);
 
         return FlashMassage('Staff/Permintaan_TTD-Surat_Tanpa_NoSurat', [resMas('s.save.surat')], 'success');
     }
@@ -425,16 +481,18 @@ class SuratKeluarController extends BaseController
     public function indexStatusTTD()
     {
         PagePerm(['Dosen']);
-        $model = model(TandaTangan::class);
-        $data['datasurat'] = $model->cekStatusSuratTTD(userInfo());
 
-        // foreach ($data['datasurat'] as $key => $value) {
-        //     $data['surat'][$key] = $value['SuratIdentifier'];
-        //     $data['datasurat'][$key]['status'] = $model->cekStatusSurat($data['surat'][$key]);
-        // }
+        $prefix = "Query_indexStatusTTD_";
+        if (cekCacheData($prefix)) {
+            $model = model('TandaTangan');
+            $data['datasurat'] = $model->cekStatusSuratTTD(userInfo());
+            $data['perluttd'] = count($data['datasurat']);
 
-        $data['perluttd'] = count($data['datasurat']);
-        // d($data);
+            setCacheData($prefix, $data);
+        } else {
+            $data = getCachaData($prefix);
+        }
+
         return view('suratkeluar/penandatangan/Semua_Perlu_TTD', $data);
     }
 
@@ -470,14 +528,24 @@ class SuratKeluarController extends BaseController
             return FlashMassage('/Surat_Perlu_TandaTangan', [resMas('f.u.save.ttd')], 'fail');
         }
 
+        $prefix = "Query_indexStatusTTD_";
+        delCacheData($prefix);
+
         return FlashMassage('/Surat_Perlu_TandaTangan', [resMas('s.save.ttd')], 'success');
     }
 
     public function indexRiwayatTTD()
     {
         PagePerm(['Dosen']);
-        $model = model(TandaTangan::class);
-        $data['datasurat'] = $model->cekStatusSuratTTD(userInfo(), 1);
+
+        $namacache = "Query_indexRiwayatTTD_";
+        if (cekCacheData($namacache)) {
+            $model = model('TandaTangan');
+            $data['datasurat'] = $model->cekStatusSuratTTD(userInfo(), 1);
+            setCacheData($namacache, $data['datasurat']);
+        } else {
+            $data['datasurat'] = getCachaData($namacache);
+        }
 
         return view('suratkeluar/penandatangan/Semua_Riwayat_TTD', $data);
     }

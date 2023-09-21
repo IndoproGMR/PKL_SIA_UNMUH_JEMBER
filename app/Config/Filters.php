@@ -69,6 +69,6 @@ class Filters extends BaseConfig
     public array $filters = [
         'loginlimiter'   => ['before' => ['/login']],
         'throttle'       => ['before' => ['/api/*']],
-        'refreshlimiter' => ['before' => ['/*']],
+        // 'refreshlimiter' => ['before' => ['/*']],
     ];
 }

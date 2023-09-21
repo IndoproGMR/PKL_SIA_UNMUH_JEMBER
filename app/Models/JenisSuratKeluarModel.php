@@ -22,6 +22,16 @@ class JenisSuratKeluarModel extends Model
         'delete'
     ];
 
+    protected $allowCallbacks = true;
+    protected $beforeFind     = ['cekCache'];
+
+    function cekCache()
+    {
+        d('cekCache');
+        // if () {
+
+        // }
+    }
 
     public function countdb()
     {

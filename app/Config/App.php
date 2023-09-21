@@ -4,6 +4,7 @@ namespace Config;
 
 use CodeIgniter\Config\BaseConfig;
 use CodeIgniter\Session\Handlers\FileHandler;
+use CodeIgniter\Session\Handlers\RedisHandler;
 
 class App extends BaseConfig
 {
@@ -146,7 +147,8 @@ class App extends BaseConfig
      *
      * @deprecated use Config\Session::$driver instead.
      */
-    public string $sessionDriver = FileHandler::class;
+    // public string $sessionDriver = FileHandler::class;
+    public string $sessionDriver = RedisHandler::class;
     // !update ke 4.4.0 hapus yang di atas
 
     /**

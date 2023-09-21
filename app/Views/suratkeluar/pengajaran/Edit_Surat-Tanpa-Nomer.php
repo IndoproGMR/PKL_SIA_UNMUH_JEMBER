@@ -33,7 +33,7 @@
     <input type="submit" value="Update" id="tombolUpdate" class="Actions danger" disabled>
 </form>
 
-<button id="cekNomer">
+<button id="cekNomer" class="Actions">
     cek nomer
 </button>
 <p class="Status-con">Status: <span id="Status">unknown</span></p>
