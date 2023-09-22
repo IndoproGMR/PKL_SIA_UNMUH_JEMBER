@@ -21,14 +21,14 @@ class Home extends BaseController
                     'API',
                     $pinAPI,
                     [
-                        'max-age' => 3600 * 3,
+                        'max-age' => 3600,
                     ]
                 );
 
                 // set ke browser
                 set_cookie($cookie);;
                 // Set ke Redis
-                if (!setCacheData($pinAPI, 'AUTH_API_X-Token', 3600 * 3, '')) {
+                if (!setCacheData($pinAPI, 'AUTH_API_X-Token', 3600, '')) {
                     FlashMassage('/', ['API Key error']);
                 }
             }
@@ -66,7 +66,7 @@ class Home extends BaseController
     // ! TEST
     public function TestInfo()
     {
-        d($this->request->getIPAddress());
+        // d($this->request->getIPAddress());
 
 
         // d(FCPATH);

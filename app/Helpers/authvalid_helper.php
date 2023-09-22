@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\AuthUserGroup;
+use CodeIgniter\Config\Services;
 
 $cache = \Config\Services::cache();
 
@@ -68,7 +69,7 @@ function getCachaData(string $prefix, string $customId = null)
  */
 function delCacheData(string $prefix, string $customId = null): bool
 {
-    if ($customId == null) {
+    if (is_null($customId)) {
         $namacache = $prefix . userInfo()['id'];
     } else {
         $namacache = $prefix . $customId;
@@ -86,7 +87,6 @@ function delCacheData(string $prefix, string $customId = null): bool
  */
 function in_group(array $group, int $secure = 0): bool
 {
-    $AuthUserGroup = model(AuthUserGroup::class);
     switch ($secure) {
         case '0':
             foreach ($group as $namagrup) {
@@ -97,13 +97,21 @@ function in_group(array $group, int $secure = 0): bool
             }
             break;
         case '1':
+            $request = Services::request();
+            if (userInfo()['IP'] == $request->getIPAddress()) {
+                return false;
+            }
+
             $prefix = 'AUTH_Group_';
             if (cekCacheData($prefix)) {
+                $AuthUserGroup = model('AuthUserGroup');
                 $lvluser = $AuthUserGroup->cekuserinfo(userInfo()['id'])['namaLVL'];
                 setCacheData($prefix, $lvluser, 360);
             } else {
                 $lvluser = getCachaData($prefix);
             }
+
+
 
             foreach ($group as $namagrup) {
                 if ($namagrup == $lvluser) {
@@ -150,7 +158,8 @@ function userInfo(): array
         'FotoUser' => 'img/level/personal.png',
         'NamaUser' => 'mohon login',
         'namaLVL'  => 'mohon login',
-        'Gelar'    => ''
+        'Gelar'    => '',
+        'IP'       => 'error'
     ];
 }
 
@@ -215,28 +224,6 @@ function PagePerm(array $group, string $redirect = 'error_perm', bool $login = f
     if (!in_group($group, $secure)) {
         throw new \CodeIgniter\Router\Exceptions\RedirectException("$redirect");
     }
-
-    // $Perm = [
-    //     "Superuser",
-    //     "Administrator",
-    //     "Aplikan",
-    //     "Staf PMB",
-    //     "Ka PMB",
-    //     "Presenter",
-    //     "Calon Mahasiswa",
-    //     "Administrasi Akademik",
-    //     "Pengajaran Fakultas",
-    //     "Kepala Akademik",
-    //     "Administrasi Keuangan",
-    //     "Kepala Keuangan",
-    //     "Fakultas",
-    //     "Biro Umum",
-    //     "Dosen",
-    //     "Kaprodi / Kajur",
-    //     "Mahasiswa",
-    //     "Executive Information System",
-    //     "Rektorat"
-    // ];
 }
 
 /**
