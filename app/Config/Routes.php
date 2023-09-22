@@ -21,6 +21,29 @@ $routes->set404Override();
 // Set `$autoRoutesImproved` to true in `app/Config/Feature.php` and set the following to true.
 // $routes->setAutoRoute(false);
 
+
+
+
+// !Admin Panel ==============================================================>>
+// ?index ======================================================================
+$routes->get('/Admin-Panel', 'AdminPanelController::index');
+$routes->post('/Admin-Panel/login', 'AdminPanelController::loginAdminProses');
+
+
+$routes->get('/Admin-Panel/Masukan-akun', 'AdminPanelController::createNewuser');
+$routes->post('/Admin-Panel/Masukan-akun/step2', 'AdminPanelController::createNewuser');
+
+$routes->get('/Admin-Panel/join', 'AdminPanelController::newUser');
+$routes->post('/Admin-Panel/join', 'AdminPanelController::newUser');
+// ! =========================================================================<<
+
+// ! maintenance =============================================================>>
+if (false) {
+    $routes->set404Override('App\Controllers\Home::maintenance');
+    return;
+}
+// ! =========================================================================<<
+
 /*
  * --------------------------------------------------------------------
  * Route Definitions
@@ -48,21 +71,6 @@ $routes->get('/help', 'Home::MahasiswaHelp');
 $routes->get('/testinfo', 'Home::TestInfo');
 $routes->post('/testinfo/proses', 'Home::TestInfoProses');
 $routes->get('/testinfo/data', 'Home::TestInfoput');
-// ! =========================================================================<<
-
-// ?
-
-// !Admin Panel ==============================================================>>
-// ?index ======================================================================
-$routes->get('/Admin-Panel', 'AdminPanelController::index');
-$routes->post('/Admin-Panel/login', 'AdminPanelController::loginAdminProses');
-
-
-$routes->get('/Admin-Panel/Masukan-akun', 'AdminPanelController::createNewuser');
-$routes->post('/Admin-Panel/Masukan-akun/step2', 'AdminPanelController::createNewuser');
-
-$routes->get('/Admin-Panel/join', 'AdminPanelController::newUser');
-$routes->post('/Admin-Panel/join', 'AdminPanelController::newUser');
 // ! =========================================================================<<
 
 // ?
@@ -199,7 +207,8 @@ $routes->post('/login', 'Login::debuglogin');
 $routes->get('/api/v1/validasi/qr', 'apiv1::validasiqr');
 $routes->get('/api/v1/validasi/qr/detail', 'apiv1::validasiqrdetail');
 $routes->get('/api/v1/image/(:segment)', 'apiv1::imagecache/$1');
-$routes->get('/api/v1/icon/(:segment)', 'apiv1::iconcache/$1');
+
+$routes->get('/api/v1/cekNomerSurat', 'apiv1::cekNoSurat');
 // *===========================================================================<
 // ! =========================================================================<<
 

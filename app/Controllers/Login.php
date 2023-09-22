@@ -4,10 +4,12 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Libraries\enkripsi_library;
-use App\Models\AuthUserGroup;
+
 
 // $GLOBALS['loginUI'] = 'public';
 $GLOBALS['loginUI'] = 'debug';
+
+$cache = \Config\Services::cache();
 
 class Login extends BaseController
 {
@@ -15,8 +17,15 @@ class Login extends BaseController
     // harus mahasiswa aktif
     public function index()
     {
+        // !CLEAR Data
+        $namacache = "AUTH_";
+        delCacheData($namacache);
+
         $session = \Config\Services::session();
         $session->destroy();
+
+        helper('cookie');
+        delete_cookie('API');
 
         $data['datacoba'] = [
             '1' => [
@@ -48,6 +57,7 @@ class Login extends BaseController
                 'password' => generateIdentifier()
             ],
         ];
+        // ! =================
 
         // d(user_id());
         // d(in_group("Mahasiswa"));
@@ -69,20 +79,26 @@ class Login extends BaseController
             'dataLogin',
             'dataPassword'
         ]);
-        $model = model(AuthUserGroup::class);
+
+        $model = model('AuthUserGroup');
 
 
         // ! Algoritma password
         /////
         // !
 
-
         if (!$model->proseslogin($postdata['dataLogin'], $postdata['dataPassword'])) {
             $session->destroy();
             return redirect()->to('error_perm');
         }
 
-        $datauser = $model->cekuserinfo($postdata['dataLogin']);
+        $namacache = "AUTH_";
+        if (cekCacheData($namacache, $postdata['dataLogin'])) {
+            $datauser = $model->cekuserinfo($postdata['dataLogin']);
+            setCacheData($namacache, $datauser, 18000, $postdata['dataLogin']);
+        } else {
+            $datauser = getCachaData($namacache, $postdata['dataLogin']);
+        }
 
         $data['userdata'] = [
             'id'       => $datauser['LoginUser'],
@@ -103,6 +119,9 @@ class Login extends BaseController
 
     public function logout()
     {
+        $namacache = "AUTH_";
+        delCacheData($namacache);
+
         $session = \Config\Services::session();
         $session->destroy();
         return redirect()->to('/login');

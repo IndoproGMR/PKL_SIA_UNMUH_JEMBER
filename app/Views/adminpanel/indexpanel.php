@@ -27,13 +27,33 @@
             <form action="<?= base_url('/Admin-Panel/login'); ?>" method="post">
                 <?= csrf_field() ?>
                 <label for="pass">Password:</label>
-                <input id="pass" name="pass" type="text" placeholder="Password">
+                <input id="pass" name="pass" type="password" placeholder="Password">
                 <input type="submit" value="Login">
             </form>
 
         <?php else : ?>
 
             <h4>Selamat datang</h4>
+
+            <h5>TODO:LIST</h5>
+            <ul>
+                <li>cek berapa data dari DeleteAt</li>
+                <li>pulihkan data dari DeleteAt</li>
+                <li>Clear Database dari DeleteAt</li>
+
+                <li>cek berapa banyak Surat yang sudah di minta</li>
+                <li>cek berapa banyak Surat yang sudah di Tanda Tangani</li>
+            </ul>
+
+
+
+
+
+
+
+
+
+
 
             <div>
                 <?= view_cell('TombolIdCell', [
@@ -45,8 +65,6 @@
                     'method'            => 'get'
                 ]) ?>
             </div>
-
-
 
 
         <?php endif ?>

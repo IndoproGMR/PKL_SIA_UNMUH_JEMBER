@@ -10,7 +10,7 @@ class SuratKeluraModel extends Model
     protected $table            = 'SK_ttd_SuratMasuk';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
-    // protected $returnType       = 'array';
+    protected $returnType       = 'array';
     // protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
@@ -176,5 +176,23 @@ class SuratKeluraModel extends Model
     function deleteSurat($id)
     {
         return $this->update($id, ['DeleteAt' => getUnixTimeStamp()]);
+    }
+
+    function cekExistNoSurat($noSurat)
+    {
+        $data = $this->where('NoSurat', $noSurat)->findAll(2);
+        helper('datacall');
+        if (count($data) > 0) {
+            $data = [
+                'massage_status'  => '1',
+                'massage' => resMas('num.surat.exist.db')
+            ];
+            return $data;
+        }
+        $data = [
+            'massage_status'  => '0',
+            'massage' => resMas('num.surat.n.exist.db')
+        ];
+        return $data;
     }
 }

@@ -2,15 +2,37 @@
 
 namespace App\Controllers;
 
-use App\Models\AuthUserGroup;
-use Faker\Extension\Helper;
-
+use CodeIgniter\Cookie\Cookie;
 
 class Home extends BaseController
 {
     public function index()
     {
         PagePerm([''], '/login', true);
+
+        if (!in_group(['Mahasiswa'])) {
+            helper('cookie');
+
+            // cek apakah browser memiliki cookie API
+            if (is_null(get_cookie('API'))) {
+                $pinAPI = hash256(generateIdentifier(), 64);
+
+                $cookie = new Cookie(
+                    'API',
+                    $pinAPI,
+                    [
+                        'max-age' => 3600 * 3,
+                    ]
+                );
+
+                // set ke browser
+                set_cookie($cookie);;
+                // Set ke Redis
+                if (!setCacheData($pinAPI, 'AUTH_API_X-Token', 3600 * 3, '')) {
+                    FlashMassage('/', ['API Key error']);
+                }
+            }
+        }
 
         return view('home/index');
     }
@@ -36,9 +58,17 @@ class Home extends BaseController
         return view('home/customError');
     }
 
+    public function maintenance()
+    {
+        return 'server in maintenance stat';
+    }
+
+    // ! TEST
     public function TestInfo()
     {
         d($this->request->getIPAddress());
+
+
         // d(FCPATH);
         // $text = 'TTD.valid.t.n.exist.db.!2';
         // $data = 'Tanda Tangan Tidak ada Didalam Database!!!';

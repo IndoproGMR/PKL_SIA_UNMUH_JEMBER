@@ -10,7 +10,7 @@ class JenisSuratKeluarModel extends Model
     protected $table            = 'SK_JenisSurat';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
-    // protected $returnType       = 'array';
+    protected $returnType       = 'array';
     // protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
@@ -22,6 +22,16 @@ class JenisSuratKeluarModel extends Model
         'delete'
     ];
 
+    protected $allowCallbacks = true;
+    protected $beforeFind     = ['cekCache'];
+
+    function cekCache()
+    {
+        d('cekCache');
+        // if () {
+
+        // }
+    }
 
     public function countdb()
     {
