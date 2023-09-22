@@ -17,15 +17,22 @@ class Login extends BaseController
     // harus mahasiswa aktif
     public function index()
     {
-        // !CLEAR Data
+        // !CLEAR AUTH
         $namacache = "AUTH_";
         delCacheData($namacache);
 
         $session = \Config\Services::session();
         $session->destroy();
 
+        // !CLEAR Cookie
         helper('cookie');
-        delete_cookie('API');
+
+        if (!is_null(get_cookie('API'))) {
+            delCacheData(get_cookie('API'), '');
+            delete_cookie('API');
+        }
+
+
 
         $data['datacoba'] = [
             '1' => [
@@ -88,8 +95,7 @@ class Login extends BaseController
         // !
 
         if (!$model->proseslogin($postdata['dataLogin'], $postdata['dataPassword'])) {
-            $session->destroy();
-            return redirect()->to('error_perm');
+            return redirect()->to('login');
         }
 
         $namacache = "AUTH_";
@@ -105,7 +111,8 @@ class Login extends BaseController
             'NamaUser' => $datauser['NamaUser'],
             'FotoUser' => $datauser['FotoUser'],
             'namaLVL'  => $datauser['namaLVL'],
-            'Gelar'    => $datauser['Gelar']
+            'Gelar'    => $datauser['Gelar'],
+            'IP'       => $this->request->getIPAddress()
         ];
 
         $session->set($data);

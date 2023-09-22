@@ -38,11 +38,6 @@ Options -Indexes
 	RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 </IfModule>
 
-<FilesMatch "\.(jpg|JPG|jpeg|webp|jpe?g|woff|woff2|png|css|js|gif|swf|ico|ttf|eot|ico|js|mp4|webm|svg|json)$">
-Header set Cache-Control "public,max-age=31536000,no-transform"
-Header unset ETag
-</FilesMatch>
-
 # <IfModule mod_expires.c>
 # ExpiresActive On
 # ExpiresByType text/css "access plus 1 week"
