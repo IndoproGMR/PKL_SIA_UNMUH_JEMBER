@@ -205,7 +205,7 @@ $routes->post('/login', 'Login::debuglogin');
 // *Surat Keluar ==============================================================>
 // ?tandatangan Qr validasi ====================================================
 $routes->get('/api/v1/validasi/qr', 'apiv1::validasiqr');
-$routes->get('/api/v1/validasi/qr/detail', 'apiv1::validasiqrdetail');
+$routes->get('/api/v1/validasi/qr/detail', 'apiv1::ValidasiQRDetail');
 $routes->get('/api/v1/image/(:segment)', 'apiv1::imagecache/$1');
 
 $routes->get('/api/v1/cekNomerSurat', 'apiv1::cekNoSurat');

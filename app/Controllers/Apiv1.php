@@ -37,7 +37,7 @@ class Apiv1 extends ResourceController
         return $this->respond($data['respond']);
     }
 
-    public function validasiqrdetail()
+    public function ValidasiQRDetail()
     {
         $dataGet = $this->request->getGet([
             'nosurat',
