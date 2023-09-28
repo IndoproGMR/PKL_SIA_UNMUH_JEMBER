@@ -60,7 +60,7 @@ class Home extends BaseController
 
     public function maintenance()
     {
-        return 'server in maintenance stat';
+        return 'server in maintenance state';
     }
 
     // ! TEST
