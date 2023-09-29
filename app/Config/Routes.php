@@ -35,10 +35,14 @@ $routes->post('/Admin-Panel/Masukan-akun/step2', 'AdminPanelController::createNe
 
 $routes->get('/Admin-Panel/join', 'AdminPanelController::newUser');
 $routes->post('/Admin-Panel/join', 'AdminPanelController::newUser');
+
+if (env('CI_ENVIRONMENT') == 'development') {
+    $routes->get('/Admin-Panel/CekServer', 'AdminPanelController::test');
+}
 // ! =========================================================================<<
 
 // ! maintenance =============================================================>>
-if (false) {
+if (env('MAINTENANCE_ENVIRONMENT', 'false') == 'true') {
     $routes->set404Override('App\Controllers\Home::maintenance');
     return;
 }
@@ -191,8 +195,7 @@ $routes->get('/staff/TestMPDF', 'Pdfrender::TestMPDF');
 // ?login ======================================================================
 $routes->get('/login', 'Login::index');
 $routes->get('/logout', 'Login::logout');
-$routes->post('/login', 'Login::debuglogin');
-// $routes->post('/login', 'Login::loginProses');
+$routes->post('/login', 'Login::loginProses');
 
 // ?Api Auth ===================================================================
 // $routes->get('/api/v1/login', 'apiv1::validasiqr');
@@ -206,9 +209,12 @@ $routes->post('/login', 'Login::debuglogin');
 // ?tandatangan Qr validasi ====================================================
 $routes->get('/api/v1/validasi/qr', 'Apiv1::validasiqr');
 $routes->get('/api/v1/validasi/qr/detail', 'Apiv1::ValidasiQRDetail');
-$routes->get('/api/v1/image/(:segment)', 'Apiv1::imagecache/$1');
 
+// ?Dengan Perlu AUTH
 $routes->get('/api/v1/cekNomerSurat', 'Apiv1::cekNoSurat');
+
+// ?etc
+$routes->get('/api/v1/image/(:segment)', 'Apiv1::imagecache/$1');
 // *===========================================================================<
 // ! =========================================================================<<
 
