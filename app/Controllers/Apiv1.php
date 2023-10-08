@@ -9,33 +9,6 @@ use CodeIgniter\RESTful\ResourceController;
 class Apiv1 extends ResourceController
 {
     use ResponseTrait;
-    public function validasiqr()
-    {
-        $dataGet = $this->request->getGet([
-            'nosurat',
-            'qrcode'
-        ]);
-
-        if (is_null($dataGet['nosurat']) || is_null($dataGet['qrcode'])) {
-            helper('datacall');
-
-            $data['respond'] = [
-                'valid' => resMas('e.param.n.exist')
-            ];
-            return $this->respond($data['respond'], 400, 'invalid_request');
-        }
-
-        helper('datacall');
-
-        $validasienkripsi = new enkripsi_library;
-        $data['dataJson'] = $validasienkripsi->validasiTTD($dataGet['qrcode'], $dataGet['nosurat']);
-
-        $data['respond'] = [
-            'valid' => $data['dataJson']['valid']
-        ];
-
-        return $this->respond($data['respond']);
-    }
 
     public function ValidasiQRDetail()
     {
@@ -193,5 +166,44 @@ class Apiv1 extends ResourceController
             ->setStatusCode(200)
             ->setBody($binary);
         // return $data['imagepath'];
+    }
+
+
+
+    /**
+     * @deprecated
+     */
+    public function validasiqr()
+    {
+        $data['respond'] = [
+            'massage_status'  => '-1',
+            'massage' => 'API Deprecated'
+        ];
+        return $this->respond($data['respond'], 410);
+
+        $dataGet = $this->request->getGet([
+            'nosurat',
+            'qrcode'
+        ]);
+
+        if (is_null($dataGet['nosurat']) || is_null($dataGet['qrcode'])) {
+            helper('datacall');
+
+            $data['respond'] = [
+                'valid' => resMas('e.param.n.exist')
+            ];
+            return $this->respond($data['respond'], 400, 'invalid_request');
+        }
+
+        helper('datacall');
+
+        $validasienkripsi = new enkripsi_library;
+        $data['dataJson'] = $validasienkripsi->validasiTTD($dataGet['qrcode'], $dataGet['nosurat']);
+
+        $data['respond'] = [
+            'valid' => $data['dataJson']['valid']
+        ];
+
+        return $this->respond($data['respond']);
     }
 }

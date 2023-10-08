@@ -259,7 +259,7 @@
 
         </div>
         <br>
-        <h5 class="Version">Web Version: Beta 0.6</h5>
+        <h5 class="Version">Web Version: Beta 0.65</h5>
     </div>
 
     <!-- main Conten -->
@@ -272,13 +272,3 @@
                 <div id="hamburger"></div>
             </label>
         </div>
-
-        <!-- Start Main data -->
-        <div class="kontenerutama">
-            <?= $this->renderSection('main') ?>
-        </div>
-        <!-- END Main data -->
-
-    </div>
-</div>
-<!-- End Sidebar -->

@@ -58,7 +58,7 @@ class SuratMasukModel extends Model
         return $this->update($id, $data);
     }
 
-    public function seeallbyJenis($idJenis = 'all')
+    public function seeallbyJenis2($idJenis = 'all')
     {
         if ($idJenis == 'all') {
             return $this
@@ -91,6 +91,36 @@ class SuratMasukModel extends Model
             ->findAll();
         // return $this->where('JenisSuratArchice_id', $idJenis)->findAll();
     }
+
+
+    public function seeallbyJenis($idJenis = 'all')
+    {
+        $build = $this->select('
+        SM_SuratArchice.id as idSurat,
+        SM_JenisSuratArchice.Name as JenisSurat,
+        SM_SuratArchice.DiskirpsiSurat as DiskripsiSurat,
+        SM_SuratArchice.NomerSurat as NoSurat,
+        SM_SuratArchice.TanggalSurat as TanggalSurat,
+        ')
+            ->join('SM_JenisSuratArchice', 'SM_JenisSuratArchice.id=SM_SuratArchice.JenisSuratArchice_id')
+            ->where('SM_SuratArchice.DeleteAt', null)
+            ->orderBy('SM_SuratArchice.TimeStamp', 'DESC');
+
+        if ($idJenis == 'all') {
+            return $build
+                ->findAll();
+        }
+
+        return $build
+            ->where('JenisSuratArchice_id', $idJenis)
+            ->findAll();
+        // return $this->where('JenisSuratArchice_id', $idJenis)->findAll();
+
+
+        // return $datareturn;
+    }
+
+
 
     function addSuratMasuk($data)
     {

@@ -15,9 +15,7 @@ class SuratMasukController extends BaseController
         PagePerm(['Dosen']);
         $getget = ($filter = $this->request->getGet('filter')) ? $filter : 'all';
 
-
-
-        $namacache = "Query_indexArchiveSurat_";
+        $namacache = "Query_indexArchiveSurat_$getget";
         if (cekCacheData($namacache)) {
 
             $model = model('JenisSuratMasukModel');
