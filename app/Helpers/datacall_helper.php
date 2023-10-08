@@ -1,6 +1,6 @@
 <?php
 
-function resMas($errorCategory)
+function resMas(string $errorCategory)
 {
     $errorCategory = strtolower($errorCategory);
     $errorMessages = [
@@ -20,6 +20,7 @@ function resMas($errorCategory)
 
         'ttd'      => 'Tanda Tangan',
         'surat'    => 'Surat',
+        'num'      => 'Nomer',
         'jenis'    => 'Jenis',
         'master'   => 'Master',
         'minta'    => 'Meminta',
@@ -29,11 +30,14 @@ function resMas($errorCategory)
         'server'   => 'di Server',
         'fl'       => 'File',
         'qr'       => 'QRCode',
+        'token'    => 'Token',
+        'enkrip'   => 'Enkripsi',
 
 
         'exist' => 'ada',
         'valid' => 'valid',
         'param' => 'parameter',
+        'perm'  => 'Permission',
 
         'y' => 'iya',
         'n' => 'tidak',
@@ -51,6 +55,7 @@ function resMas($errorCategory)
         '?'  => '?',
         '!'  => '!',
         '!2' => '!!',
+        ':' => ':',
     ];
 
     $errorParts = explode('.', $errorCategory);

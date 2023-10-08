@@ -19,17 +19,23 @@ class Throttle implements FilterInterface
      */
     public function before(RequestInterface $request, $arguments = null)
     {
-        $throttler = Services::throttler();
+        if (!$request->isValidIP($request->getIPAddress())) {
+            $error = [
+                'status'  => '400',
+                'message' => 'invalid_credentials',
+            ];
+            return Services::response()->setJSON($error);
+        }
 
-        $error = [
-            'status'  => '429',
-            'message' => 'Too Many Request',
-        ];
+        $throttler = Services::throttler();
 
         // Restrict an IP address to no more than 1 request
         // per second across the entire site.
-        // if ($throttler->check("test", 1, MINUTE) === false) {
-        if ($throttler->check(md5($request->getIPAddress()), 60, MINUTE) === false) {
+        if ($throttler->check(md5($request->getIPAddress()), 30, MINUTE) === false) {
+            $error = [
+                'status'  => '429',
+                'message' => 'Too Many Request (T)',
+            ];
             return Services::response()->setJSON($error);
         }
     }

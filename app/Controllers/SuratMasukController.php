@@ -14,15 +14,23 @@ class SuratMasukController extends BaseController
     {
         PagePerm(['Dosen']);
         $getget = ($filter = $this->request->getGet('filter')) ? $filter : 'all';
-        $model = model('JenisSuratMasukModel');
-        $data['jenisFilter'] = $model->seeall();
-        $modelsurat = model('SuratMasukModel');
-        $data['surat'] = $modelsurat->seeallbyJenis($getget);
+
+        $namacache = "Query_indexArchiveSurat_$getget";
+        if (cekCacheData($namacache)) {
+
+            $model = model('JenisSuratMasukModel');
+            $data['jenisFilter'] = $model->seeall();
+
+            $modelsurat = model('SuratMasukModel');
+            $data['surat'] = $modelsurat->seeallbyJenis($getget);
+
+            setCacheData($namacache, $data);
+        } else {
+            $data['jenisFilter'] = getCachaData($namacache)['jenisFilter'];
+            $data['surat'] = getCachaData($namacache)['surat'];
+        }
+
         $data['filter'] = $getget;
-
-
-        // d($data);
-        // d($getget);
 
         return view('suratMasuk/semua_surat', $data);
     }
@@ -31,8 +39,17 @@ class SuratMasukController extends BaseController
     public function addArchiveSurat()
     {
         PagePerm(['Dosen']);
-        $model = model(JenisSuratMasukModel::class);
-        $data['jenisFilter'] = $model->seeall();
+
+        $namacache = "Query_addArchiveSurat_";
+        if (cekCacheData($namacache)) {
+
+            $model = model('JenisSuratMasukModel');
+            $data['jenisFilter'] = $model->seeall();
+
+            setCacheData($namacache, $data);
+        } else {
+            $data['jenisFilter'] = getCachaData($namacache)['jenisFilter'];
+        }
 
         return view('suratMasuk/input_arhive', $data);
     }
@@ -104,6 +121,10 @@ class SuratMasukController extends BaseController
             return FlashMassage('/input-archive-surat', [resMas('f')]);
             // return FlashException('Tidak dapat menginputkan Surat kedatabase');
         }
+
+        $prefix = "Query_indexArchiveSurat_";
+        delCacheData($prefix);
+
         return FlashMassage('/input-archive-surat', [resMas('s.save.surat')]);
     }
 
@@ -127,9 +148,6 @@ class SuratMasukController extends BaseController
         ];
         $data['jenisFilter'] = $model->seeall();
 
-        // d($namaFile);
-        // d($postdata);
-        // d($data);
         return view('suratMasuk/edit_surat', $data);
     }
 
@@ -157,16 +175,15 @@ class SuratMasukController extends BaseController
             'TimeStampUpdate'      => getUnixTimeStamp(),
         ];
 
-        // d($postdata);
-        // d($data);
+        $prefix = "Query_indexArchiveSurat_";
+        delCacheData($prefix);
+
         if (!$model->updateSuratMasuk($postdata['id'], $data)) {
             return FlashMassage('/input-archive-surat', [resMas('f')]);
 
             // return FlashException('Gagal Meng update Surat');
         }
         return FlashMassage('/input-archive-surat', [resMas('f')]);
-
-        // return FlashSuccess('semua-archive-surat', 'berhasil Meng Update Surat');
     }
 
     public function deleteArchiveSuratProses()
@@ -201,9 +218,10 @@ class SuratMasukController extends BaseController
             // return 'gagal menghapus surat';
         }
 
-        return FlashMassage('/input-archive-surat', [resMas('f')]);
+        $prefix = "Query_indexArchiveSurat_";
+        delCacheData($prefix);
 
-        // return FlashSuccess('/input-archive-surat', 'Berhasil Menghapus Surat');
+        return FlashMassage('/input-archive-surat', [resMas('f')]);
     }
 
     // !Jenis Surat

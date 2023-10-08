@@ -25,9 +25,7 @@
                 ]
             ) ?>
 
-
-            <?php
-            if (in_group(['Mahasiswa'])) : ?>
+            <?php if (in_group(['Mahasiswa'])) : ?>
 
                 <hr class="line">
 
@@ -66,6 +64,7 @@
 
             <?php if (in_group(['Dosen', 'Kepala Keuangan'])) : ?>
                 <?php
+
                 $cache = \Config\Services::cache();
                 $namacache = "notif_" . userInfo()['id'];
 
@@ -224,7 +223,7 @@
                         'link'      => 'help',
                         'linktext'  => 'Help',
                         'imagelink' => 'asset/svg/circle-info-solid.svg',
-                        'shortcut'  => '',
+                        'shortcut'  => '?',
                         'target'    => '_blank'
                     ]
                 ) ?>
@@ -237,11 +236,9 @@
                     'SidebarLinkNotifCell',
                     [
                         'link'      => 'Staff/help',
-                        'linkout'   => '',
-
                         'linktext'  => 'Help',
                         'imagelink' => 'asset/svg/circle-info-solid.svg',
-                        'shortcut'  => '',
+                        'shortcut'  => '?',
                         'target'    => '_blank'
                     ]
                 ) ?>
@@ -262,7 +259,7 @@
 
         </div>
         <br>
-        <h5>Web Version: Beta 0.5</h5>
+        <h5 class="Version">Web Version: Beta 0.65</h5>
     </div>
 
     <!-- main Conten -->
@@ -275,13 +272,3 @@
                 <div id="hamburger"></div>
             </label>
         </div>
-
-        <!-- Start Main data -->
-        <div class="kontenerutama">
-            <?= $this->renderSection('main') ?>
-        </div>
-        <!-- END Main data -->
-
-    </div>
-</div>
-<!-- End Sidebar -->

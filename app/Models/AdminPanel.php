@@ -9,8 +9,8 @@ class AdminPanel extends Model
     // protected $DBGroup          = 'default';
     protected $table            = 'AUTH_Account_Admin_Panel';
     protected $primaryKey       = 'id';
-    // protected $useAutoIncrement = true;
-    // protected $returnType       = 'array';
+    protected $useAutoIncrement = true;
+    protected $returnType       = 'array';
     // protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [

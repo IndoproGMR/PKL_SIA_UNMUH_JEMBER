@@ -9,8 +9,8 @@ class TempPin extends Model
     // protected $DBGroup          = 'default';
     protected $table            = 'AUTH_temp_pin';
     protected $primaryKey       = 'id';
-    // protected $useAutoIncrement = true;
-    // protected $returnType       = 'array';
+    protected $useAutoIncrement = true;
+    protected $returnType       = 'array';
     // protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
@@ -19,7 +19,8 @@ class TempPin extends Model
         'pin2',
         'register_oleh',
         'TimeStamp',
-        'expired'
+        'expired',
+        'JenisPin'
     ];
 
     function buatPin($pin1)
@@ -33,15 +34,21 @@ class TempPin extends Model
             'id_akun_pembuat' => userInfo()['id'],
             'pin1'            => $pin1,
             'TimeStamp'       => $TimeStamp,
-            'expired'         => $exp
+            'expired'         => $exp,
+            'JenisPin'        => 'ADMIN'
         ];
-        return $this->insert($data, true);
+        return $this->insert($data);
     }
 
     function confirmPin($pin1)
     {
         $TimeStamp = getUnixTimeStamp();
-        $cek = $this->where('expired >', $TimeStamp)->where('pin1', $pin1)->where('pin2', '')->findAll(2);
+        $cek = $this
+            ->where('expired >', $TimeStamp)
+            ->where('pin1', $pin1)
+            ->where('pin2', '')
+            ->where('JenisPin', 'ADMIN')
+            ->findAll(2);
 
         if (count($cek) !== 1) {
             return false;
@@ -57,7 +64,12 @@ class TempPin extends Model
     function confirmPin2($pin1, $pin2)
     {
         $TimeStamp = getUnixTimeStamp();
-        $cek = $this->where('expired >', $TimeStamp)->where('pin1', $pin1)->where('pin2', $pin2)->findAll(2);
+        $cek = $this
+            ->where('expired >', $TimeStamp)
+            ->where('pin1', $pin1)
+            ->where('pin2', $pin2)
+            ->where('JenisPin', 'ADMIN')
+            ->findAll(2);
         if (count($cek) !== 1) {
             return false;
         }
@@ -66,6 +78,9 @@ class TempPin extends Model
 
     function refreshPin($pin1)
     {
-        return $this->where('pin1', $pin1)->findAll(2)[0];
+        return $this
+            ->where('pin1', $pin1)
+            ->where('JenisPin', 'ADMIN')
+            ->findAll(2)[0];
     }
 }

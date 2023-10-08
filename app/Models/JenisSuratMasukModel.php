@@ -10,7 +10,7 @@ class JenisSuratMasukModel extends Model
     protected $table            = 'SM_JenisSuratArchice';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
-    // protected $returnType       = 'array';
+    protected $returnType       = 'array';
     // protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [
@@ -19,6 +19,28 @@ class JenisSuratMasukModel extends Model
         'TimeStamp',
         'DeleteAt'
     ];
+
+
+    // protected $allowCallbacks = true;
+    // protected $beforeFind     = ['cekCache'];
+
+    // function cekCache()
+    // {
+    //     // $cache = \Config\Services::cache();
+    //     // $namacache = "Query_" . userInfo()['id'];
+
+    //     // if (cache($namacache) === null) {
+    //     //     $cachedata = '';
+    //     //     cache()->save($namacache, $cachedata, 10);
+    //     // }
+
+
+    //     d('cekCache');
+
+    //     // if () {
+
+    //     // }
+    // }
 
     public function seeall($showall = 0)
     {

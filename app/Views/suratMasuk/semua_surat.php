@@ -6,11 +6,6 @@
 
 <?= $this->section('main') ?>
 
-
-<!-- <?= view_cell('DisplayErrorCell', ['dataterima' => '["data dikirim","data nomer2"]']) ?> -->
-
-
-
 <div class="filter">
     <p class="first">Filter:
     <form action="">
@@ -25,10 +20,7 @@
     </form>
     </p>
     <p class="Time">Tanggal: <span class="waktu-sekarang"></span></p>
-
 </div>
-
-
 
 
 
