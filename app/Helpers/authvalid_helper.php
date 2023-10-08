@@ -1,16 +1,92 @@
 <?php
 
 use App\Models\AuthUserGroup;
+use CodeIgniter\Config\Services;
+
+$cache = \Config\Services::cache();
+
+/**
+ * @param string $prefix
+ * @param string $customId null = userID
+ * 
+ * @return bool null = true
+ */
+function cekCacheData(string $prefix, string $customId = null): bool
+{
+    if (is_null($customId)) {
+        $namacache = $prefix . userInfo()['id'];
+    } else {
+        $namacache = $prefix . $customId;
+    }
+
+    if (cache($namacache) === null) {
+        return true;
+    };
+    return false;
+}
+
+/**
+ * @param string $prefix
+ * @param mixed $data
+ * @param int $ttl
+ * @param string $customId null = userID
+ * 
+ * @return bool
+ */
+function setCacheData(string $prefix, $data, int $ttl = 30, string $customId = null)
+{
+    if (is_null($customId)) {
+        $namacache = $prefix . userInfo()['id'];
+    } else {
+        $namacache = $prefix . $customId;
+    }
+
+    return cache()->save($namacache, base64_encode(json_encode($data)), $ttl);
+}
+
+/**
+ * @param string $prefix
+ * @param string $customId null = userID
+ * 
+ * @return mixed
+ */
+function getCachaData(string $prefix, string $customId = null)
+{
+    if (is_null($customId)) {
+        $namacache = $prefix . userInfo()['id'];
+    } else {
+        $namacache = $prefix . $customId;
+    }
+
+    return json_decode(base64_decode(cache($namacache)), true);
+}
+
+/**
+ * @param string $prefix
+ * @param string $customId null = userID
+ * 
+ * @return bool
+ */
+function delCacheData(string $prefix, string $customId = null): bool
+{
+    if (is_null($customId)) {
+        $namacache = $prefix . userInfo()['id'];
+    } else {
+        $namacache = $prefix . $customId;
+    }
+
+    return cache()->delete($namacache);
+}
 
 /**
  * @param array $group 
  * @param int $secure
  * 0 = cek dari session user
  * 1 = cek dari database
+ * @return bool
  */
-function in_group($group, int $secure = 0)
+function in_group(array $group, int $secure = 0): bool
 {
-    $AuthUserGroup = model(AuthUserGroup::class);
     switch ($secure) {
         case '0':
             foreach ($group as $namagrup) {
@@ -21,7 +97,22 @@ function in_group($group, int $secure = 0)
             }
             break;
         case '1':
-            $lvluser = $AuthUserGroup->cekuserinfo(userInfo()['id'])['namaLVL'];
+            $request = Services::request();
+            if (userInfo()['IP'] !== $request->getIPAddress()) {
+                return false;
+            }
+
+            $prefix = 'AUTH_Group_';
+            if (cekCacheData($prefix)) {
+                $AuthUserGroup = model('AuthUserGroup');
+                $lvluser = $AuthUserGroup->cekuserinfo(userInfo()['id'])['namaLVL'];
+                setCacheData($prefix, $lvluser, 360);
+            } else {
+                $lvluser = getCachaData($prefix);
+            }
+
+
+
             foreach ($group as $namagrup) {
                 if ($namagrup == $lvluser) {
                     return true;
@@ -40,16 +131,10 @@ function in_group($group, int $secure = 0)
 /**
  * @return bool
  */
-function in_admin()
+function in_admin(): bool
 {
     $model = model('AdminPanel');
     return $model->cekAdmin(userInfo()['id']);
-    // panggil fungsi di admin panel model cek apakah userinfo()['id'] itu ada didalam db auth_admin-panel
-    // userInfo()['namaLVL'] == 'Administrator'
-    // if () {
-    // return true;
-    // };
-    // return false;
 }
 
 /**
@@ -61,7 +146,7 @@ function in_admin()
  * ['Gelar']
  * @return array
  */
-function userInfo()
+function userInfo(): array
 {
     $session = \Config\Services::session();
     if ($session->has('userdata')) {
@@ -73,7 +158,8 @@ function userInfo()
         'FotoUser' => 'img/level/personal.png',
         'NamaUser' => 'mohon login',
         'namaLVL'  => 'mohon login',
-        'Gelar'    => ''
+        'Gelar'    => '',
+        'IP'       => 'error'
     ];
 }
 
@@ -117,6 +203,8 @@ function userAdmin()
  * @param int $secure
  * 0 = cek dari session user
  * 1 = cek daro database
+ * 
+ * @return void
  */
 function PagePerm(array $group, string $redirect = 'error_perm', bool $login = false, int $secure = 0)
 {
@@ -136,27 +224,6 @@ function PagePerm(array $group, string $redirect = 'error_perm', bool $login = f
     if (!in_group($group, $secure)) {
         throw new \CodeIgniter\Router\Exceptions\RedirectException("$redirect");
     }
-    // $Perm = [
-    //     "Superuser",
-    //     "Administrator",
-    //     "Aplikan",
-    //     "Staf PMB",
-    //     "Ka PMB",
-    //     "Presenter",
-    //     "Calon Mahasiswa",
-    //     "Administrasi Akademik",
-    //     "Pengajaran Fakultas",
-    //     "Kepala Akademik",
-    //     "Administrasi Keuangan",
-    //     "Kepala Keuangan",
-    //     "Fakultas",
-    //     "Biro Umum",
-    //     "Dosen",
-    //     "Kaprodi / Kajur",
-    //     "Mahasiswa",
-    //     "Executive Information System",
-    //     "Rektorat"
-    // ];
 }
 
 /**
@@ -191,6 +258,9 @@ function FlashMassage(string $link = '', array $datainput = [], $type = 'unknown
             break;
     }
 }
+/**
+ * @param string $dataError $e->getMe
+ */
 
 function FlashException($dataError = "Error Tidak Di Ketahui", $mode = 'set')
 {

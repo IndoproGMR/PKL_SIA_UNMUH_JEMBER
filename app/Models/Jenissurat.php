@@ -10,7 +10,7 @@ class Jenissurat extends Model
     protected $table            = 'SK_JenisSurat';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
-    // protected $returnType       = 'array';
+    protected $returnType       = 'array';
     // protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [

@@ -1,0 +1,28 @@
+GET /api/v1/cekNomerSurat
+?NoSurat=YXNka1
+Host: [::1]:8080
+X-Token: 2643bd4d47addb80702098a31ffdb5045d3f33e5d85cd3cb6e3f6217afc669bc
+
+###
+
+GET /api/v1/validasi/qr/detail
+?nosurat=23fsdasd
+&qrcode=DiTandaTanganiOleh_MUHAMMAD%20NAELY%20AZHAD_TEh3Nkh0bHJLeitteUZoeE10QUN3aUtzZHViVkd6eHRNOS9heFZOMmk4eCt1M0RKZm1WNzhONVNXSTJyekRQSlZjV1VqMEljOGZlcml0S2ZlTzJiMFE9PQ==
+Host: [::1]:8080
+
+###
+
+GET /api/v1/validasi/qr/detail
+?nosurat=23fsdasd
+&qrcode=DiTandaTanganiOleh_MUHAMMAD%20NAELY%20AZHAD_TEh3Nkh0bHJLeitteUZoeE10QUN3aUtzZHViVkd6eHRNOS9heFZOMmk4eCt1M0RKZm1WNzhONVNXSTJyekRQSlZjV1VqMEljOGZlcml0S2ZlTzJiMFE9PQ==
+Host: 192.168.43.138
+
+
+###
+
+GET /api/v1/validasi/qr
+?nosurat=23fsdasd
+&qrcode=DiTandaTanganiOleh_MUHAMMAD%20NAELY%20AZHAD_TEh3Nkh0bHJLeitteUZoeE10QUN3aUtzZHViVkd6eHRNOS9heFZOMmk4eCt1M0RKZm1WNzhONVNXSTJyekRQSlZjV1VqMEljOGZlcml0S2ZlTzJiMFE9PQ==
+Host: [::1]:8080
+
+###

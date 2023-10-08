@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="<?= base_url('/css/style.css'); ?>">
-    <title>Authentication Failed</title>
+    <title>Server Dalam Maintenance</title>
 </head>
 
 <style>
@@ -29,15 +29,6 @@
         justify-content: center;
         width: 600px;
     }
-
-    .redirec {
-        margin-top: 50px;
-        text-align: center;
-    }
-
-    .redirec a {
-        color: black;
-    }
 </style>
 
 <body>
@@ -57,18 +48,12 @@
     </navbar>
     <!-- End Navbar -->
 
-
     <div class="kontenerUtama">
         <div class="textTitle">
-            <h1>Anda Tidak Memiliki Akses Ke Halaman ini !!</h1>
+            <h1>Server Dalam Maintenance</h1>
+            <h1>Mohon Tunggu Beberapa Saat Lagi</h1>
             <div class="scheduled-maintenance">
-                <img src="<?= base_url('/asset/svg/baseline-do-not-touch.svg'); ?>" alt="" srcset="">
-            </div>
-            <div class="redirec">
-                <p>Kembali ke
-                    <span><a href="<?= base_url('/'); ?>">Dashboard</a></span>
-                    <span id="countdown">10</span>S
-                </p>
+                <img src="<?= base_url('/asset/svg/scheduled-maintenance.svg'); ?>" alt="" srcset="">
             </div>
         </div>
     </div>
@@ -76,20 +61,3 @@
 </body>
 
 </html>
-
-
-<script>
-    var count = 10;
-
-    function countdown() {
-        if (count == 0) {
-            window.location.href = "<?= base_url('/'); ?>";
-        } else {
-            document.getElementById("countdown").textContent = count;
-            count--;
-            setTimeout(countdown, 1000);
-        }
-    }
-
-    setTimeout(countdown, 1);
-</script>
