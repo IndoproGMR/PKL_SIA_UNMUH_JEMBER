@@ -9,6 +9,7 @@ if (!empty($title)) {
 <html lang="en">
 
 <head>
+    <!-- <?php header("Cache-Control: public, max-age=60, s-maxage=60", true, 200); ?> -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="WebSite Surat Menyurat">
@@ -46,8 +47,20 @@ if (!empty($title)) {
     <!-- Dialog -->
     <?= view_cell('DialogMassageCell') ?>
 
-    <!-- main data ada didalam side bar -->
+    <!-- Start Sidebar -->
     <?= $this->include('templates/sidebar') ?>
+
+    <!-- Start Main data -->
+    <div class="kontenerutama">
+        <?= $this->renderSection('main') ?>
+    </div>
+
+    <!-- END Main data -->
+
+    </div>
+    </div>
+    <!-- End Sidebar -->
+
     <span style="display: none;" class="waktu-sekarang"></span>
 </body>
 

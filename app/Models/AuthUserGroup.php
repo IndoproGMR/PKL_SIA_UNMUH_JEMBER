@@ -10,7 +10,7 @@ class AuthUserGroup extends Model
     protected $table            = 'level';
     protected $primaryKey       = 'LevelID';
     // protected $useAutoIncrement = true;
-    // protected $returnType       = 'array';
+    protected $returnType       = 'array';
     // protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [

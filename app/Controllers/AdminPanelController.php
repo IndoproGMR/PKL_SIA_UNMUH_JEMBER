@@ -13,7 +13,7 @@ class AdminPanelController extends BaseController
         // $model = model('AdminPanel');
         // d($model->cekAdmin(userInfo()['id']));
 
-
+        // d(userInfo());
 
         // d(userAdmin());
         // d($this->request->is('post'));

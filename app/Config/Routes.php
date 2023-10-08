@@ -21,6 +21,53 @@ $routes->set404Override();
 // Set `$autoRoutesImproved` to true in `app/Config/Feature.php` and set the following to true.
 // $routes->setAutoRoute(false);
 
+
+// !Admin Panel ==============================================================>>
+// ?index ======================================================================
+$routes->get('/Admin-Panel', 'AdminPanelController::index');
+$routes->post('/Admin-Panel/login', 'AdminPanelController::loginAdminProses');
+
+
+$routes->get('/Admin-Panel/Masukan-akun', 'AdminPanelController::createNewuser');
+$routes->post('/Admin-Panel/Masukan-akun/step2', 'AdminPanelController::createNewuser');
+
+
+$routes->get('/Admin-Panel/join', 'AdminPanelController::newUser');
+$routes->post('/Admin-Panel/join', 'AdminPanelController::newUser');
+
+
+if (env('CI_ENVIRONMENT') == 'development') {
+    $routes->get('/Admin-Panel/CekServer', 'AdminPanelController::testServer');
+}
+// ! =========================================================================<<
+
+// ?
+
+// !AUTH =====================================================================>>
+// ?login ======================================================================
+$routes->get('/login', 'Login::index');
+$routes->get('/logout', 'Login::index');
+$routes->post('/login', 'Login::loginProses');
+
+// ?Api Auth ===================================================================
+// $routes->get('/api/v1/login', 'apiv1::validasiqr');
+
+// ! =========================================================================<<
+
+// ?
+
+// ! maintenance =============================================================>>
+if (env('MAINTENANCE_ENVIRONMENT', 'false') == 'true') {
+    $routes->set404Override('App\Controllers\Home::maintenance');
+
+    if (is_file(APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php')) {
+        require APPPATH . 'Config/' . ENVIRONMENT . '/Routes.php';
+    }
+
+    return;
+}
+// ! =========================================================================<<
+
 /*
  * --------------------------------------------------------------------
  * Route Definitions
@@ -48,21 +95,6 @@ $routes->get('/help', 'Home::MahasiswaHelp');
 $routes->get('/testinfo', 'Home::TestInfo');
 $routes->post('/testinfo/proses', 'Home::TestInfoProses');
 $routes->get('/testinfo/data', 'Home::TestInfoput');
-// ! =========================================================================<<
-
-// ?
-
-// !Admin Panel ==============================================================>>
-// ?index ======================================================================
-$routes->get('/Admin-Panel', 'AdminPanelController::index');
-$routes->post('/Admin-Panel/login', 'AdminPanelController::loginAdminProses');
-
-
-$routes->get('/Admin-Panel/Masukan-akun', 'AdminPanelController::createNewuser');
-$routes->post('/Admin-Panel/Masukan-akun/step2', 'AdminPanelController::createNewuser');
-
-$routes->get('/Admin-Panel/join', 'AdminPanelController::newUser');
-$routes->post('/Admin-Panel/join', 'AdminPanelController::newUser');
 // ! =========================================================================<<
 
 // ?
@@ -160,31 +192,20 @@ $routes->post('/staff/delete-proses/JenisSurat', 'SuratMasukController::deleteJe
 // *===========================================================================<
 
 // *quary =====================================================================>
-// ? test ======================================================================
-$routes->get('/quary', 'TestQuary::index');
-$routes->post('/quary', 'TestQuary::caridata');
+
 // *===========================================================================<
 
 // ?
 
-// !WIP ======================================================================>>
-$routes->get('/staff/TestMPDF', 'Pdfrender::TestMPDF');
-// $routes->get('/staff/TestInfo', 'SuratMasukController::TestInfo');
 // ! =========================================================================<<
-
-// ?
-
-
-
 
 // ?
 
 // !AUTH =====================================================================>>
 // ?login ======================================================================
 $routes->get('/login', 'Login::index');
-$routes->get('/logout', 'Login::logout');
-$routes->post('/login', 'Login::debuglogin');
-// $routes->post('/login', 'Login::loginProses');
+$routes->get('/logout', 'Login::index');
+$routes->post('/login', 'Login::loginProses');
 
 // ?Api Auth ===================================================================
 // $routes->get('/api/v1/login', 'apiv1::validasiqr');
@@ -196,14 +217,34 @@ $routes->post('/login', 'Login::debuglogin');
 // !API ======================================================================>>
 // *Surat Keluar ==============================================================>
 // ?tandatangan Qr validasi ====================================================
-$routes->get('/api/v1/validasi/qr', 'apiv1::validasiqr');
-$routes->get('/api/v1/validasi/qr/detail', 'apiv1::validasiqrdetail');
-$routes->get('/api/v1/image/(:segment)', 'apiv1::imagecache/$1');
-$routes->get('/api/v1/icon/(:segment)', 'apiv1::iconcache/$1');
+$routes->get('/api/v1/validasi/qr/detail', 'Apiv1::ValidasiQRDetail');
+
+$routes->get('/api/v1/validasi/qr', 'Apiv1::validasiqr');
+
+// ?Dengan Perlu AUTH
+$routes->get('/api/v1/cekNomerSurat', 'Apiv1::cekNoSurat');
+
+// ?etc
 // *===========================================================================<
 // ! =========================================================================<<
 
 // ?
+
+// !deprecated ===============================================================>>
+$routes->get('/api/v1/validasi/qr', 'Apiv1::validasiqr');
+$routes->get('/api/v1/image/(:segment)', 'Apiv1::imagecache/$1');
+
+// $routes->get('/quary', 'TestQuary::index');
+// $routes->post('/quary', 'TestQuary::caridata');
+
+// ?WIP ======================================================================>>
+$routes->get('/staff/TestMPDF', 'Pdfrender::TestMPDF');
+// $routes->get('/staff/TestInfo', 'SuratMasukController::TestInfo');
+
+
+// *===========================================================================<
+// ! =========================================================================<<
+
 
 /*
  * --------------------------------------------------------------------

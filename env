@@ -14,17 +14,22 @@
 # ENVIRONMENT
 #--------------------------------------------------------------------
 
+CI_ENVIRONMENT = development
 # CI_ENVIRONMENT = production
 
-# CI_ENVIRONMENT = development
+AUTH_ENVIRONMENT = development
+# AUTH_ENVIRONMENT = production
+
+# MAINTENANCE_ENVIRONMENT = true
+MAINTENANCE_ENVIRONMENT = false
 
 #--------------------------------------------------------------------
 # SUPERKEY
 #--------------------------------------------------------------------
 
-# superKey = '16lengkey'
-# twoWAYKEY = '24lengkey'
-# ALGO = 'aes256'
+enkripsi.SuperKey = 'key1'
+enkripsi.IV = 'key2'
+enkripsi.ALGO = 'aes-256-cbc'
 
 #--------------------------------------------------------------------
 # Logo pada qr
@@ -36,13 +41,11 @@ logoqr = 'asset/logo/unmuh.png'
 # URL pada API apakah ada update ?
 #--------------------------------------------------------------------
 
-# urlapi = 'api/v1'
+urlapi = 'api/v1'
 
 #--------------------------------------------------------------------
 # APP
 #--------------------------------------------------------------------
-
-AppVersion = 'Beta 0.5'
 
 # app.baseURL = ''
 # If you have trouble with `.`, you could also use `_`.
@@ -54,21 +57,21 @@ AppVersion = 'Beta 0.5'
 # DATABASE
 #--------------------------------------------------------------------
 
-# database.default.hostname = localhost
-# database.default.database = ci4
-# database.default.username = root
-# database.default.password = root
-# database.default.DBDriver = MySQLi
-# database.default.DBPrefix =
-# database.default.port = 3306
+database.default.hostname = 127.0.0.1
+database.default.database = test_SuratMenyurat
+database.default.username = test
+database.default.password = 12345678
+database.default.DBDriver = MySQLi
+database.default.DBPrefix =
+database.default.port = 3306
 
-# database.siautama.hostname = localhost
-# database.siautama.database = ci4
-# database.siautama.username = root
-# database.siautama.password = root
-# database.siautama.DBDriver = MySQLi
-# database.siautama.DBPrefix =
-# database.siautama.port = 3306
+database.siautama.hostname = 127.0.0.1
+database.siautama.database = siamujdb
+database.siautama.username = test
+database.siautama.password = 12345678
+database.siautama.DBDriver = MySQLi
+database.siautama.DBPrefix =
+database.siautama.port = 3306
 
 # database.tests.hostname = localhost
 # database.tests.database = ci4_test
@@ -118,9 +121,7 @@ cookie.samesite = 'Lax'
 cookie.raw = false
 
 #--------------------------------------------------------------------
-
 # ENCRYPTION
-
 #--------------------------------------------------------------------
 
 # encryption.key =
@@ -150,6 +151,7 @@ security.cookieName = 'Ax1ooph9'
 security.expires = 7200
 security.regenerate = true
 security.redirect = true
+# security.redirect = false
 security.samesite = 'Lax'
 
 #--------------------------------------------------------------------
@@ -158,9 +160,12 @@ security.samesite = 'Lax'
 
 # session.driver = 'CodeIgniter\Session\Handlers\FileHandler'
 # session.driver = 'CodeIgniter\Session\Handlers\DatabaseHandler'
+session.driver = 'CodeIgniter\Session\Handlers\RedisHandler'
 session.cookieName = 'aib3ieM5ooxanet3AeBei6ChChaikeb2'
 session.expiration = 7200
-# session.savePath = null
+# session.savePath = WRITEPATH . 'session'
+# session.savePath = 'CI_sessions'
+session.savePath = 'tcp://localhost:6379'
 session.matchIP = true
 session.timeToUpdate = 300
 session.regenerateDestroy = true

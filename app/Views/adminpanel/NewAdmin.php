@@ -30,7 +30,7 @@
         <input id="pin2" name="pin2" type="text" value="">
         <br>
         <label for="password">Masukan Password</label>
-        <input type="text" id="password" name="password">
+        <input type="password" id="password" name="password">
         <br>
         <input type="submit" value="Login">
 
