@@ -20,6 +20,7 @@
     <p>mahasiswa yang buat: <span><?= esc($namaMHS); ?></span></p>
     <p>kapan Surat Dibuat: <span><?= esc(timeconverter($TimeStamp)) ?></span></p>
     <p>Jenis Surat: <span><?= esc($name); ?></span></p>
+    <p>Surat Identifier: <span><?= esc($SuratIdentifier) ?></span></p>
 </div>
 
 

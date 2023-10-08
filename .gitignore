@@ -128,7 +128,6 @@ nb-configuration.xml
 # Obsidian
 .obsidian
 
-
 # public
 public/pdf/*
 public/uploads/SuratKeluar/*
@@ -137,8 +136,6 @@ public/module/tinymce/*
 
 # Libraries
 app/Libraries/enkripsi_library.php
-app/Libraries/enkripsi_libraryV2.php
-app/Libraries/enkripsi_library_test.php
 
 writable/ArhiveSurat/*
 writable/pdf/*
