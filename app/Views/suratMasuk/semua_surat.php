@@ -4,11 +4,50 @@
 <link rel="stylesheet" href="<?= base_url('/'); ?>css/tablestyle.css">
 <?= $this->endSection() ?>
 
+
+<?php
+$waktu = [
+    [
+        'id' => 1,
+        'name' => '1 Bulan Lalu'
+    ],
+    [
+        'id' => 2,
+        'name' => '2 Bulan Lalu'
+    ],
+    [
+        'id' => 3,
+        'name' => '3 Bulan Lalu'
+    ],
+    [
+        'id' => 6,
+        'name' => '6 Bulan Lalu'
+    ],
+    [
+        'id' => 9,
+        'name' => '9 Bulan Lalu'
+    ],
+    [
+        'id' => 12,
+        'name' => '1 Tahun Lalu'
+    ],
+    [
+        'id' => 18,
+        'name' => '1 Tahun 6 Bulan Lalu'
+    ],
+    [
+        'id' => 24,
+        'name' => '2 Tahun Lalu'
+    ]
+];
+?>
+
+
 <?= $this->section('main') ?>
 
 <div class="filter">
-    <p class="first">Filter:
-    <form action="">
+    <p class="first">Filter:</p>
+    <form>
         <?= view_cell('SelectOptionCell', [
             'options'      => $jenisFilter,
             'nameselect'   => 'filter',
@@ -16,9 +55,14 @@
             'firstoptions' => ['value' => 'all', 'name' => 'Semua Surat'],
             'selected'     => $filter,
         ]) ?>
-        <input type="submit" value="Cari surat">
+        <br>
+        <input type="date" name="TanggalSurat" id="TanggalSurat" value="<?= esc($TanggalSurat) ?>">
+        <input type="button" value="Clear" id="clear">
+        <!-- <button>Clear Query</button> -->
+        <br>
+        <input type="text" name="TextF" id="TextF" placeholder="Diskripsi / Nomer Surat" value="<?= esc($dataGetTextF) ?>">
+        <input type="submit" value="Cari">
     </form>
-    </p>
     <p class="Time">Tanggal: <span class="waktu-sekarang"></span></p>
 </div>
 
@@ -92,4 +136,23 @@
 </div>
 
 
+<?= $this->endSection() ?>
+
+<?= $this->section('jsF') ?>
+<script>
+    const clearButton = document.getElementById('clear');
+
+    const TanggalSurat = document.getElementById('TanggalSurat');
+    const TextF = document.getElementById('TextF');
+    const filter = document.getElementById('filter');
+
+    clearButton.addEventListener('click', () => {
+        // console.log('klick');
+
+        TanggalSurat.value = '';
+        TextF.value = '';
+        filter.value = 'all';
+
+    });
+</script>
 <?= $this->endSection() ?>

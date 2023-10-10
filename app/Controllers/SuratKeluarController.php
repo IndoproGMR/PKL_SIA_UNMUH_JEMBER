@@ -13,7 +13,7 @@ class SuratKeluarController extends BaseController
     {
         helper('authvalid');
 
-        $prefix = "Query_Filter_Jenis_Surat";
+        $prefix = "Query_Filter_Jenis_Surat_Keluar";
         if (cekCacheData($prefix, '')) {
             $model = model('JenisSuratKeluarModel');
             $Filter_Jenis_Surat = $this->Filter_Jenis_Surat = $model->seeall();
@@ -601,15 +601,6 @@ class SuratKeluarController extends BaseController
 
         $model = model('TandaTangan');
         $data['datasurat'] = $model->cekStatusSuratTTD(userInfo(), 1, $dataGet, $dataGetTextF, $filter_waktu);
-
-
-        // $namacache = "Query_indexRiwayatTTD_";
-        // if (cekCacheData($namacache)) {
-        // 
-        // setCacheData($namacache, $data['datasurat']);
-        // } else {
-        // $data['datasurat'] = getCachaData($namacache);
-        // }
 
         return view('suratkeluar/penandatangan/Semua_Riwayat_TTD', $data);
     }
