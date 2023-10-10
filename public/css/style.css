@@ -311,7 +311,8 @@ navbar {
 }
 
 .filter form input[type="text"],
-.filter form input[type="number"] {
+.filter form input[type="number"],
+.filter form input[type="date"] {
   /* color: var(--txt-white); */
   display: inline-block;
   text-decoration: none;
@@ -324,13 +325,15 @@ navbar {
   font-weight: bold;
 }
 
+.filter form input[type="text"]:hover,
 .filter form input[type="number"]:hover,
-.filter form input[type="text"]:hover {
+.filter form input[type="date"] {
   background-color: var(--clr-select-hover);
   border-radius: 3px;
   transition: all ease-in-out 0.3s;
 }
 
+.filter form input[type="button"],
 .filter form input[type="submit"] {
   color: var(--txt-white);
   display: inline-block;
@@ -342,8 +345,11 @@ navbar {
   border: 1px solid var(--clr-buttom);
   background-color: var(--clr-buttom);
   font-weight: bold;
+
+  width: 100px;
 }
 
+.filter form input[type="button"]:hover,
 .filter form input[type="submit"]:hover {
   color: var(--txt-black);
   background-color: var(--clr-buttom-hover);
