@@ -58,7 +58,7 @@
         <p>Kamera sedang mati</p>
     </div>
 </div>
-<h1 id="valid">-</h1>
+<h1 id="valid"> - </h1>
 
 <input type="text" name="nosurat" id="nosurat" placeholder="NoSurat">
 <br>
@@ -80,7 +80,7 @@
 
 <br>
 <br>
-<input type="submit" value="detail" onclick=detail(url_apidetail)>
+<input type="submit" value="detail" id="button_detail">
 <br>
 
 <?php if (!in_group(['Mahasiswa'])) : ?>
@@ -113,12 +113,16 @@
 
 <?= $this->section('jsF') ?>
 <!-- Js Script untuk Footer -->
-<script type="text/javascript">
+<!-- <script type="text/javascript"> -->
+<script>
+    // import API_library from '<?= base_url('/js/API_library.js'); ?>';
+
+
+
     const url_api = "<?= base_url(getenv('urlapi') . '/validasi/qr')  ?>";
     const url_apidetail = "<?= base_url(getenv('urlapi') . "/validasi/qr/detail") ?>";
 
-    <?php if (!$nocam) : ?>
-        Instascan.Camera.getCameras()
+    <?php if (!$nocam) : ?> Instascan.Camera.getCameras()
             .then(function(cameras) {
                 if (cameras.length > 0) {
                     var selectopt = document.getElementById('kamera')
@@ -195,13 +199,37 @@
         window.location.href = "<?= base_url('/qr-validasi'); ?>";
     }
 
-    function detail(url) {
+    const tomboldetail = document.getElementById('button_detail');
+
+    tomboldetail.addEventListener('click', () => {
+        console.log('klick');
+        detail();
+    });
+
+    function detail() {
         var nosurat = document.getElementById("nosurat").value
         var qrcode = encodeURIComponent(document.getElementById("qrcode").value);
 
-        url = url + "?nosurat=" + nosurat + "&qrcode=" + qrcode
+        // const apilib = new API_library("<?= base_url(getenv('urlapi') . "/validasi/qr/detail") ?>");
+        var urlq = url_apidetail + "?nosurat=" + nosurat + "&qrcode=" + qrcode;
 
-        fetch(url)
+        // apilib.setQuery(urlQ);
+        // console.log(apilib.getURL());
+
+        // var dataa;
+        // await apilib.getRespond()
+        //     .then(
+        //         function(result) {
+        //             return result;
+        //         })
+        //     .then(function(result) {
+        //         dataa = result;
+        //     });
+        // console.log('respond succes: ', dataa);
+
+
+        // return;
+        fetch(urlq)
             .then((response) => {
                 return response.json();
             })

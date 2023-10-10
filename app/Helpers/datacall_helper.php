@@ -31,6 +31,7 @@ function resMas(string $errorCategory)
         'fl'       => 'File',
         'qr'       => 'QRCode',
         'token'    => 'Token',
+        'enkrip'   => 'Enkripsi',
 
 
         'exist' => 'ada',

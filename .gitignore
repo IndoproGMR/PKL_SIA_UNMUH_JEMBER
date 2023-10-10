@@ -128,7 +128,6 @@ nb-configuration.xml
 # Obsidian
 .obsidian
 
-
 # public
 public/pdf/*
 public/uploads/SuratKeluar/*

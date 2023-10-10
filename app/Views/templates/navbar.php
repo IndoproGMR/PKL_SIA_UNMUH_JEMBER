@@ -3,7 +3,7 @@
 <navbar class="">
 
     <div class="logo">
-        <img src="<?= base_url('/asset/logo/small/unmuh-tiny.png'); ?>" alt="logo" class="">
+        <img crossorigin="anonymous" src="<?= base_url('/asset/logo/small/unmuh-tiny.png'); ?>" alt="logo" class="">
     </div>
 
     <div class="navbody">

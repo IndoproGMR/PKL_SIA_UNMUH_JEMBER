@@ -52,7 +52,8 @@ class Login extends BaseController
 
         // ! Algoritma password
         $encrip = new enkripsi_library();
-        $hashpass = $encrip->enkripsiPass($postdata['dataPassword']);
+        // $hashpass = $encrip->enkripsiPass($postdata['dataPassword']);
+        $hashpass = $encrip->get_HashPass($postdata['dataPassword']);
         // !====================
 
 

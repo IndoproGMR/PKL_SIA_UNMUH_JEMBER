@@ -47,8 +47,20 @@ if (!empty($title)) {
     <!-- Dialog -->
     <?= view_cell('DialogMassageCell') ?>
 
-    <!-- main data ada didalam side bar -->
+    <!-- Start Sidebar -->
     <?= $this->include('templates/sidebar') ?>
+
+    <!-- Start Main data -->
+    <div class="kontenerutama">
+        <?= $this->renderSection('main') ?>
+    </div>
+
+    <!-- END Main data -->
+
+    </div>
+    </div>
+    <!-- End Sidebar -->
+
     <span style="display: none;" class="waktu-sekarang"></span>
 </body>
 
