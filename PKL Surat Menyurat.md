@@ -85,7 +85,8 @@ ___
 | int      | varchar  | varchar  | timestamp  | varchar     | varchar    | varchar        | varchar  |
 
 ___
-KRS
+KRS:
+
 | idKRS | idMHS | idMK | nilai T1 | nilai T2 | nilai T3 | UAS | UTS |
 | ----- | ----- | ---- | -------- | -------- | -------- | --- | --- |
 | 1     | 201   | A01  | 90       | 30       | 80       | 50  | 10  |
@@ -93,27 +94,31 @@ KRS
 | 3     | 202   | A01  | 90       | 90       | 100      | 10  | 50  |
 | 4     | 201   | A02  | 10       | 40       | 60       | 80  | 90  |  
 
-MK
+MK:
+
 | idMK | NamaMK |
 | ---- | ------ |
 | A01  | DB1    |
 | A02  | BD2    |
 | A03  | AI     |
 
-MHS
+MHS:
+
 | idMHS | namaMHS |
 | ----- | ------- |
 | 201   | bob1    |
 | 202   | bob2    |
 
-DB_PenandaTangan
+DB_PenandaTangan:
+
 | idPT | idPengajaran/idDosen/IdDekan | UUID |
 | ---- | ---------------------------- | ---- |
 | P01  | D03                          | fw2  |
 | P02  | D04                          | frt3 |
 | P03  | D05                          | ger3 |
 
-DB_Suratmasuk
+DB_Suratmasuk:
+
 | idSuratMasuk | idMHS | idPT | jenisSurat | NOSurat | Done  | Hash   | timestamp |
 | ------------ | ----- | ---- | ---------- | ------- | ----- | ------ | --------- |
 | 1            | 201   | P01  | test1      | N0543   | true  | wefwad | unixtime  |
@@ -268,7 +273,7 @@ server akan melihat DB_TTDSurat dimana NoSurat apakah flag done sudah tidak ada 
 
 server akan membuat TTD qrcode dengan nama "NoSurat_IdPenandaTangan" dengan data twowakeyhash
 
-server akan membuat qrcode dengan nama "HashFile_NoSurat" dengan data sha256 file sebelum nya
+server akan membuat qrcode dengan nama "HashFile_NoSurat" dengan data sha256 file sebelum nyae
 
 server akan menyimpan data2 di dalam DB_SuratMasuk
 server akan menyimpan data id baru
@@ -310,6 +315,7 @@ server akan menyimpan waktu TTD
 
 
 **pengajar**
+
 | id  | pengajar |
 | --- | -------- |
 | 1   | budi     |
@@ -319,6 +325,7 @@ server akan menyimpan waktu TTD
 
 
 **penandatangan**
+
 | id  | uuid     | pin_secure | diskripsi | id_pengajar |
 | --- | -------- | ---------- | --------- | ----------- |
 | 1   | {uuidv4} | {hash}     | baak      | 1           |
@@ -327,6 +334,7 @@ server akan menyimpan waktu TTD
 
 
 **jenis-surat**
+
 | id  | nama_jenisSurat | diskripsi |
 | --- | --------------- | --------- |
 | 1   | MOU             | MOU       |
@@ -336,6 +344,7 @@ server akan menyimpan waktu TTD
 
 
 **isi surat**
+
 | id  | isi-surat                    | diskripsi |
 | --- | ---------------------------- | --------- |
 | 1   | ini adalah surat mao         | surat mou |
@@ -343,6 +352,7 @@ server akan menyimpan waktu TTD
 
 
 **ttd_surat_penanda**
+
 | id_jenisSurat | id_PenandaTangan |
 | ------------- | ---------------- |
 | 1             | 1                |
@@ -354,6 +364,7 @@ server akan menyimpan waktu TTD
 
 
 **mahasiswa**
+
 | idMHS | namaMHS |
 | ----- | ------- |
 | 201   | bob1    |
@@ -361,6 +372,7 @@ server akan menyimpan waktu TTD
 
 
 **ttd-Surat-Masuk**
+
 | id  | noSurat | timeStamp | id_mahasiswa | id_jenis-Surat |
 | --- | ------- | --------- | ------------ | -------------- |
 | 1   | 10021   | {waktu}   | 201          | 1              |
@@ -368,6 +380,7 @@ server akan menyimpan waktu TTD
 
 
 **ttd**
+
 | id  | id_ttd-surat-masuk | hash   | status | timestamp | id_ttd |
 | --- | ------------------ | ------ | ------ | --------- | ------ |
 | 1   | 1                  | null   | belum  | null      | 3      |
@@ -465,7 +478,115 @@ bikin tombol preview untuk penandatangan
 bikin tombol preview untuk mahasiswa
 cari cara kalo mahasiswa itu membuat surat yang benar
 
+buat filter berdasarkan waktu default 1 bulan ini pada riwayat pembuatan surat
 
-buat tanggal formater hijriah 
+time()= 1600000
+1 bulan = 70
+filter selama 1 bulan ini = time()-70
+
 
 optimasi database
+
+
+random name yang di simpan di database berfungsi untuk meng identifikasi nama file di folder server untuk dipanggil saat render pdf foto qrcode 
+
+```php
+'ttdName' => ['type' => 'varchar', 'constraint' => 12], // random name untuk save qrcode di server
+```
+
+
+NIP NIK diliat dari data dari database
+
+actions ada tombol
+liat untuk melihat surat pdf
+edit surat didalam nya memiliki tombol delete
+
+delete surat Archive
+pindahkan surat pdf dari Z_Archive kedalam Writable/temp/ArchiveSurat
+denga nama baru
+{identifier}\_delete
+
+dapat file yang ada didalam Writable/temp/ dibuka memakai admin panel dan dapat di hapus juga
+
+# Ganti View dan URL
+## surat keluar
+### Mahasiswa
+- [x] indexStatusSurat
+- [x] indexMintaSurat
+- [x] addMintaSuratProses
+- [x] indexRiwayatSurat
+### Pengajaran
+- [x] indexJenisSurat
+- [x] addJenisSurat
+- [x] addJenisSuratProses
+- [x] updateJenisSuratToggleProses
+- [x] detailJenisSurat
+- [x] updateJenisSuratProses
+- [x] indexTanpaNoSurat
+- [x] updateTanpaNoSurat
+- [x] updateTanpaNoSuratProses
+- [x] deleteTanpaNoSuratProses
+### PenandaTangan
+- [x] indexStatusTTD
+- [x] TTDProses
+- [x] indexRiwayatTTD
+### QRCode
+- [ ] kameraQR
+
+
+
+  
+
+dosen
+
+NIDN. {{Nomer}}
+
+  
+
+NIDN Harus ada
+
+  
+  
+
+Quary
+
+pilihan prodi nya dimana terus tahun berapada
+
+  
+
+Jumlah Mahasiswa dari tahunID,prodiID
+
+  
+  
+
+aktif diliat dari krs tahun id di grup mahassiswa -> count
+
+  
+
+pendaftaran dari pmd.nama,prodiID,tanggalBuat
+
+lulus seleksi
+
+  
+
+jumlah mahasiswa baru
+
+transfer
+
+requler
+
+  
+
+jumlah mahasiswa Aktif
+
+transfer
+
+requler
+
+  
+
+bisa filter tanggal , oleh siapa
+
+  
+
+**Foto hati2 NULL**
