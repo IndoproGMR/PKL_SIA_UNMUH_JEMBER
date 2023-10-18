@@ -8,7 +8,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-	<link rel="stylesheet" href="<?= base_url('/'); ?>css/style-login.css">
+	<link rel="stylesheet" href="<?= base_url('/css/style-login.css'); ?>">
 
 	<link rel="preconnect" href="https://fonts.googleapis.com">
 	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -46,7 +46,7 @@
 
 			</div>
 			<div class="image">
-				<img src="<?= base_url('/'); ?>asset/logo/unmuh.png" alt="">
+				<img src="<?= base_url('/asset/logo/unmuh.png'); ?>" alt="" loading="lazy">
 			</div>
 		</div>
 	</div>
