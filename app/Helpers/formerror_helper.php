@@ -5,6 +5,11 @@ function timedecor()
     return '<p class="Time">Tanggal: <span class="waktu-sekarang"></span></p>';
 }
 
+function moreInfo($text)
+{
+    return '<span class="morInpo">' . esc($text) . '</span>';
+}
+
 /**
  * @param $target = _self,_blank
  */

@@ -36,9 +36,9 @@
                     <td><?= esc(timeconverter($key['TimeStamp'])) ?></td>
 
                     <?php if (esc($key['NoSurat']) == 'Belum_Memiliki_No_Surat') : ?>
-                        <td style="color: red;"><?= esc($key['NoSurat']) ?></td>
+                        <td style="color: red;"><?= esc($key['NoSurat']) ?> <span class="morInpo"><?= esc($key['SuratIdentifier']) ?></span></td>
                     <?php else : ?>
-                        <td><?= esc($key['NoSurat']) ?></td>
+                        <td><?= esc($key['NoSurat']) ?> <span class="morInpo"><?= esc($key['SuratIdentifier']) ?></span></td>
                     <?php endif ?>
 
                     <!-- Buat info bila surat telah tolak -->

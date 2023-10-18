@@ -65,7 +65,11 @@ class TandaTangan extends Model
     {
         // return $this->where('status',$id)->find($id);
         return $this
-            ->select('SK_ttd.Status,SK_ttd_SuratMasuk.mshw_id,SK_ttd_SuratMasuk.NoSurat')
+            ->select('
+                SK_ttd.Status,
+                SK_ttd_SuratMasuk.mshw_id,
+                SK_ttd_SuratMasuk.NoSurat
+            ')
             ->join('SK_ttd_SuratMasuk', 'SK_ttd_SuratMasuk.SuratIdentifier=SK_ttd.SuratIdentifier')
             ->where('SK_ttd.id', $id)
             ->find()[0];
@@ -91,8 +95,8 @@ class TandaTangan extends Model
     {
         $datautama = $this
             ->select('COUNT(*) AS totalTTD,
-        SUM(CASE WHEN Status = 1 THEN 1 ELSE 0 END) AS sudah,
-        SUM(CASE WHEN Status = 0 THEN 1 ELSE 0 END) AS belum')
+                SUM(CASE WHEN Status = 1 THEN 1 ELSE 0 END) AS sudah,
+                SUM(CASE WHEN Status = 0 THEN 1 ELSE 0 END) AS belum')
             ->where('SuratIdentifier', $SuratIdentifier)
             ->find();
 
@@ -104,79 +108,65 @@ class TandaTangan extends Model
         $data['sudah'] = 0;
         $data['belum'] = 99;
         return $data;
-
-        // !old query
-        // $data['totalTTD'] = $this
-        //     ->where('NoSurat', $nosurat)
-        //     ->countAllResults();
-
-        // $data['belum'] = $this
-        //     ->where('NoSurat', $nosurat)
-        //     ->where('status', '0')
-        //     ->countAllResults();
-
-        // $data['sudah'] = $this
-        //     ->where('NoSurat', $nosurat)
-        //     ->where('status', '1')
-        //     ->countAllResults();
-
-        // return $data;
-
-        /**
-         *SELECT
-         *COUNT(*) AS total,
-         *SUM(CASE WHEN Status = 1 THEN 1 ELSE 0 END) AS dataTrue,
-         *SUM(CASE WHEN Status = 0 THEN 1 ELSE 0 END) AS dataFalse
-         *FROM
-         *    SK_ttd
-         *GROUP BY
-         *    NoSurat;
-         *
-         */
     }
 
     // untuk melihat semua ttd yang sudah dan belum di TTD kan untuk penandatangan
-    function cekStatusSuratTTD($pendattg_id, $status = 0)
+    function cekStatusSuratTTD($pendattg_id, $status = 0, $jenisSurat = 'all', $search = null, $time = 1)
     {
         $data = $this
             ->select('
-        `SK_ttd`.`id` AS idttd,
-        `SK_ttd`.`Status`,
-        `SK_ttd_SuratMasuk`.`NoSurat`,
-        `SK_ttd`.`SuratIdentifier`,
-        `SK_ttd`.`pendattg_id`,
-        `SK_JenisSurat`.`name` as namaJenisSurat,
-        `SK_ttd_SuratMasuk`.`TimeStamp`,
-        `SK_ttd`.`jenisttd` ,
-        `SK_ttd`.`TimeStamp` as `TimeStamp_ttd`')
+                `SK_ttd`.`id` AS idttd,
+                `SK_ttd`.`Status`,
+                `SK_ttd_SuratMasuk`.`NoSurat`,
+                `SK_ttd`.`SuratIdentifier`,
+                `SK_ttd`.`pendattg_id`,
+                `SK_JenisSurat`.`name` as namaJenisSurat,
+                `SK_ttd_SuratMasuk`.`TimeStamp`,
+                `SK_ttd`.`jenisttd` ,
+                `SK_ttd`.`TimeStamp` as `TimeStamp_ttd`')
+
             ->join('SK_ttd_SuratMasuk', '`SK_ttd_SuratMasuk`.`SuratIdentifier` = `SK_ttd`.`SuratIdentifier`')
             ->join('SK_JenisSurat', '`SK_JenisSurat`.`id`=`SK_ttd_SuratMasuk`.`JenisSurat_id`')
+
             ->where('`SK_ttd`.`Status`', $status)
-            ->where('`SK_ttd_SuratMasuk`.`NoSurat` != ', 'Belum_Memiliki_No_Surat')
             ->where('SK_ttd_SuratMasuk.DeleteAt', null)
+            ->where('`SK_ttd_SuratMasuk`.`NoSurat` != ', 'Belum_Memiliki_No_Surat')
+
             ->groupStart()
             ->where('`SK_ttd`.`pendattg_id`', $pendattg_id['id'])
             ->orWhere('`SK_ttd`.`pendattg_id`', $pendattg_id['namaLVL'])
             ->groupEnd()
-            ->find();
+            ->orderBy('SK_ttd_SuratMasuk.TimeStamp', 'DESC');
 
-        // d($data);
+        if (!is_null($search)) {
+            $data->groupStart()
+                ->like('`SK_ttd_SuratMasuk`.`NoSurat`', $search)
+                ->orLike('`SK_ttd_SuratMasuk`.`mshw_id`', $search)
+                ->groupEnd();
+        }
+
+        if ($jenisSurat !== 'all') {
+            $data->groupStart()
+                ->where('SK_ttd_SuratMasuk.JenisSurat_id', $jenisSurat)
+                ->groupEnd();
+        }
+
+        if ($time !== 'all' && is_null($search)) {
+            $timeNow = getUnixTimeStamp();
+
+            $timeAtas  = $timeNow - (2592000 * ($time));
+            $timeBawah = $timeNow - (2592000 * ($time - 1));
+
+            $data->groupStart()
+                ->where('SK_ttd_SuratMasuk.TimeStamp >=', $timeAtas)
+                ->where('SK_ttd_SuratMasuk.TimeStamp <=', $timeBawah)
+                ->groupEnd();
+        }
+
+        $data = $data
+            ->findAll(100);
+
         return $data;
-
-        // $db = \Config\Database::connect();
-
-        // $sql = "SELECT `SK_ttd`.`id` AS idttd,`SK_ttd`.`Status`,`SK_ttd`.`NoSurat`,`SK_ttd`.`pendattg_id`,`SK_JenisSurat`.`name` as namaJenisSurat,`SK_ttd_SuratMasuk`.`TimeStamp`,`SK_ttd`.`jenisttd` ,`SK_ttd`.`TimeStamp` as `TimeStamp_ttd`
-        // FROM `SK_ttd` 
-        // LEFT JOIN `SK_ttd_SuratMasuk` ON `SK_ttd_SuratMasuk`.`NoSurat` = `SK_ttd`.`NoSurat` 
-        // LEFT JOIN `SK_JenisSurat` ON `SK_JenisSurat`.`id`=`SK_ttd_SuratMasuk`.`JenisSurat_id` 
-        // WHERE `SK_ttd`.`Status` = '" . $status . "' and 
-        // (`SK_ttd`.`pendattg_id` = '" .
-        //     $db->escapeLikeString($pendattg_id['id']) .
-        //     "' OR `SK_ttd`.`pendattg_id` = '" .
-        //     $db->escapeLikeString($pendattg_id['namaLVL']) .
-        //     "' );";
-
-        // return $db->query($sql)->getResult('array');
     }
 
     function cekStatusSuratTTDCount($pendattg_id, $status = 0)

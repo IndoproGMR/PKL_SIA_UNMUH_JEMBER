@@ -6,11 +6,6 @@ use App\Controllers\BaseController;
 use App\Libraries\enkripsi_library;
 
 
-// $GLOBALS['loginUI'] = 'public';
-$GLOBALS['loginUI'] = 'debug';
-
-$cache = \Config\Services::cache();
-
 class Login extends BaseController
 {
 
@@ -18,8 +13,7 @@ class Login extends BaseController
     public function index()
     {
         // !CLEAR AUTH
-        $namacache = "AUTH_";
-        delCacheData($namacache);
+        delCacheData('AUTH_');
 
         $session = \Config\Services::session();
         $session->destroy();
@@ -31,55 +25,21 @@ class Login extends BaseController
             delCacheData(get_cookie('API'), '');
             delete_cookie('API');
         }
-
-
-
-        $data['datacoba'] = [
-            '1' => [
-                'login' => 'yuni',
-                'password' => '*FDF3D0567'
-            ],
-            '2' => [
-                'login' => '99111084',
-                'password' => '*6947C77DB'
-            ],
-            '3' => [
-                'login' => 'yasin',
-                'password' => '*30C2AA2CF'
-            ],
-            '4' => [
-                'login' => '0000001',
-                'password' => '*638F025EF'
-            ],
-            '5' => [
-                'login' => '0001016602',
-                'password' => '*3FB29F57B'
-            ],
-            '6' => [
-                'login' => '1210652011',
-                'password' => '*3E5287812'
-            ],
-            '7' => [
-                'login' => generateIdentifier(16, 'time'),
-                'password' => generateIdentifier()
-            ],
-        ];
         // ! =================
 
-        // d(user_id());
-        // d(in_group("Mahasiswa"));
-        // $model = model(Testusers::class);
-        // $data['datalogin'] = $model->seeall();
+
+
         $data['defaultdata'] = '';
 
-        if ($GLOBALS['loginUI'] == 'debug') {
+        if (env('AUTH_ENVIRONMENT') == 'development') {
             return view("login", $data);
         }
         return view("auth/Auth_login", $data);
         // return view("auth/Auth_login-figma", $data);
     }
 
-    public function debuglogin()
+
+    public function loginProses()
     {
         $session = \Config\Services::session();
         $postdata = $this->request->getPost([
@@ -87,24 +47,29 @@ class Login extends BaseController
             'dataPassword'
         ]);
 
-        $model = model('AuthUserGroup');
+
 
 
         // ! Algoritma password
-        /////
-        // !
+        $encrip = new enkripsi_library();
+        // $hashpass = $encrip->enkripsiPass($postdata['dataPassword']);
+        $hashpass = $encrip->get_HashPass($postdata['dataPassword']);
+        // !====================
 
-        if (!$model->proseslogin($postdata['dataLogin'], $postdata['dataPassword'])) {
+
+        $model = model('AuthUserGroup');
+        if (!$model->proseslogin(esc($postdata['dataLogin']), $hashpass)) {
             return redirect()->to('login');
         }
 
-        $namacache = "AUTH_";
-        if (cekCacheData($namacache, $postdata['dataLogin'])) {
+        $prefix = "AUTH_";
+        if (cekCacheData($prefix, $postdata['dataLogin'])) {
             $datauser = $model->cekuserinfo($postdata['dataLogin']);
-            setCacheData($namacache, $datauser, 18000, $postdata['dataLogin']);
+            setCacheData($prefix, $datauser, 18000, $postdata['dataLogin']);
         } else {
-            $datauser = getCachaData($namacache, $postdata['dataLogin']);
+            $datauser = getCachaData($prefix, $postdata['dataLogin']);
         }
+
 
         $data['userdata'] = [
             'id'       => $datauser['LoginUser'],
@@ -117,20 +82,5 @@ class Login extends BaseController
 
         $session->set($data);
         return redirect()->to('/');
-    }
-
-    public function loginProses()
-    {
-        // $auth = new enkripsi_library;
-    }
-
-    public function logout()
-    {
-        $namacache = "AUTH_";
-        delCacheData($namacache);
-
-        $session = \Config\Services::session();
-        $session->destroy();
-        return redirect()->to('/login');
     }
 }

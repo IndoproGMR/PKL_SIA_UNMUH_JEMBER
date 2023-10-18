@@ -3,36 +3,46 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use App\Models\JenisSuratMasukModel;
-use App\Models\SuratMasukModel;
 
 // !Update FlashMassage
 
 class SuratMasukController extends BaseController
 {
+    protected $Filter_Jenis_Surat;
+
+    function __construct()
+    {
+        helper('authvalid');
+
+        $prefix = "Query_Filter_Jenis_Surat_Masuk";
+        if (cekCacheData($prefix, '')) {
+            $model = model('JenisSuratMasukModel');
+            $Filter_Jenis_Surat = $this->Filter_Jenis_Surat = $model->seeall();
+            setCacheData($prefix, $Filter_Jenis_Surat, 600, '');
+        } else {
+            $this->Filter_Jenis_Surat = getCachaData($prefix, '');
+        }
+
+        // $data['jenisFilter'] = $this->Filter_Jenis_Surat;
+    }
+
     public function indexArchiveSurat()
     {
         PagePerm(['Dosen']);
-        $getget = ($filter = $this->request->getGet('filter')) ? $filter : 'all';
+
+        $dataGet      = ($filter = $this->request->getGet('filter')) ? $filter : 'all';
+        $TanggalSurat = ($filter = $this->request->getGet('TanggalSurat')) ? $filter : null;
+        $dataGetTextF = ($filter = $this->request->getGet('TextF')) ? $filter : null;
 
 
+        $data['TanggalSurat'] = $TanggalSurat;
 
-        $namacache = "Query_indexArchiveSurat_";
-        if (cekCacheData($namacache)) {
+        $data['dataGetTextF'] = $dataGetTextF;
+        $data['jenisFilter'] = $this->Filter_Jenis_Surat;
+        $data['filter'] = $dataGet;
 
-            $model = model('JenisSuratMasukModel');
-            $data['jenisFilter'] = $model->seeall();
-
-            $modelsurat = model('SuratMasukModel');
-            $data['surat'] = $modelsurat->seeallbyJenis($getget);
-
-            setCacheData($namacache, $data);
-        } else {
-            $data['jenisFilter'] = getCachaData($namacache)['jenisFilter'];
-            $data['surat'] = getCachaData($namacache)['surat'];
-        }
-
-        $data['filter'] = $getget;
+        $modelsurat = model('SuratMasukModel');
+        $data['surat'] = $modelsurat->seeallbyFilter($dataGet, $TanggalSurat, $dataGetTextF);
 
         return view('suratMasuk/semua_surat', $data);
     }
@@ -42,16 +52,7 @@ class SuratMasukController extends BaseController
     {
         PagePerm(['Dosen']);
 
-        $namacache = "Query_addArchiveSurat_";
-        if (cekCacheData($namacache)) {
-
-            $model = model('JenisSuratMasukModel');
-            $data['jenisFilter'] = $model->seeall();
-
-            setCacheData($namacache, $data);
-        } else {
-            $data['jenisFilter'] = getCachaData($namacache)['jenisFilter'];
-        }
+        $data['jenisFilter'] = $this->Filter_Jenis_Surat;
 
         return view('suratMasuk/input_arhive', $data);
     }
@@ -118,7 +119,7 @@ class SuratMasukController extends BaseController
             'TimeStamp'            => getUnixTimeStamp()
         ];
         // d($dataSimpan);
-        $model = model(SuratMasukModel::class);
+        $model = model('SuratMasukModel');
         if (!$model->addSuratMasuk($dataSimpan)) {
             return FlashMassage('/input-archive-surat', [resMas('f')]);
             // return FlashException('Tidak dapat menginputkan Surat kedatabase');
@@ -135,9 +136,9 @@ class SuratMasukController extends BaseController
         PagePerm(['Dosen']);
 
         $postdata = $this->request->getPost('id');
-        $model = Model(SuratMasukModel::class);
+        $model = Model('SuratMasukModel');
         $namaFile = $model->seebyid($postdata);
-        $model = model(JenisSuratMasukModel::class);
+        $model = model('JenisSuratMasukModel');
         $data = [
             'id'                   => $postdata,
             'DiskirpsiSurat'       => $namaFile['DiskirpsiSurat'],
@@ -167,7 +168,7 @@ class SuratMasukController extends BaseController
                 'jenisFilter',
             ]
         );
-        $model = Model(SuratMasukModel::class);
+        $model = Model('SuratMasukModel');
         $data = [
             'DiskirpsiSurat'       => $postdata['DiskirpsiSurat'],
             'NomerSurat'           => $postdata['NomerSurat'],
@@ -230,10 +231,9 @@ class SuratMasukController extends BaseController
     public function addJenisArchiveSurat()
     {
         PagePerm(['Dosen']);
-        $model = model(JenisSuratMasukModel::class);
+        $model = model('JenisSuratMasukModel');
         $data['jenisFilter'] = $model->seeall();
         // d($data);
-
 
         return view('suratMasuk/input_jenis_arhive', $data);
     }
@@ -246,14 +246,22 @@ class SuratMasukController extends BaseController
             'Name',
             'DiskripsiJenis'
         ]);
+
         $postdata['TimeStamp'] = getUnixTimeStamp();
-        // d($postdata);
+        d($postdata);
         $dataSimpan = [
             'name' => $postdata['Name'],
             'description' => $postdata['DiskripsiJenis'],
             'TimeStamp' => $postdata['TimeStamp']
         ];
-        $model = model(JenisSuratMasukModel::class);
+
+        $prefix = "Query_Filter_Jenis_Surat_Masuk";
+        delCacheData($prefix, '');
+
+        // d($dataSimpan);
+
+        // return;
+        $model = model('JenisSuratMasukModel');
         if (!$model->addJenisSurat($dataSimpan)) {
             return FlashMassage('/input-archive-surat', [resMas('f')]);
 

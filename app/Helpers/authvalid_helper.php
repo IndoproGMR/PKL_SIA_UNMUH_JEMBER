@@ -98,7 +98,7 @@ function in_group(array $group, int $secure = 0): bool
             break;
         case '1':
             $request = Services::request();
-            if (userInfo()['IP'] == $request->getIPAddress()) {
+            if (userInfo()['IP'] !== $request->getIPAddress()) {
                 return false;
             }
 

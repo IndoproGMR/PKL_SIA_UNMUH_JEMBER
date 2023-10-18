@@ -1,7 +1,6 @@
 <?= $this->extend('templates/layout.php') ?>
 <?= $this->section('style') ?>
 
-
 <style>
     video {
         width: 300px;
@@ -43,10 +42,12 @@
         display: none;
     }
 </style>
+
 <?= $this->endSection() ?>
 
-<?= $this->section('main') ?>
 
+
+<?= $this->section('main') ?>
 
 <div class="vidcontainer">
     <div class="videogb">
@@ -57,53 +58,71 @@
         <p>Kamera sedang mati</p>
     </div>
 </div>
-<h1 id="valid"></h1>
+<h1 id="valid"> - </h1>
 
 <input type="text" name="nosurat" id="nosurat" placeholder="NoSurat">
 <br>
+<br>
 <textarea name="qrcode" id="qrcode" cols="30" rows="10"></textarea>
 <br>
-<input type="checkbox" name="autodetail" id="autodetail" value="autodetail"> auto detail
 <br>
 <?php if (!$nocam) : ?>
-    <select name="kamera" id="kamera">
+    <select name="kamera" id="kamera" onchange="setCamera(this.value)">
     </select>
-    <button onclick="jalankancamera()">Start Scan</button>
-    <button onclick="stopcam()">Stop Scan</button>
+    <button onclick="restartCamera()">Start Camera</button>
+    <button onclick="stopcam()">Stop Camera</button>
 <?php else : ?>
     <select name="kamera" id="kamera">
         <option value="">camera has been disable</option>
     </select>
+    <button onclick="startCamera()">Start Camera</button>
 <?php endif ?>
 
-
 <br>
-<input type="submit" value="detail" onclick=detail(url_apidetail)>
-
+<br>
+<input type="submit" value="detail" id="button_detail">
 <br>
 
-<div class="detailhide">
-    <p>No Surat: <span id="no-surat"></span></p>
-    <p>Mahasiswa: <span id="Mahasiswa"></span></p>
-    <p>Penandatangan: <span id="Penandatangan"></span></p>
-    <p>timestamp: <span id="timestamp"></span></p>
-    <p>JenisSurat: <span id="JenisSurat"></span></p>
-</div>
+<?php if (!in_group(['Mahasiswa'])) : ?>
 
-<input hidden type="text" class="inputNoSurat">
+    <div>
+        <p><input type="checkbox"> No Surat: <span id="no-surat"></span></p>
+        <p><input type="checkbox"> Mahasiswa: <span id="Mahasiswa"></span></p>
+        <p><input type="checkbox"> Penandatangan: <span id="Penandatangan"></span></p>
+        <p><input type="checkbox"> timestamp: <span id="timestamp"></span></p>
+        <p><input type="checkbox"> JenisSurat: <span id="JenisSurat"></span></p>
+    </div>
 
+    <input hidden type="text" id="inputNoSurat" name="noSurat">
+    <input hidden type="text" id="inputMahasiswa" name="Mahasiswaat">
+
+<?php else : ?>
+
+    <div>
+        <p>No Surat: <span id="no-surat"></span></p>
+        <p>Mahasiswa: <span id="Mahasiswa"></span></p>
+        <p>Penandatangan: <span id="Penandatangan"></span></p>
+        <p>timestamp: <span id="timestamp"></span></p>
+        <p>JenisSurat: <span id="JenisSurat"></span></p>
+    </div>
+
+<?php endif ?>
 
 
 <?= $this->endSection() ?>
 
 <?= $this->section('jsF') ?>
 <!-- Js Script untuk Footer -->
-<script type="text/javascript">
+<!-- <script type="text/javascript"> -->
+<script>
+    // import API_library from '<?= base_url('/js/API_library.js'); ?>';
+
+
+
     const url_api = "<?= base_url(getenv('urlapi') . '/validasi/qr')  ?>";
     const url_apidetail = "<?= base_url(getenv('urlapi') . "/validasi/qr/detail") ?>";
 
-    <?php if (!$nocam) : ?>
-        Instascan.Camera.getCameras()
+    <?php if (!$nocam) : ?> Instascan.Camera.getCameras()
             .then(function(cameras) {
                 if (cameras.length > 0) {
                     var selectopt = document.getElementById('kamera')
@@ -112,6 +131,12 @@
                         opt.value = index;
                         opt.textContent = cameras[index].name;
                         selectopt.appendChild(opt);
+
+                        var idcamera = document.getElementById('kamera').value;
+
+                        if (localStorage.getItem('kameraID') == null) {
+                            localStorage.setItem('kameraID', idcamera);
+                        }
                     }
                     jalankancamera();
                 } else {
@@ -130,101 +155,97 @@
             let scanner = new Instascan.Scanner({
                 video: document.getElementById("preview")
             });
+
             scanner.addListener("scan", function(content) {
-                // console.log(content);
                 document.getElementById("qrcode").value = content;
-                cek(url_api)
+                detail(url_api)
             });
 
-            // scanner.stop();
-            var idcamera = document.getElementById('kamera').value;
-            console.log(idcamera);
-            Instascan.Camera.getCameras().then(function(cameras) {
-                scanner.stop();
-                scanner.start(cameras[idcamera]);
-            }).catch(function(e) {
-                console.error(e);
-            });
+            var idcamera = localStorage.getItem('kameraID');
+
+            Instascan.Camera.getCameras()
+                .then(function(cameras) {
+                    scanner.start(cameras[idcamera])
+                        .then(() => {
+                                console.log('Camera Ready');
+                            },
+                            () => {
+                                localStorage.setItem('kameraID', 0);
+                                window.location.reload();
+                            })
+                }).catch(function(e) {
+                    console.error(e);
+                });
 
         };
 
         function stopcam() {
-            console.log('jalan');
-            let scanner = new Instascan.Scanner({
-                video: document.getElementById("preview")
-            });
-            scanner.stop().then(function() {
-                console.log('stop jalan');
-            });
+            localStorage.setItem('kameraID', 0);
+            window.location.href = "<?= base_url('/qr-validasi'); ?>?nocam=true";
+        }
+
+
+        function setCamera(id) {
+            localStorage.setItem('kameraID', id);
+        }
+
+        function restartCamera() {
+            window.location.reload();
         }
 
     <?php endif ?>
 
-    async function cek(url) {
+    function startCamera() {
+        window.location.href = "<?= base_url('/qr-validasi'); ?>";
+    }
+
+    const tomboldetail = document.getElementById('button_detail');
+
+    tomboldetail.addEventListener('click', () => {
+        console.log('klick');
+        detail();
+    });
+
+    function detail() {
         var nosurat = document.getElementById("nosurat").value
         var qrcode = encodeURIComponent(document.getElementById("qrcode").value);
-        url = url + "?nosurat=" + nosurat + "&qrcode=" + qrcode
-        // console.log(url);
-        var x = document.querySelector('#autodetail:checked');
-        if (x) {
-            detail(url_apidetail);
-        }
 
-        await fetch(url)
+        // const apilib = new API_library("<?= base_url(getenv('urlapi') . "/validasi/qr/detail") ?>");
+        var urlq = url_apidetail + "?nosurat=" + nosurat + "&qrcode=" + qrcode;
+
+        // apilib.setQuery(urlQ);
+        // console.log(apilib.getURL());
+
+        // var dataa;
+        // await apilib.getRespond()
+        //     .then(
+        //         function(result) {
+        //             return result;
+        //         })
+        //     .then(function(result) {
+        //         dataa = result;
+        //     });
+        // console.log('respond succes: ', dataa);
+
+
+        // return;
+        fetch(urlq)
             .then((response) => {
                 return response.json();
             })
             .then((data) => {
-                var valid = document.getElementById("valid").textContent = data.valid;
-                // console.log(data.valid);
-                // return data.valid;
-            }).catch(function(error) {
-                console.error("Terjadi kesalahan:", error);
-            });
-    };
-
-    function detail(url) {
-        // console.log(url_api);
-        cek(url_api);
-        var nosurat = document.getElementById("nosurat").value
-        var qrcode = encodeURIComponent(document.getElementById("qrcode").value);
-        let countclass = document.getElementsByClassName("detailhide").length;
-
-        deleteclass("detailhide", countclass);
-
-
-        url = url + "?nosurat=" + nosurat + "&qrcode=" + qrcode
-        // console.log(url);
-
-        fetch(url)
-            .then((response) => {
-                return response.json();
-            })
-            .then((data) => {
-                var valid = data.valid;
-                // console.log(valid);
-                // document.getElementById("valid").textContent = data.valid;
-                // document.getElementById("valid").textContent = cek(url_api);
+                document.getElementById("valid").textContent = data.valid;
                 document.getElementById("no-surat").textContent = data.nosurat;
                 document.getElementById("Mahasiswa").textContent = data.Mahasiswa;
                 document.getElementById("Penandatangan").textContent = data.penandatangan;
                 document.getElementById("timestamp").textContent = data.TimeStamp;
                 document.getElementById("JenisSurat").textContent = data.JenisSurat;
-                document.getElementsByClassName('inputNoSurat')[0].value = data.nosurat;
-                // console.log(data);
+
+                document.getElementById('inputNoSurat').value = data.nosurat;
+                document.getElementById('inputMahasiswa').value = data.Mahasiswa;
             }).catch(function(error) {
                 console.error("Terjadi kesalahan:", error);
             });
-    };
-
-    function deleteclass(namaclass, count) {
-        if (!count == 0) {
-            for (let index = 0; index < count; index++) {
-                document.getElementsByClassName(namaclass)[index].classList.remove(namaclass);
-                count = count - 1;
-            }
-            deleteclass(namaclass, count);
-        }
 
     };
 </script>
