@@ -19,17 +19,24 @@ class Loginlimiter implements FilterInterface
      */
     public function before(RequestInterface $request, $arguments = null)
     {
+
+        if (!$request->isValidIP($request->getIPAddress())) {
+            $error = [
+                'status'  => '400',
+                'message' => 'invalid_credentials',
+            ];
+            return Services::response()->setJSON($error);
+        }
+
         $throttler = Services::throttler();
-
-        $error = [
-            'status'  => '429',
-            'message' => 'Too Many Login',
-        ];
-
 
         // Restrict an IP address to no more than 1 request
         // per second across the entire site.
         if ($throttler->check(md5($request->getIPAddress()), 5, MINUTE) === false) {
+            $error = [
+                'status'  => '429',
+                'message' => 'Too Many Request (L)',
+            ];
             return Services::response()->setJSON($error);
         }
     }

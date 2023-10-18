@@ -87,6 +87,30 @@
   border-radius: 5px;
 }
 
+.morInpo {
+  visibility: hidden;
+  background-color: var(--clr-second-hover);
+  color: var(--txt-white);
+  text-align: center;
+  border-radius: 5px;
+  padding: 5px 10px;
+  border: 1px solid var(--txt-black);
+
+  position: absolute;
+  z-index: 100;
+}
+
+.morInpo::before {
+  content: " ? ";
+  visibility: visible;
+  /* position: absolute; */
+  /* top: 0%; */
+}
+
+.morInpo:hover {
+  visibility: visible;
+}
+
 /* !ScrollBar */
 /* width */
 ::-webkit-scrollbar {
@@ -210,7 +234,7 @@ navbar {
 
 /* !Mini Nav */
 .filter {
-  margin-top: 30px;
+  margin-top: 20px;
   margin-bottom: 20px;
   background-color: var(--clr-accent);
   padding: 15px;
@@ -245,12 +269,13 @@ navbar {
   cursor: pointer;
   font-weight: bold;
   background-color: var(--clr-select);
-  width: 200px;
+  width: 250px;
   height: 30px;
   margin-left: 10px;
   padding: 5px 10px;
   border: 1px solid var(--txt-black);
   border-radius: 10px;
+  margin: 5px;
 }
 
 .filter select:hover {
@@ -262,27 +287,6 @@ navbar {
 .filter option {
   background-color: var(--clr-select-options);
   font-size: 15px;
-}
-
-.filter form input[type="submit"] {
-  color: var(--txt-white);
-  display: inline-block;
-  text-decoration: none;
-  font-size: 14px;
-  padding: 5px 20px;
-  margin: 5px;
-  border-radius: 10px;
-  border: 1px solid var(--clr-buttom);
-  background-color: var(--clr-buttom);
-  font-weight: bold;
-}
-
-.filter form input[type="submit"]:hover {
-  color: var(--txt-black);
-  background-color: var(--clr-buttom-hover);
-  border: 1px solid var(--txt-black);
-  border-radius: 5px;
-  transition: all ease-in-out 0.3s;
 }
 
 .filter form input[type="button"] {
@@ -306,19 +310,78 @@ navbar {
   transition: all ease-in-out 0.3s;
 }
 
+.filter form input[type="text"],
+.filter form input[type="number"],
+.filter form input[type="date"] {
+  /* color: var(--txt-white); */
+  display: inline-block;
+  text-decoration: none;
+  font-size: 14px;
+  width: 250px;
+  padding: 5px 20px;
+  margin: 5px;
+  border-radius: 10px;
+  border: 1px solid var(--clr-buttom);
+  font-weight: bold;
+}
+
+.filter form input[type="text"]:hover,
+.filter form input[type="number"]:hover,
+.filter form input[type="date"] {
+  background-color: var(--clr-select-hover);
+  border-radius: 3px;
+  transition: all ease-in-out 0.3s;
+}
+
+.filter form input[type="button"],
+.filter form input[type="submit"] {
+  color: var(--txt-white);
+  display: inline-block;
+  text-decoration: none;
+  font-size: 14px;
+  padding: 5px 20px;
+  margin: 5px;
+  border-radius: 10px;
+  border: 1px solid var(--clr-buttom);
+  background-color: var(--clr-buttom);
+  font-weight: bold;
+
+  width: 100px;
+}
+
+.filter form input[type="button"]:hover,
+.filter form input[type="submit"]:hover {
+  color: var(--txt-black);
+  background-color: var(--clr-buttom-hover);
+  border: 1px solid var(--txt-black);
+  border-radius: 5px;
+  transition: all ease-in-out 0.3s;
+}
+
 /* !SideBar */
+.Version {
+  position: relative;
+  /* background-color: red; */
+  bottom: 1px;
+  /* align-self: flex-end; Mengatur posisi versi ke paling bawah */
+  margin-bottom: 10px; /* Spasi antara versi dan bagian bawah sidebar */
+}
+
 .containersidebar {
   display: flex;
   min-height: 100vh;
 }
 
 .sidebar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  /* height: 100%; */
+
   background-color: var(--clr-second);
   width: 260px;
   padding: 25px;
-  display: flex;
   box-sizing: border-box;
-  flex-direction: column;
   transition: all ease-in 0.3s;
 }
 
@@ -396,6 +459,10 @@ navbar {
 .sidebar.hide > .main .tooltip {
   /* border-left: 1px dotted black; */
   border-right: 1px dotted black;
+}
+
+.sidebar.hide > .Version {
+  display: none;
 }
 
 .tooltip .tooltiptext {
@@ -754,4 +821,26 @@ navbar {
   /* transform: scale(0.1 0.1); */
   /* transform: scale(0.8, 0.8); */
   /* } */
+}
+
+.Actions {
+  display: inline-block;
+  text-decoration: none;
+  font-size: 14px;
+  padding: 5px 20px;
+  margin: 5px;
+  border-radius: 10px;
+  border: 1px solid var(--clr-buttom);
+  background-color: var(--clr-buttom);
+  color: var(--txt-white);
+  font-weight: bold;
+}
+
+.Actions:hover {
+  color: var(--txt-black);
+  background-color: var(--clr-buttom-hover);
+  border: 1px solid var(--txt-black);
+  border-radius: 5px;
+
+  transition: all ease-in-out 0.3s;
 }

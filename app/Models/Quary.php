@@ -10,7 +10,7 @@ class Quary extends Model
     protected $table            = 'test_quary';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
-    // protected $returnType       = 'array';
+    protected $returnType       = 'array';
     // protected $useSoftDeletes   = false;
     protected $protectFields    = true;
     protected $allowedFields    = [

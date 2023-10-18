@@ -26,7 +26,19 @@ gh repo clone IndoproGMR/PKL_SIA_UNMUH_JEMBER
 ```bash
 bash installapp
 ```
-3. isi .env
+3. Install phpredis
+```bash
+sudo apt install php8.1-redis
+
+curl -fsSL https://packages.redis.io/gpg | sudo gpg --dearmor -o /usr/share/keyrings/redis-archive-keyring.gpg
+
+echo "deb [signed-by=/usr/share/keyrings/redis-archive-keyring.gpg] https://packages.redis.io/deb $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/redis.list
+
+sudo apt-get update
+sudo apt-get install redis
+```
+
+4. isi .env
 ```
 harus di isi:
 SUPERKEY,
@@ -39,21 +51,33 @@ optional:
 SESSION
 ```
 
-4. lalu jalankan server local php
+5. lalu jalankan server local php
 ```bash
 php spark serve
 ```
-5. lalu buka browser
+6. lalu buka browser
 ```url
 localhost:8080/
 ```
-6. Update
+7. Update
 ```bash
 git pull
 ```
-7. 
+8. File Penting
 ```
 copy file enkripsi_libary kedalam App\Libraries
+```
+
+Clean Redis
+```bash
+redis-cli flushall
+```
+
+upgrade/install
+```
+apache dari 2.4.18 (2016) ke yang terbaru
+redis server
+php 
 ```
 
 ---
@@ -82,27 +106,34 @@ ___
 
 #### Error feedback
 - [ ] Exceptions (need:UI)
-- [ ] permissions error (need:UI)
+- [x] permissions error
 - [x] Validation error
 - [x] succes fail massage
 
 **Create_Read_Update_Delete_readPDF_MakeFile**
-#### Surat Keluar (8/18)
+#### Surat Keluar (16/28)
 ##### Semua user
 - [ ] cek QR (need:UI)
+- [ ] liat surat dari server
+- [ ] penambahan centang untuk cek manual
+- [ ] bug pada auto detail
+- [x] API baru untuk mencek apakah noSurat sudah ada di dalam database atau tidak?
 
 ##### Mahasiswa 
 - [ ] Minta Surat (R) (need:UI)
 - [ ] Minta Surat buat (C_R) (need:UI)
-- [x] Semua Surat (R_PDF_MK)
+- [x] Semua Surat / Riwayat (R_PDF_MK)
+- [x] Filter Berdasarkan Tgl,Jenis Surat
 - [x] Melihat Status Surat (R)
-- [ ] Mendownload surat (bug: tidak dapat membuat file qr baru)
+- [x] Mendownload surat
 
 ##### PenandaTangan
 - [x] Semua Yang belum di TandaTangan kan (R_PDF)
+- [x] Filter Berdasarkan Tgl,Peminta,Jenis Surat
 - [x] TandaTangan Preview (PDF)
-- [ ] TandaTangan (U_MK)
+- [x] TandaTangan (U_MK)
 - [x] Semua Yang sudah di TandaTangan kan (R_PDF)
+- [x] Filter Berdasarkan Tgl,Peminta,Jenis Surat
 
 ##### Pengajaran
 - [ ] Master Surat Buat (C) (need:UI)
@@ -110,7 +141,8 @@ ___
 - [ ] Test Master Surat (R_PDF) (need:UI)
 - [ ] Master Surat edit (R_U_D) (need:UI)
 - [x] Master Surat Visiblity Toggle (U)
-- [x] set NomerSurat semua (R_PDF) (need:UI)
+- [x] set NomerSurat semua (R_PDF)
+- [x] Filter Berdasarkan Peminta,Jenis Surat
 - [ ] set NomerSurat edit (R_U_D) (need:UI)
 
 ##### PDF Surat
@@ -118,9 +150,10 @@ ___
 - [ ] layout
 - [x] tandatangan
 
-#### Surat Masuk (1/6)
+#### Surat Masuk (1/7)
 ##### Pengajaran
 - [x] SuratMasuk semua (R)
+- [ ] Filter Berdasarkan Tgl,Jenis Surat
 - [ ] SuratMasuk input (C_MK) (need:UI)
 - [ ] SuratMasuk edit (U_D) (need:UI) (bug: tidak dapat reload saat update)
 - [ ] SuratMasuk Preview (R_PDF) (need:UI)
@@ -132,10 +165,10 @@ ___
 - [ ] Informasi Tambahan
 - [ ] Table (need:backend)
 
-#### Admin Panel (0/?)
+#### Admin Panel (2/?)
 ##### Akun
 - [x] Login
-- [X] Membuat akun baru
+- [x] Membuat akun baru
 - [ ] cek ke amanan
 ##### Admin
 - [ ] Analastik storage server surat (R)
@@ -160,49 +193,7 @@ ___
 - [ ] test Query
 - [ ] test admin panel
 
----
-
-- [x] framework
-- [ ] Data flow
-- [ ] Database
-- [ ] Backend Login dan auth
-
-- [x] UI Surat masuk
-- [ ] Backend Surat masuk
-- [x] DB Surat masuk
-- [x] Enckripsi qrcode
-- [x] Quary Filter
-- [x] Quary Search
-- [x] menyimpan namafile
-- [x] render pdf
-- [x] format nomersurat
-- [ ] memasukan qr ke pdf
-- [ ] memasukan nama penandatangan ke pdf
-- [ ] memilih nip atau nik dari database ke pdf
-
-- [ ] UI Archive
-- [x] Backend Archive
-- [x] DB Archive
-- [x] menyimpan namafile
-- [x] menampilkan Archive
-
-- [ ] UI Quary archive
-- [ ] Backend Quary archive
-
-- [ ] UI Quary Mahasiswa
-- [ ] Backend Quary
-- [ ] Backend Quary Mahasiswa
-
-- [ ] Dokumentasi PHP
-
-- [x] cara men encripsi TTD
-- [x] cara men decripsi TTD
-- [ ] cara men encripsi file PDF
-- [ ] cara men decripsi file PDF
-- [x] membuat QrCode
-- [x] mensave pdf
-
-- [x] Membuat API validasi TTD dengan qrcode
+- [ ] Menambah fungsi Cache pada quary
 
 ___
 
@@ -259,8 +250,6 @@ menggunakan Under_Score dan garis-tengah
 #### controllers proses
 menggunakan CamelCase
 
-
-
 ### URL
 menggunakan Under_Score dan garis-tengah dan Garis/Miring
 
@@ -268,6 +257,33 @@ KELOMPOK_KELOMPOK/FUNGSI_FUNGSI/NAMA-NAMA/{ID}\
 contoh:\
 Staff/Preview/Surat/TandaTangan\
 Staff/Preview/Master_Surat/{Id}\
+
+### API
+```php
+$data = [
+	'massage_status' => '1',
+	'massage' => resMas('f.:.perm.n.valid')
+];
+return $this->respond($data, 401, 'access_denied');
+```
+
+```JSON
+{
+    "massage_status": "1",
+    "massage": "Gagal : Permission tidak valid"
+}
+
+.then(function(response) {
+	if (response.status != 200) {
+	const data = {
+		'massage_status': 1,
+		'massage': response.statusText
+	};
+		return data;
+	}
+return response.json(); // Mengambil data JSON dari respons
+})
+```
 
 ### Error massage
 #### lvl 1 (kondisi)

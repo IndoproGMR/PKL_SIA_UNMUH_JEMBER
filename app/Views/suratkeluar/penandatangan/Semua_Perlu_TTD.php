@@ -7,6 +7,17 @@
 
 <div class="filter">
     <p class="first">Filter:</p>
+    <form>
+        <?= view_cell('SelectOptionCell', [
+            'options'      => $jenisFilter,
+            'nameselect'   => 'filter',
+            'idselect'     => 'filter',
+            'firstoptions' => ['value' => 'all', 'name' => 'Semua Surat'],
+            'selected'     => $filter,
+        ]) ?>
+        <input type="text" name="TextF" id="TextF" placeholder="NIM / Nomer Surat" value="<?= esc($dataGetTextF) ?>">
+        <input type="submit" value="Cari">
+    </form>
     <?= timedecor() ?>
 </div>
 

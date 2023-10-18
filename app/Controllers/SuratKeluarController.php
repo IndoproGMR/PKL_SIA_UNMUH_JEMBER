@@ -3,36 +3,62 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use App\Models\Jenissurat;
-use App\Models\TandaTangan;
 use App\Libraries\enkripsi_library;
-use App\Models\SuratKeluraModel;
 
 class SuratKeluarController extends BaseController
 {
+    protected $Filter_Jenis_Surat;
+
+    function __construct()
+    {
+        helper('authvalid');
+
+        $prefix = "Query_Filter_Jenis_Surat_Keluar";
+        if (cekCacheData($prefix, '')) {
+            $model = model('JenisSuratKeluarModel');
+            $Filter_Jenis_Surat = $this->Filter_Jenis_Surat = $model->seeall();
+            setCacheData($prefix, $Filter_Jenis_Surat, 600, '');
+        } else {
+            $this->Filter_Jenis_Surat = getCachaData($prefix, '');
+        }
+
+
+
+        // $data['jenisFilter'] = $this->Filter_Jenis_Surat;
+
+    }
+
     // !START Untuk Mahasiswa
     // untuk melihat semua surat yang dimanta apakah sudah di ttd ngi
     public function indexStatusSurat()
     {
         PagePerm(['Mahasiswa', 'Calon Mahasiswa']);
-        $model = model(SuratKeluraModel::class);
-        $model2 = model(TandaTangan::class);
-        $data['datasurat'] = $model->cekNoSurat(userInfo()['id'], true);
 
-        // cek status setiap surat
-        foreach ($data['datasurat'] as $key => $value) {
-            $data['surat'][$key] = $value['SuratIdentifier'];
-            $data['datasurat'][$key]['status'] = $model2->cekStatusSurat($data['surat'][$key]);
-        }
+        $namacache = "Query_indexStatusSurat_";
+        if (cekCacheData($namacache)) {
 
-        // bila status yang belum sudah 0 maka hapus dari array
-        foreach ($data['datasurat'] as $key => $value) {
-            if ($value['status']['belum'] == '0') {
-                unset($data['datasurat'][$key]);
+            $model = model('SuratKeluraModel');
+            $model2 = model('TandaTangan');
+            $data['datasurat'] = $model->cekNoSurat(userInfo()['id'], true);
+
+            // cek status setiap surat
+            foreach ($data['datasurat'] as $key => $value) {
+                $data['surat'][$key] = $value['SuratIdentifier'];
+                $data['datasurat'][$key]['status'] = $model2->cekStatusSurat($data['surat'][$key]);
             }
+
+            // bila status yang belum sudah 0 maka hapus dari array
+            foreach ($data['datasurat'] as $key => $value) {
+                if ($value['status']['belum'] == '0') {
+                    unset($data['datasurat'][$key]);
+                }
+            }
+
+            setCacheData($namacache, $data, 120);
+        } else {
+            $data = getCachaData($namacache);
         }
 
-        // d($data);
         return view('suratkeluar/mahasiswa/semua_Status_TTD', $data);
     }
 
@@ -41,23 +67,41 @@ class SuratKeluarController extends BaseController
     {
         PagePerm(['Mahasiswa', 'Calon Mahasiswa']);
 
-        $model = model(Jenissurat::class);
-        $data['jenissurat'] = $model->seeall();
+        // identifire untuk cachesing
+        if (is_null($idsurat)) {
+            $cacheid = 'null';
+        } else {
+            $cacheid = $idsurat;
+        }
+
+        $data['jenissurat'] = $this->Filter_Jenis_Surat;
+
         $data['minta'] = 0;
 
+        // cek apakah id surat null?
         if (!is_null($idsurat)) {
-            $data['minta'] = 1;
+            // cek data jenis surat
+            $prefix = "Query_idsurat_" . $cacheid;
+            if (cekCacheData($prefix, '')) {
 
-            $model = model(Jenissurat::class);
-            $data['datasurat'] = $model->seebyID($idsurat);
+                $data['minta'] = 1;
 
-            // cek apakah id yang diminta ada di db ?
-            if ($data['datasurat']['error'] == 'y') {
-                return redirect()->to('/minta-surat');
+                $model = model('JenisSuratKeluarModel');
+                $data['datasurat'] = $model->seebyID($idsurat);
+
+                // cek apakah id yang diminta ada di db ?
+                if ($data['datasurat']['error'] == 'y') {
+                    return redirect()->to('/minta-surat');
+                }
+
+                $data['dataform'] = json_decode($data['datasurat']['form'], true);
+
+                setCacheData($prefix, $data, 600, '');
+            } else {
+                $data = getCachaData($prefix, '');
             }
-
-            $data['dataform'] = json_decode($data['datasurat']['form'], true);
         }
+
         return view('suratkeluar/mahasiswa/Proses_Minta-TTD', $data);
     }
 
@@ -66,19 +110,15 @@ class SuratKeluarController extends BaseController
     {
         PagePerm(['Mahasiswa', 'Calon Mahasiswa'], 'error_perm', false, 1);
         helper(['text']);
-        $model  = model(SuratKeluraModel::class);
-        $model2 = model(TandaTangan::class);
-        $model3 = model(Jenissurat::class);
+        $model  = model('SuratKeluraModel');
+        $model2 = model('TandaTangan');
+        $model3 = model('JenisSuratKeluarModel');
 
         $postdata = $this->request->getPost();
         unset($postdata['LaB7Thol']);
-        // return d($postdata);
+
         $seebyid = $model3->seebyID($idsurat);
-        // d($seebyid);
-        // $dataform = json_decode($model3->seebyID($idsurat)['form'], 'array');
         $dataform = json_decode($seebyid['form'], 'array');
-        // d($dataform);
-        // d($dataform2);
 
         // !Validasi dan save gambar Start
         if (isset($dataform['tambahan'])) {
@@ -119,7 +159,6 @@ class SuratKeluarController extends BaseController
                     $filepath = $filepath . '/' . $filename;
                 }
                 $postdata['foto'] = $filepath;
-                // d($postdata);
             }
         }
         // !Validasi dan save gambar End
@@ -157,9 +196,6 @@ class SuratKeluarController extends BaseController
         $TTDdata['TTD'] = removeGroups(json_decode($seebyid['form'], true)['TTD']);
         $TTDdata['SuratIdentifier'] = $data['SuratIdentifier'];
 
-        d($TTDdata);
-        d($data['JenisSurat_id']);
-        d($idsurat);
 
 
 
@@ -169,9 +205,6 @@ class SuratKeluarController extends BaseController
          */
         $ttdArray = transformData($TTDdata);
 
-        // d($ttdArray);
-        // d($data);
-
         // set ke dalam database
         if (!$model->addSuratKeluar($data)) {
             return FlashMassage('Surat/Minta-TandaTangan', [resMas('f.u.minta.surat')]);
@@ -179,6 +212,9 @@ class SuratKeluarController extends BaseController
         if (!$model2->addTTD($ttdArray)) {
             return FlashMassage('Surat/Minta-TandaTangan', [resMas('f.u.minta.ttd')]);
         }
+
+        $prefix = "Query_indexStatusSurat_";
+        delCacheData($prefix);
 
         return FlashMassage('Surat/Status-TandaTangan', [resMas('s.u.minta.surat')], 'success');
     }
@@ -188,20 +224,45 @@ class SuratKeluarController extends BaseController
     {
         PagePerm(['Mahasiswa', 'Calon Mahasiswa']);
 
-        $model = model(SuratKeluraModel::class);
-        $model2 = model(TandaTangan::class);
-        $data['datasurat'] = $model->cekNoSurat(userInfo()['id']);
 
-        foreach ($data['datasurat'] as $key => $value) {
-            $data['surat'][$key] = $value['SuratIdentifier'];
-            $data['datasurat'][$key]['status'] = $model2->cekStatusSurat($data['surat'][$key]);
+        $dataGet = ($filter = $this->request->getGet('filter')) ? $filter : 'all';
+        $filter_waktu = ($filter = $this->request->getGet('filter_waktu')) ? $filter : 1;
+
+        if (!is_numeric($filter_waktu)) {
+            $data['filter_waktu'] = 1;
+        } else {
+            $data['filter_waktu'] = $filter_waktu;
         }
 
-        foreach ($data['datasurat'] as $key => $value) {
-            if ($value['status']['belum'] !== '0') {
-                unset($data['datasurat'][$key]);
+        $data['filter'] = $dataGet;
+        $data['jenisFilter'] = $this->Filter_Jenis_Surat;
+
+
+
+
+        $namacache = "Query_indexRiwayatSurat_" . $data['filter'] . $filter_waktu;
+        if (cekCacheData($namacache)) {
+            $model = model('SuratKeluraModel');
+            $model2 = model('TandaTangan');
+            $data['datasurat'] = $model->cekNoSurat(userInfo()['id'], false, $data['filter'], $filter_waktu);
+
+            foreach ($data['datasurat'] as $key => $value) {
+                $data['surat'][$key] = $value['SuratIdentifier'];
+                $data['datasurat'][$key]['status'] = $model2->cekStatusSurat($data['surat'][$key]);
             }
+
+            foreach ($data['datasurat'] as $key => $value) {
+                if ($value['status']['belum'] !== '0') {
+                    unset($data['datasurat'][$key]);
+                }
+            }
+
+            setCacheData($namacache, $data, 120);
+        } else {
+            $data = getCachaData($namacache);
         }
+
+
 
         return view('suratkeluar/mahasiswa/Semua_Riwayat-TTD', $data);
     }
@@ -214,8 +275,17 @@ class SuratKeluarController extends BaseController
     {
         PagePerm(['Dosen']);
 
-        $jenissurat = model(Jenissurat::class);
-        $data['jenissurat'] = $jenissurat->seeall(true);
+        $namacache = "Query_indexJenisSurat_";
+        if (cekCacheData($namacache)) {
+
+            $jenissurat = model('JenisSuratKeluarModel');
+            $data['jenissurat'] = $jenissurat->seeall(true);
+
+            setCacheData($namacache, $data);
+        } else {
+            $data = getCachaData($namacache);
+        }
+
 
         return view('suratkeluar/pengajaran/Semua_Master-surat', $data);
     }
@@ -225,7 +295,7 @@ class SuratKeluarController extends BaseController
     {
         PagePerm(['Dosen']);
 
-        $jenissurat = model(Jenissurat::class);
+        $jenissurat = model('JenisSuratKeluarModel');
         $data['level'] = $jenissurat->seegrouplvl();
         $data['ttd'] = $jenissurat->seeNamaPettd();
         return view('suratkeluar/pengajaran/Input_Master-Surat', $data);
@@ -285,19 +355,24 @@ class SuratKeluarController extends BaseController
 
         $data['json_data'] = json_encode($postdataform);
 
-        $model = model(Jenissurat::class);
+        $model = model('JenisSuratKeluarModel');
 
         if (!$model->addJenisSurat($postdatasurat['jenisSurat'], $postdatasurat['diskripsi'], $postdatasurat['inputisi'], $data['json_data'])) {
             return FlashMassage('/input/master-surat', [resMas('f.u.save.jenis.surat.db')], 'fail');
             // return FlashException('Tidak dapat Menambahkan Surat ke dalam DataBase');
         }
+
+
+        $prefix = "Query_indexJenisSurat_";
+        delCacheData($prefix);
+
         return FlashMassage('/Staff/Master-Surat', [resMas('s.save.jenis.surat.db')], 'success');
     }
 
     // untuk melihat detail jenis surat
     public function detailJenisSurat($idsurat)
     {
-        $model = model(Jenissurat::class);
+        $model = model('JenisSuratKeluarModel');
         $data['datasurat'] = $model->seebyID($idsurat, 1);
         return view('suratkeluar/pengajaran/Edit_Master_Surat', $data);
     }
@@ -330,10 +405,14 @@ class SuratKeluarController extends BaseController
         }
         // !Validasi input End
 
-        $model = model(Jenissurat::class);
+        $model = model('JenisSuratKeluarModel');
         if (!$model->updateJenisSurat($postdata['id'], $postdata['jenisSurat'], $postdata['diskripsi'], $postdata['inputisi'])) {
             return FlashMassage('/Staff/Master-Surat', [resMas('f.update.master.surat.db')], 'success');
         }
+
+        $prefix = "Query_indexJenisSurat_";
+        delCacheData($prefix);
+
         return FlashMassage('/Staff/Master-Surat', [resMas('s.update.master.surat')], 'success');
     }
 
@@ -342,11 +421,15 @@ class SuratKeluarController extends BaseController
     {
         PagePerm(['Dosen'], 'error_perm', false, 1);
         $postdata = $this->request->getPost(['id']);
-        $model = model(Jenissurat::class);
+        $model = model('JenisSuratKeluarModel');
 
         if (!$model->toggleshow($postdata['id'])) {
             return FlashMassage('/semua_master-surat', [resMas('f.update.surat')], 'fail');
         }
+
+        $prefix = "Query_indexJenisSurat_";
+        delCacheData($prefix);
+
         return FlashMassage('/Staff/Master-Surat', [resMas('s.update.master.surat')], 'success');
     }
 
@@ -355,11 +438,21 @@ class SuratKeluarController extends BaseController
     public function indexTanpaNoSurat()
     {
         PagePerm(['Dosen']);
-        $model = model(SuratKeluraModel::class);
-        $data['datasurat'] = $model->seeAllnoNoSurat();
+
+
+        $dataGet = ($filter = $this->request->getGet('filter')) ? $filter : 'all';
+        $dataGetTextF = ($filter = $this->request->getGet('TextF')) ? $filter : null;
+
+
+        $model = model('SuratKeluraModel');
+        $data['datasurat'] = $model->seeAllnoNoSuratWithJenis($dataGet, $dataGetTextF);
+
+        $data['jenisFilter'] = $this->Filter_Jenis_Surat;
+
+        $data['filter'] = $dataGet;
+        $data['dataGetTextF'] = $dataGetTextF;
 
         return view('suratkeluar/pengajaran/Semua_Surat-Tanpa-Nomer', $data);
-        // return view('suratkeluar/pengajaran/index_SuratTanpaNo', $data);
     }
 
     public function updateTanpaNoSurat()
@@ -399,8 +492,6 @@ class SuratKeluarController extends BaseController
         if (!$model->updateNoSurat($postdata['id'], $data)) {
             return FlashMassage('Staff/Permintaan_TTD-Surat_Tanpa_NoSurat', [resMas('f.save.surat')], 'fail');
         }
-        // d($dataSurat);
-        // d($postdata);
 
         return FlashMassage('Staff/Permintaan_TTD-Surat_Tanpa_NoSurat', [resMas('s.save.surat')], 'success');
     }
@@ -425,16 +516,28 @@ class SuratKeluarController extends BaseController
     public function indexStatusTTD()
     {
         PagePerm(['Dosen']);
-        $model = model(TandaTangan::class);
-        $data['datasurat'] = $model->cekStatusSuratTTD(userInfo());
 
-        // foreach ($data['datasurat'] as $key => $value) {
-        //     $data['surat'][$key] = $value['SuratIdentifier'];
-        //     $data['datasurat'][$key]['status'] = $model->cekStatusSurat($data['surat'][$key]);
+        $dataGet = ($filter = $this->request->getGet('filter')) ? $filter : 'all';
+        $dataGetTextF = ($filter = $this->request->getGet('TextF')) ? $filter : null;
+
+        $data['filter'] = $dataGet;
+        $data['dataGetTextF'] = $dataGetTextF;
+
+        $data['jenisFilter'] = $this->Filter_Jenis_Surat;
+
+        $prefix = "Query_indexStatusTTD_";
+        // if (cekCacheData($prefix)) {
+        $model = model('TandaTangan');
+        $data['datasurat'] = $model->cekStatusSuratTTD(userInfo(), 0, $dataGet, $dataGetTextF);
+        $data['perluttd'] = count($data['datasurat']);
+
+
+        // setCacheData($prefix, $data);
+        // } else {
+        // $data = getCachaData($prefix);
         // }
 
-        $data['perluttd'] = count($data['datasurat']);
-        // d($data);
+
         return view('suratkeluar/penandatangan/Semua_Perlu_TTD', $data);
     }
 
@@ -446,7 +549,7 @@ class SuratKeluarController extends BaseController
             'id',
         ]);
 
-        $model = model(TandaTangan::class);
+        $model = model('TandaTangan');
         $data['TTD'] = $model->cekStatusById($postdata['id']);
 
 
@@ -458,7 +561,7 @@ class SuratKeluarController extends BaseController
 
         $data['update']['Status']      = 1;
         $data['update']['qrcodeName']  =  "QRCode-" . generateIdentifier(16, 'time');
-        $data['update']['hash']        = $enkripsi->enkripsiTTD($data['TTD']['NoSurat'], $data['TTD']['mshw_id']);
+        $data['update']['hash']        = $enkripsi->get_EnkripsiTTD($data['TTD']['NoSurat'], $data['TTD']['mshw_id']);
         $data['update']['TimeStamp']   = getUnixTimeStamp();
         $data['update']['pendattg_id'] = userInfo()['id'];
 
@@ -470,14 +573,34 @@ class SuratKeluarController extends BaseController
             return FlashMassage('/Surat_Perlu_TandaTangan', [resMas('f.u.save.ttd')], 'fail');
         }
 
+        $prefix = "Query_indexStatusTTD_";
+        delCacheData($prefix);
+
         return FlashMassage('/Surat_Perlu_TandaTangan', [resMas('s.save.ttd')], 'success');
     }
 
     public function indexRiwayatTTD()
     {
         PagePerm(['Dosen']);
-        $model = model(TandaTangan::class);
-        $data['datasurat'] = $model->cekStatusSuratTTD(userInfo(), 1);
+
+
+        $dataGet = ($filter = $this->request->getGet('filter')) ? $filter : 'all';
+        $filter_waktu = ($filter = $this->request->getGet('filter_waktu')) ? $filter : 1;
+        $dataGetTextF = ($filter = $this->request->getGet('TextF')) ? $filter : null;
+
+
+        if (!is_numeric($filter_waktu)) {
+            $data['filter_waktu'] = 1;
+        } else {
+            $data['filter_waktu'] = $filter_waktu;
+        }
+
+        $data['filter'] = $dataGet;
+        $data['dataGetTextF'] = $dataGetTextF;
+        $data['jenisFilter'] = $this->Filter_Jenis_Surat;
+
+        $model = model('TandaTangan');
+        $data['datasurat'] = $model->cekStatusSuratTTD(userInfo(), 1, $dataGet, $dataGetTextF, $filter_waktu);
 
         return view('suratkeluar/penandatangan/Semua_Riwayat_TTD', $data);
     }

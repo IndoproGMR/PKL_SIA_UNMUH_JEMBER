@@ -38,6 +38,17 @@ Options -Indexes
 	RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 </IfModule>
 
+# <IfModule mod_expires.c>
+# ExpiresActive On
+# ExpiresByType text/css "access plus 1 week"
+# ExpiresByType application/javascript "access plus 1 month"
+# ExpiresByType application/x-javascript "access plus 1 month"
+# ExpiresByType image/gif "access plus 1 month"
+# ExpiresByType image/jpeg "access plus 1 month"
+# ExpiresByType image/png "access plus 1 month"
+# ExpiresByType image/x-icon "access plus 1 year"
+# </IfModule>
+
 <IfModule !mod_rewrite.c>
 	# If we don't have mod_rewrite installed, all 404's
 	# can be sent to index.php, and everything works as normal.
