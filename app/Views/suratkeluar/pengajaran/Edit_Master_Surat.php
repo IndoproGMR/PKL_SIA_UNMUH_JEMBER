@@ -66,10 +66,17 @@
 <?= $this->section('style') ?>
 
 <style>
+    .TombolADD {
+        display: flex;
+        justify-content: space-between;
+    }
+
     .tomboladd {
+        flex: 1;
+        margin: 0 5px;
+
         background-color: green;
         color: white;
-        width: 30%;
         margin-right: 16px;
         padding: 12px;
         margin-bottom: 16px;
@@ -78,9 +85,23 @@
         border: 1px solid #ccc;
     }
 
+    .inputclass {
+        height: 40px !important;
+        width: 75% !important;
+    }
+
     .tomboladd:hover {
         background-color: #aaffaa;
     }
+
+    .Delete {
+        background-color: red !important;
+        width: 22% !important;
+        margin-left: 3% !important;
+        height: 40px !important;
+    }
+
+
 
 
     input[type=text] {
@@ -90,39 +111,7 @@
         margin-top: 6px;
         border-radius: 4px;
         border: 1px solid #ccc;
-
-    }
-
-    input[type=button] {
-        background-color: red;
-        color: white;
-        width: 15%;
-        padding: 12px;
-        margin-bottom: 16px;
-        margin-top: 6px;
-        border-radius: 4px;
-        border: 1px solid #ccc;
-        margin-left: 16px;
-    }
-
-    input[type=button]:hover {
-        background-color: #ffaaaa;
-    }
-
-    button[type=submit] {
-        background-color: green;
-        color: white;
-        width: 80%;
-        padding: 12px;
-        margin-bottom: 16px;
-        margin-top: 6px;
-        border-radius: 4px;
-        border: 1px solid #ccc;
-        margin-left: 16px;
-    }
-
-    button[type=submit]:hover {
-        background-color: #aaffaa;
+        height: 40px !important;
     }
 
     .informasipenting {
@@ -136,27 +125,32 @@
 
 <?= $this->section('main') ?>
 
-<h1 style="text-align: center;">Edit isi Surat</h1>
-<hr>
 <br>
-<form action="<?= base_url('/Staff/detail/Master-Surat'); ?>" method="post" id="inputisi">
+<form class="inputform" action="<?= base_url('/Staff/detail/Master-Surat'); ?>" method="post" id="inputisi">
+    <h1 style="text-align: center;">Edit isi Surat</h1>
+    <hr>
+    <br>
     <?= csrf_field() ?>
 
     <textarea id="mytextarea" name="inputisi">
         <?= $datasurat['isiSurat'] ?>
     </textarea>
-    <input hidden type="text" name="id" id="id" value="<?= esc($datasurat['id']) ?>">
-    <br>
-    <hr>
+    <input type="hidden" name="id" id="id" value="<?= esc($datasurat['id']) ?>">
 
     <br>
-    <input type="text" name="jenisSurat" id="jenisSurat" placeholder="JenisSurat" value="<?= esc($datasurat['name']) ?>">
-    <br>
-    <input type="text" name="diskripsi" id="diskripsi" placeholder="diskripsi" value="<?= esc($datasurat['description']) ?>">
+    <hr>
     <br>
 
-    <hr>
-    <button type="submit" id="submit">upload</button>
+    <div>
+        <label for="jenisSurat" class="required">Nama Master Surat:</label>
+        <input type="text" name="jenisSurat" id="jenisSurat" placeholder="JenisSurat" value="<?= esc($datasurat['name']) ?>">
+    </div>
+    <div>
+        <label for="diskripsi" class="required">Diskripsi Master Surat:</label>
+        <input type="text" name="diskripsi" id="diskripsi" placeholder="diskripsi" value="<?= esc($datasurat['description']) ?>">
+    </div>
+
+    <input type="submit" id="submit" value="Update">
 </form>
 
 <hr>

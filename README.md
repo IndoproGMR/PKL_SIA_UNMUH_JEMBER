@@ -111,7 +111,7 @@ ___
 - [x] succes fail massage
 
 **Create_Read_Update_Delete_readPDF_MakeFile**
-#### Surat Keluar (16/28)
+#### Surat Keluar (22/28)
 ##### Semua user
 - [ ] cek QR (need:UI)
 - [ ] liat surat dari server
@@ -120,8 +120,8 @@ ___
 - [x] API baru untuk mencek apakah noSurat sudah ada di dalam database atau tidak?
 
 ##### Mahasiswa 
-- [ ] Minta Surat (R) (need:UI)
-- [ ] Minta Surat buat (C_R) (need:UI)
+- [x] Minta Surat (R)
+- [x] Minta Surat buat (C_R)
 - [x] Semua Surat / Riwayat (R_PDF_MK)
 - [x] Filter Berdasarkan Tgl,Jenis Surat
 - [x] Melihat Status Surat (R)
@@ -136,15 +136,14 @@ ___
 - [x] Filter Berdasarkan Tgl,Peminta,Jenis Surat
 
 ##### Pengajaran
-- [ ] Master Surat Buat (C) (need:UI)
+- [x] Master Surat Buat (C)
 - [x] Master Surat semua (R_PDF) 
-- [ ] Test Master Surat (R_PDF) (need:UI)
-- [ ] Master Surat edit (R_U_D) (need:UI)
+- [x] Test Master Surat (R_PDF)
+- [x] Master Surat edit (R_U_D)
 - [x] Master Surat Visiblity Toggle (U)
 - [x] set NomerSurat semua (R_PDF)
 - [x] Filter Berdasarkan Peminta,Jenis Surat
-- [ ] set NomerSurat edit (R_U_D) (need:UI)
-
+- [x] set NomerSurat edit (R_U_D)
 ##### PDF Surat
 - [ ] KOP Surat
 - [ ] layout
