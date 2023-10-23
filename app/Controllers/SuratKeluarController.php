@@ -528,7 +528,7 @@ class SuratKeluarController extends BaseController
         $prefix = "Query_indexStatusTTD_";
         // if (cekCacheData($prefix)) {
         $model = model('TandaTangan');
-        $data['datasurat'] = $model->cekStatusSuratTTD(userInfo(), 0, $dataGet, $dataGetTextF);
+        $data['datasurat'] = $model->cekStatusSuratTTD(userInfo(), 0, $dataGet, $dataGetTextF, 'all');
         $data['perluttd'] = count($data['datasurat']);
 
 

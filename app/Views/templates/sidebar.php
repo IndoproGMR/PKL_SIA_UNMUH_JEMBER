@@ -259,7 +259,7 @@
 
         </div>
         <br>
-        <h5 class="Version">Web Version: Beta 0.65</h5>
+        <h5 class="Version">Web Version: Beta 0.70</h5>
     </div>
 
     <!-- main Conten -->
