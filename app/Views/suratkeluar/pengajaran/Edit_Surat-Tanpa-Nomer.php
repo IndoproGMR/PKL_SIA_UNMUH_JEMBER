@@ -16,55 +16,78 @@
 <?= $this->section('main') ?>
 
 
-<div>
-    <p>mahasiswa yang buat: <span><?= esc($namaMHS); ?></span></p>
-    <p>kapan Surat Dibuat: <span><?= esc(timeconverter($TimeStamp)) ?></span></p>
-    <p>Jenis Surat: <span><?= esc($name); ?></span></p>
-    <p>Surat Identifier: <span><?= esc($SuratIdentifier) ?></span></p>
-</div>
 
 
-<form action="<?= base_url('/Staff/Edit-proses/Permintaan_TTD-Surat_Tanpa_NoSurat'); ?>" method="post">
+<form class="inputform" action="<?= base_url('/Staff/Edit-proses/Permintaan_TTD-Surat_Tanpa_NoSurat'); ?>" method="post">
     <?= csrf_field() ?>
     <input type="hidden" name="id" value="<?= esc($id); ?>">
+
+    <table>
+        <tbody>
+            <tr>
+                <td>mahasiswa yang buat:</td>
+                <td><?= esc($namaMHS); ?></td>
+            </tr>
+            <tr>
+                <td>kapan Surat Dibuat:</td>
+                <td><?= esc(timeconverter($TimeStamp)) ?></td>
+            </tr>
+            <tr>
+                <td>Jenis Surat:</td>
+                <td><?= esc($name); ?></td>
+            </tr>
+            <tr>
+                <td>Surat Identifier:</td>
+                <td><?= esc($SuratIdentifier) ?></td>
+            </tr>
+        </tbody>
+    </table>
+
     <br>
-    <label for="DiskripsiSurat">NoSurat Surat:</label>
-    <input type="text" name="NoSurat" id="NoSurat">
-    <br>
+    <div>
+        <label for="DiskripsiSurat">NoSurat Surat:</label>
+        <br>
+        <input type="text" name="NoSurat" id="NoSurat">
+    </div>
     <input type="submit" value="Update" id="tombolUpdate" class="Actions danger" disabled>
 </form>
-
-<button id="cekNomer" class="Actions">
-    cek nomer
-</button>
-<p class="Status-con">Status: <span id="Status">unknown</span></p>
-<label for="ceklist">Mohon Confirm</label>
-<input type="checkbox" name="" id="ceklist">
-
 <br>
 <hr>
 <br>
 
-<?= view_cell('TombolIdCell', [
-    'link'              => 'staff/Preview-Surat',
-    'valueinput'        => $id,
-    'tombolsubmitclass' => 'Actions',
-    'textsubmit'        => 'Preview Surat',
-    'confirmdialog'     => false,
-    'target'            => '_blank'
-]) ?>
+<div class="outForm">
+    <button id="cekNomer" class="Actions ">cek nomer</button>
+    <br>
+    <p class="Status-con">Status: <span id="Status">unknown</span></p>
+    <br>
+    <label for="ceklist" class="required">Mohon Confirm: </label>
+    <input type="hidden" name="" id="ceklist">
+</div>
+<br>
+<hr>
+<br>
+
+<div class="outForm">
+    <?= view_cell('TombolIdCell', [
+        'link'              => 'staff/Preview-Surat',
+        'valueinput'        => $id,
+        'tombolsubmitclass' => 'Actions',
+        'textsubmit'        => 'Preview Surat',
+        'confirmdialog'     => false,
+        'target'            => '_blank'
+    ]) ?>
 
 
-<?= view_cell('TombolIdCell', [
-    'link'              => 'delete-proses/surat-tanpa_NoSurat',
-    'valueinput'        => $id,
-    'tombolsubmitclass' => 'Actions',
-    'textsubmit'        => 'Delete Surat',
-    'confirmdialog'     => true,
-    'target'            => '_self'
-]) ?>
+    <?= view_cell('TombolIdCell', [
+        'link'              => 'delete-proses/surat-tanpa_NoSurat',
+        'valueinput'        => $id,
+        'tombolsubmitclass' => 'Actions danger',
+        'textsubmit'        => 'Delete Surat',
+        'confirmdialog'     => true,
+        'target'            => '_self'
+    ]) ?>
 
-
+</div>
 
 
 <?= $this->endSection() ?>
@@ -87,11 +110,17 @@
     document.getElementById("cekNomer").addEventListener("click", () => {
         var nomerSurat = btoa(document.getElementById("NoSurat").value);
         var statusSpan = document.getElementById("Status");
+        var ceklist = document.getElementById("ceklist");
 
         if (nomerSurat == '') {
             statusSpan.className = 'danger';
             return;
         }
+
+        statusSpan.textContent = 'LOADING...'
+        statusSpan.className = 'danger';
+        ceklist.type = 'hidden';
+
 
         var url = url_api + '?NoSurat=' + nomerSurat;
         // Panggil API dengan nomer surat
@@ -114,7 +143,6 @@
             .then(function(data) {
                 // Mengubah status berdasarkan respons API
                 statusSpan.textContent = data.massage;
-
                 if (data.massage_status == 1) {
                     // Menambahkan class 'danger' dan menghapus class 'good'
                     statusSpan.className = 'danger';
@@ -122,9 +150,11 @@
                     document.getElementById("tombolUpdate").setAttribute('disabled', '');
                     document.getElementById("ceklist").checked = false;
 
+
                 } else if (data.massage_status == 0) {
                     // Menambahkan class 'good' dan menghapus class 'danger'
                     statusSpan.className = 'green';
+                    ceklist.type = 'checkbox';
                 } else {
                     // Jika status tidak sama dengan 1 atau 0, hapus kelas yang ada
                     statusSpan.className = '';
