@@ -71,6 +71,8 @@ class SuratMasukController extends BaseController
         ]);
         // d($postdata);
 
+        // !Tambahkan Validasi text
+
         $validationRule = Validasi_FilePDF();
         // !ganti php.ini untuk menambah upload limit
 

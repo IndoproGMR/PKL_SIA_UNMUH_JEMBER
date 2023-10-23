@@ -1,56 +1,74 @@
 <?= $this->extend('templates/layout.php') ?>
 
 <?= $this->section('style') ?>
-<link rel="stylesheet" href="<?= base_url('/'); ?>css/status.css">
+<style>
+</style>
 <?= $this->endSection() ?>
 
 <?= $this->section('main') ?>
 
-<form action="/input-jenis-archive-surat" id="inputJenisSurat" style="display: none;">
+
+<br>
+<br>
+<form class="inputform" action="<?= esc(base_url('/staff/input-proses/archive-surat')) ?>" enctype="multipart/form-data" method="post" accept-charset="utf-8">
+    <?= csrf_field() ?>
+    <h1>Input Surat</h1>
+
+    <div>
+        <label for="jenissuratid" class="required">Jenis Surat:</label>
+        <br>
+        <?= view_cell(
+            'SelectOptionCell',
+            [
+                'options'      => $jenisFilter,
+                'nameselect'   => 'jenissuratid',
+                'idselect'     => 'jenissuratid',
+                'lastoptions'  => ['value' => '---', 'name' => 'Tidak Ketemu Jenis Surat ?'],
+                'onchange'     => 'cek()',
+            ]
+        )
+        ?>
+    </div>
+
+    <div>
+        <label for="DiskirpsiSurat">Deskripsi Surat:</label>
+        <br>
+        <input type="text" name="DiskirpsiSurat" id="DiskirpsiSurat">
+    </div>
+
+    <div>
+        <label for="DataSurat">Data Surat:</label>
+        <br>
+        <input type="text" name="DataSurat" id="DataSurat">
+    </div>
+
+    <div>
+        <label for="NomerSurat" class="required">Nomor Surat:</label>
+        <br>
+        <input type="text" name="NomerSurat" id="NomerSurat">
+    </div>
+
+    <div>
+        <label for="TanggalSurat" class="required">Tanggal Surat:</label>
+        <br>
+        <input type="date" name="TanggalSurat" id="TanggalSurat">
+    </div>
+
+    <div>
+        <label for="filepdf" class="required">Surat Scan:</label>
+        <br>
+        <input type="file" name="filepdf" id="filepdf" accept="image/*, .pdf">
+    </div>
+    <br>
+    <input type="submit" value="Simpan">
+</form>
+<br><br>
+
+<form action="/input-jenis-archive-surat" id="inputJenisSurat" class="inputform" style="display: none;">
+    <h1>Tambahkan Jenis Surat Baru</h1>
     <input type="submit" value="Tambah Jenis Surat">
 </form>
-<br>
-<br>
-<?= form_open_multipart(base_url('/staff/input-proses/archive-surat')) ?>
-<?= csrf_field() ?>
-<div>
-    <label for="jenissuratid">Jenis Surat:</label>
-    <?= view_cell(
-        'SelectOptionCell',
-        [
-            'options'      => $jenisFilter,
-            'nameselect'   => 'jenissuratid',
-            'idselect'     => 'jenissuratid',
-            'lastoptions'  => ['value' => '---', 'name' => 'Tidak Ketemu Jenis Surat ?'],
-            'onchange'     => 'cek()',
-        ]
-    )
-    ?>
-</div>
-<div>
-    <label for="DiskirpsiSurat">Deskripsi Surat:</label>
-    <input type="text" name="DiskirpsiSurat" id="DiskirpsiSurat">
-</div>
-<div>
-    <label for="NomerSurat">Nomor Surat:</label>
-    <input type="text" name="NomerSurat" id="NomerSurat">
-</div>
-<div>
-    <label for="TanggalSurat">Tanggal Surat:</label>
-    <input type="date" name="TanggalSurat" id="TanggalSurat">
-</div>
-<div>
-    <label for="DataSurat">Data Surat:</label>
-    <input type="text" name="DataSurat" id="DataSurat">
-</div>
 
-<div>
-    <label for="filepdf">Surat Scan:</label>
-    <input type="file" name="filepdf" id="filepdf">
-</div>
-
-<input type="submit" value="Simpan">
-</form>
 
 <br><br>
 <ol>

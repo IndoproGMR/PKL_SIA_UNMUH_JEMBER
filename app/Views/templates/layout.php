@@ -21,7 +21,10 @@ if (!empty($title)) {
     </title>
 
     <!-- global style -->
+    <link rel="stylesheet" href="<?= base_url('/css/root.css'); ?>">
     <link rel="stylesheet" href="<?= base_url('/css/style.css'); ?>">
+    <link rel="stylesheet" href="<?= base_url('/css/style-form.css'); ?>">
+    <link rel="stylesheet" href="<?= base_url('/css/style-sidebar.css'); ?>">
 
     <!-- font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
