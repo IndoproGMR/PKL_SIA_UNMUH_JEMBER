@@ -22,24 +22,49 @@
     <?= timedecor() ?>
 </div>
 
-
-<div class="kontensurat">
-    <h1><?= esc($datasurat['name']) ?></h1>
-    <h3><?= esc($datasurat['description']) ?></h3>
-    <h3><?= TombolTo('/staff/Preview/' . $datasurat['id'], 'Preview Surat', '', '_blank') ?></h3>
-</div>
-
-
-<form action="<?= base_url('/Staff/test-proses/Master-Surat'); ?>" method="get" id="inputisi" target="_blank">
+<form class="inputform" action="<?= base_url('/Staff/test-proses/Master-Surat'); ?>" method="get" id="inputisi" target="_blank">
     <?= csrf_field() ?>
+    <table>
+        <tr>
+            <td>Nama Surat:</td>
+            <td>
+                <strong><?= esc($datasurat['name']) ?></strong>
+            </td>
+        </tr>
+        <tr>
+            <td>Diskripsi Surat:</td>
+            <td>
+                <strong><?= esc($datasurat['description']) ?></strong>
+            </td>
+        </tr>
+        <tr>
+            <td>Preview Surat:</td>
+            <td><?= TombolTo('/staff/Preview/' . $datasurat['id'], 'Preview Surat', '', '_blank') ?></td>
+        </tr>
+    </table>
 
-    <input hidden type="text" name="id" value="<?= esc($id) ?>">
-    <?php
-    inputform($dataform['input']);
-    ?>
+
+    <input hidden type="hidden" name="id" value="<?= esc($id) ?>">
+
+    <?php foreach ($dataform['input'] as $inputfild) : ?>
+        <div>
+            <label for="<?= esc($inputfild) ?>"><?= esc($inputfild) ?>:</label>
+            <input type="text" name="<?= esc($inputfild) ?>" id="<?= esc($inputfild) ?>">
+        </div>
+    <?php endforeach ?>
+
+    <?php if (isset($dataform['tambahan'])) : ?>
+        <?php if (in_array('foto', $dataform['tambahan'])) : ?>
+            <div>
+                <label for="foto">Foto:</label>
+                <input type="file" name="foto" id="foto" accept="image/*">
+            </div>
+        <?php endif ?>
+    <?php endif ?>
 
     <br>
-    <input type="submit" value="sumit">
+
+    <input type="submit" value="Test Surat">
 </form>
 
 

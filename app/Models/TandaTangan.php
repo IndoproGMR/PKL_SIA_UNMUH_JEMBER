@@ -166,6 +166,8 @@ class TandaTangan extends Model
         $data = $data
             ->findAll(100);
 
+        // d($data);
+
         return $data;
     }
 
