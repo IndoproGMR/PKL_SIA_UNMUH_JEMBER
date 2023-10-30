@@ -31,10 +31,14 @@ $routes->post('/Admin-Panel/login', 'AdminPanelController::loginAdminProses');
 $routes->get('/Admin-Panel/Masukan-akun', 'AdminPanelController::createNewuser');
 $routes->post('/Admin-Panel/Masukan-akun/step2', 'AdminPanelController::createNewuser');
 
-
 $routes->get('/Admin-Panel/join', 'AdminPanelController::newUser');
 $routes->post('/Admin-Panel/join', 'AdminPanelController::newUser');
 
+
+$routes->get('/Admin-Panel/Input-info', 'AdminPanelController::addinformations');
+$routes->post('/Admin-Panel/Input-info/upload', 'AdminPanelController::addinformationsProses');
+
+// ambil data config dari db dan cache
 
 if (env('CI_ENVIRONMENT') == 'development') {
     $routes->get('/Admin-Panel/CekServer', 'AdminPanelController::testServer');

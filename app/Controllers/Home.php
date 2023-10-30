@@ -26,15 +26,28 @@ class Home extends BaseController
                 );
 
                 // set ke browser
-                set_cookie($cookie);;
+                set_cookie($cookie);
                 // Set ke Redis
+
                 if (!setCacheData($pinAPI, 'AUTH_API_X-Token', 3600, '')) {
-                    FlashMassage('/', ['API Key error']);
+                    return FlashMassage('/', ['API Key error']);
                 }
             }
         }
 
-        return view('home/index');
+
+        $prefix = "InformationsBoards";
+        if (cekCacheData($prefix, '')) {
+            $model = model("ServerConfig");
+            $data['informations'] = $model->getServerConfig('informations');
+            setCacheData($prefix, $data, 604800, '');
+        } else {
+            $data = getCachaData($prefix, '');
+        }
+
+
+
+        return view('home/index', $data);
     }
 
     public function StaffHelp()

@@ -17,9 +17,10 @@ $auth = env('AUTH_ENVIRONMENT');
   }
 
   .konten-kontener {
-    background-color: grey;
+    background-color: #ffffffaa;
     border-radius: 10px;
-    padding: 10px;
+    padding: 20px;
+    min-height: 300px;
   }
 </style>
 <?= $this->endSection() ?>
@@ -30,11 +31,15 @@ $auth = env('AUTH_ENVIRONMENT');
   <h1>Selamat Datang <?= esc(userInfo()['NamaUser']) ?>, Di Web Surat Universitas Muhammadiyah Jember</h1>
 </div>
 
-<div class="konten-kontener">
+<?php if ($informations !== '') : ?>
+  <div class="konten-kontener">
+    <?= $informations ?>
+  </div>
+<?php endif ?>
 
 
-
-
+<br>
+<div>
   <?php if ($ci == 'development') : ?>
     <div style="color: red;">
       <h2>CI_ENVIRONMENT: <span><?= esc($ci) ?></span></h2>
@@ -47,7 +52,6 @@ $auth = env('AUTH_ENVIRONMENT');
       <h2>AUTH_ENVIRONMENT: <span><?= esc($auth) ?></span></h2>
     </div>
   <?php endif ?>
-
 </div>
 
 <?= $this->endSection() ?>
