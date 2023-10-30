@@ -51,49 +51,14 @@ class SuratMasukModel extends Model
 
     function deleteSuratMasuk($id)
     {
-
         $data = [
             'DeleteAt' => getUnixTimeStamp()
         ];
         return $this->update($id, $data);
     }
 
-    public function seeallbyJenis2($idJenis = 'all')
-    {
-        if ($idJenis == 'all') {
-            return $this
-                ->select('
-                SM_SuratArchice.id as idSurat,
-                SM_JenisSuratArchice.Name as JenisSurat,
-                SM_SuratArchice.DiskirpsiSurat as DiskripsiSurat,
-                SM_SuratArchice.NomerSurat as NoSurat,
-                SM_SuratArchice.TanggalSurat as TanggalSurat,
-                
-                ')
-                ->join('SM_JenisSuratArchice', 'SM_JenisSuratArchice.id=SM_SuratArchice.JenisSuratArchice_id')
-                ->where('SM_SuratArchice.DeleteAt', null)
-                ->orderBy('SM_SuratArchice.TimeStamp', 'DESC')
-                ->findAll();
-            // return $this->findAll();
-        }
-        return $this
-            ->select('
-            SM_SuratArchice.id as idSurat,
-            SM_JenisSuratArchice.Name as JenisSurat,
-            SM_SuratArchice.DiskirpsiSurat as DiskripsiSurat,
-            SM_SuratArchice.NomerSurat as NoSurat,
-            SM_SuratArchice.TanggalSurat as TanggalSurat,
-            ')
-            ->join('SM_JenisSuratArchice', 'SM_JenisSuratArchice.id=SM_SuratArchice.JenisSuratArchice_id')
-            ->where('JenisSuratArchice_id', $idJenis)
-            ->where('SM_SuratArchice.DeleteAt', null)
-            ->orderBy('SM_SuratArchice.TimeStamp', 'DESC')
-            ->findAll();
-        // return $this->where('JenisSuratArchice_id', $idJenis)->findAll();
-    }
 
-
-    public function seeallbyJenis($idJenis = 'all')
+    public function seeallbyFilter($idJenis = 'all', $TanggalSurat = null, $TextF = null)
     {
         $build = $this->select('
         SM_SuratArchice.id as idSurat,
@@ -106,18 +71,31 @@ class SuratMasukModel extends Model
             ->where('SM_SuratArchice.DeleteAt', null)
             ->orderBy('SM_SuratArchice.TimeStamp', 'DESC');
 
-        if ($idJenis == 'all') {
+
+        if (!is_null($TanggalSurat)) {
+            $build
+                ->groupStart()
+                ->where('SM_SuratArchice.TanggalSurat', $TanggalSurat)
+                ->groupEnd();
+        }
+
+        if (!is_null($TextF)) {
+            $build
+                ->groupStart()
+                ->Like('SM_SuratArchice.DiskirpsiSurat', $TextF)
+                ->orlike('SM_SuratArchice.NomerSurat', $TextF)
+                ->orLike('SM_SuratArchice.DataSurat', $TextF)
+                ->groupEnd();
+        }
+
+
+        if ($idJenis !== 'all') {
             return $build
+                ->where('JenisSuratArchice_id', $idJenis)
                 ->findAll();
         }
 
-        return $build
-            ->where('JenisSuratArchice_id', $idJenis)
-            ->findAll();
-        // return $this->where('JenisSuratArchice_id', $idJenis)->findAll();
-
-
-        // return $datareturn;
+        return $build->findAll(100);
     }
 
 

@@ -13,7 +13,7 @@ class SuratKeluarController extends BaseController
     {
         helper('authvalid');
 
-        $prefix = "Query_Filter_Jenis_Surat";
+        $prefix = "Query_Filter_Jenis_Surat_Keluar";
         if (cekCacheData($prefix, '')) {
             $model = model('JenisSuratKeluarModel');
             $Filter_Jenis_Surat = $this->Filter_Jenis_Surat = $model->seeall();
@@ -462,7 +462,7 @@ class SuratKeluarController extends BaseController
         $dataSurat = $model->cekSuratByNo($postdata);
         $dataSurat['id'] = $postdata;
 
-        return view('suratKeluar/pengajaran/Edit_Surat-Tanpa-Nomer', $dataSurat);
+        return view('suratkeluar/pengajaran/Edit_Surat-Tanpa-Nomer', $dataSurat);
     }
 
     public function updateTanpaNoSuratProses()
@@ -528,7 +528,7 @@ class SuratKeluarController extends BaseController
         $prefix = "Query_indexStatusTTD_";
         // if (cekCacheData($prefix)) {
         $model = model('TandaTangan');
-        $data['datasurat'] = $model->cekStatusSuratTTD(userInfo(), 0, $dataGet, $dataGetTextF);
+        $data['datasurat'] = $model->cekStatusSuratTTD(userInfo(), 0, $dataGet, $dataGetTextF, 'all');
         $data['perluttd'] = count($data['datasurat']);
 
 
@@ -601,15 +601,6 @@ class SuratKeluarController extends BaseController
 
         $model = model('TandaTangan');
         $data['datasurat'] = $model->cekStatusSuratTTD(userInfo(), 1, $dataGet, $dataGetTextF, $filter_waktu);
-
-
-        // $namacache = "Query_indexRiwayatTTD_";
-        // if (cekCacheData($namacache)) {
-        // 
-        // setCacheData($namacache, $data['datasurat']);
-        // } else {
-        // $data['datasurat'] = getCachaData($namacache);
-        // }
 
         return view('suratkeluar/penandatangan/Semua_Riwayat_TTD', $data);
     }
