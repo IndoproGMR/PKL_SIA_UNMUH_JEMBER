@@ -462,7 +462,7 @@ class SuratKeluarController extends BaseController
         $dataSurat = $model->cekSuratByNo($postdata);
         $dataSurat['id'] = $postdata;
 
-        return view('suratKeluar/pengajaran/Edit_Surat-Tanpa-Nomer', $dataSurat);
+        return view('suratkeluar/pengajaran/Edit_Surat-Tanpa-Nomer', $dataSurat);
     }
 
     public function updateTanpaNoSuratProses()
