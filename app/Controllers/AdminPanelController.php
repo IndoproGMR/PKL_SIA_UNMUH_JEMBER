@@ -21,6 +21,28 @@ class AdminPanelController extends BaseController
         return view('adminpanel/indexpanel');
     }
 
+    public function addinformations()
+    {
+        PagePerm(['Dosen', 'Administrator'], 'login', false, 1);
+        $model = model("ServerConfig");
+        $data['informations'] = $model->getServerConfig('informations');
+
+        return view('adminpanel/addinformations', $data);
+    }
+
+    public function addinformationsProses()
+    {
+        PagePerm(['Dosen', 'Administrator'], 'login', false, 1);
+
+        $getPost = $this->request->getPost('inputisi');
+        $model = model("ServerConfig");
+        delCacheData('InformationsBoards', '');
+
+        if (!$model->addServerConfig('informations', $getPost)) {
+            return FlashMassage('/Admin-Panel/Input-info/upload', [resMas('f.save')], 'fail');
+        }
+        return FlashMassage('/', [resMas('s.save')], 'success');
+    }
 
     public function createNewuser()
     {

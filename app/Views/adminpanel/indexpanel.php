@@ -50,8 +50,16 @@
 
 
 
-
-
+            <div>
+                <?= view_cell('TombolIdCell', [
+                    'link'              => '/Admin-Panel/Input-info',
+                    'valueinput'        => '',
+                    'tombolsubmitclass' => 'Actions',
+                    'textsubmit'        => 'Tambahkan Informasi',
+                    'target'            => '_self',
+                    'method'            => 'get'
+                ]) ?>
+            </div>
 
 
 
