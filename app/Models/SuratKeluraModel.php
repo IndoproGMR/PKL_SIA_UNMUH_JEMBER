@@ -7,73 +7,106 @@ use CodeIgniter\Model;
 class SuratKeluraModel extends Model
 {
     // protected $DBGroup          = 'default';
-    protected $table            = 'SK_ttd_SuratMasuk';
+    protected $table            = 'SK_ttd_MintaSurat';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
-    // protected $useSoftDeletes   = false;
+    protected $useSoftDeletes   = true;
     protected $protectFields    = true;
     protected $allowedFields    = [
         'NoSurat',
         'SuratIdentifier',
         'DataTambahan',
-        'TimeStamp',
-        'JenisSurat_id',
+        'MasterSurat_id',
         'mshw_id',
-        'DeleteAt'
+        'Status',
+        'Report_diskripsi',
+        'created_at',
+        'updated_at',
+        'deleted_at'
     ];
+
+    // Dates
+    protected $useTimestamps = true;
+    protected $dateFormat    = 'datetime';
+    protected $createdField  = 'created_at';
+    protected $updatedField  = 'updated_at';
+    protected $deletedField  = 'deleted_at';
 
     function addSuratKeluar($data)
     {
         return $this->save($data);
     }
 
-    function cekNoSurat(string $iduser, $showall = false, $jenisSurat = 'all', int $timefilter = 1)
+    function cekNotifPerluNoSurat()
     {
-        // $timefilter = time() - $timefilter;
-
-        $quary = $this
-            ->select('
-        SK_JenisSurat.name as namaJenisSurat,
-        SK_ttd_SuratMasuk.NoSurat,
-        SK_ttd_SuratMasuk.TimeStamp,
-        SK_ttd_SuratMasuk.SuratIdentifier
-        ')
-            ->join('SK_JenisSurat', 'SK_JenisSurat.id=SK_ttd_SuratMasuk.JenisSurat_id')
-
+        return $this->select('count("*") as totalCount')
+            ->where('SK_ttd_MintaSurat.NoSurat', 'Belum_Memiliki_No_Surat')
+            ->join('SK_MasterSurat', 'SK_MasterSurat.id=SK_ttd_MintaSurat.MasterSurat_id')
+            ->join('Server_MHSW_BlackList', 'Server_MHSW_BlackList.mshw_id=SK_ttd_MintaSurat.mshw_id', 'left')
             ->groupStart()
-            ->where('SK_ttd_SuratMasuk.mshw_id', $iduser)
+            ->orwhere('Server_MHSW_BlackList.Status', NULL)
+            ->orWhere('Server_MHSW_BlackList.Status !=', 0)
             ->groupEnd()
 
-            ->where('SK_ttd_SuratMasuk.DeleteAt', null)
-            ->orderBy('SK_ttd_SuratMasuk.TimeStamp', 'DESC');
+            // ->where('Server_MHSW_BlackList.Status', 0)
+
+            // ->where('SK_ttd_MintaSurat.deleted_at', null)
+            ->findAll()[0]['totalCount'];
+    }
+
+    function cekNoSurat(string $iduser, $showall = false, $jenisSurat = 'all', $dateS = null, $dateE = null, $limit = 10)
+    {
+        $quary = $this
+            ->select('
+                SK_MasterSurat.name as namaJenisSurat,
+                SK_ttd_MintaSurat.NoSurat,
+                SK_ttd_MintaSurat.created_at,
+                SK_ttd_MintaSurat.Status as StatusSurat,
+                SK_ttd_MintaSurat.SuratIdentifier
+            ')
+            ->join('SK_MasterSurat', 'SK_MasterSurat.id=SK_ttd_MintaSurat.MasterSurat_id')
+
+            ->groupStart()
+            ->where('SK_ttd_MintaSurat.mshw_id', $iduser)
+            ->groupEnd()
+
+            ->where('SK_ttd_MintaSurat.deleted_at', null)
+            ->orderBy('SK_ttd_MintaSurat.created_at', 'DESC');
 
         if ($jenisSurat !== 'all') {
             $quary->groupStart()
-                ->where('SK_ttd_SuratMasuk.JenisSurat_id', $jenisSurat)
+                ->where('SK_ttd_MintaSurat.MasterSurat_id', $jenisSurat)
                 ->groupEnd();
         }
 
         if ($showall) {
             return $quary
-                ->findAll();
+                ->findAll($limit);
         }
 
-        if ($timefilter !== 'all' && $jenisSurat == 'all') {
-            $timeNow = getUnixTimeStamp();
 
-            $timeAtas  = $timeNow - (2592000 * ($timefilter));
-            $timeBawah = $timeNow - (2592000 * ($timefilter - 1));
+        if (!is_null($dateS)) {
+            $dateS = $dateS . " 00:00:01";
+            $textquery = 'SK_ttd_MintaSurat.created_at BETWEEN "' . $dateS . '"';
+
+            if (!is_null($dateE)) {
+                $dateE = '"' . $dateE . " 23:59:59" . '"';
+            } else {
+                helper('textsurat');
+                $dateE = '"' . getDateTime() . '"';
+            }
+
+            $textquery = $textquery . " AND " . $dateE;
 
             $quary->groupStart()
-                ->where('SK_ttd_SuratMasuk.TimeStamp >=', $timeAtas)
-                ->where('SK_ttd_SuratMasuk.TimeStamp <=', $timeBawah)
+                ->where($textquery)
                 ->groupEnd();
         }
 
         return $quary
-            ->where('SK_ttd_SuratMasuk.NoSurat !=', 'Belum_Memiliki_No_Surat')
-            ->findAll();
+            ->where('SK_ttd_MintaSurat.NoSurat !=', 'Belum_Memiliki_No_Surat')
+            ->findAll($limit);
     }
 
     function cekSuratByNo($noSurat)
@@ -83,25 +116,25 @@ class SuratKeluraModel extends Model
 
         $surat = $this
             ->select('
-            SK_ttd_SuratMasuk.NoSurat,
-            SK_ttd_SuratMasuk.DataTambahan,
-            SK_ttd_SuratMasuk.TimeStamp,
-            SK_ttd_SuratMasuk.mshw_id,
-            SK_ttd_SuratMasuk.SuratIdentifier,
-            SK_JenisSurat.name,
-            SK_JenisSurat.isiSurat,
-            SK_JenisSurat.form,
+            SK_ttd_MintaSurat.NoSurat,
+            SK_ttd_MintaSurat.DataTambahan,
+            SK_ttd_MintaSurat.created_at,
+            SK_ttd_MintaSurat.mshw_id,
+            SK_ttd_MintaSurat.SuratIdentifier,
+            SK_MasterSurat.name,
+            SK_MasterSurat.isiSurat,
+            SK_MasterSurat.form,
             ')
-            ->join('SK_JenisSurat', 'SK_JenisSurat.id=SK_ttd_SuratMasuk.JenisSurat_id')
-            ->where('SK_ttd_SuratMasuk.NoSurat', $noSurat)
-            ->orWhere('SK_ttd_SuratMasuk.id', $noSurat)
+            ->join('SK_MasterSurat', 'SK_MasterSurat.id=SK_ttd_MintaSurat.MasterSurat_id')
+            ->where('SK_ttd_MintaSurat.NoSurat', $noSurat)
+            ->orWhere('SK_ttd_MintaSurat.id', $noSurat)
             ->find();
 
         if (!count($surat) > 0) {
             helper('datacall');
             $data['NoSurat']      = resMas('e');
             $data['DataTambahan'] = resMas('e');
-            $data['TimeStamp']    = resMas('e');
+            $data['created_at']    = resMas('e');
             $data['namaMHS']      = resMas('e');
             $data['name']         = resMas('e');
             $data['isiSurat']     = resMas('e');
@@ -119,7 +152,7 @@ class SuratKeluraModel extends Model
             helper('datacall');
             $data['NoSurat']         = $surat[0]['NoSurat'];
             $data['DataTambahan']    = base64_decode($surat[0]['DataTambahan']);
-            $data['TimeStamp']       = $surat[0]['TimeStamp'];
+            $data['created_at']       = $surat[0]['created_at'];
             $data['namaMHS']         = $namaMHS[0]['Nama'];
             $data['SuratIdentifier'] = $surat[0]['SuratIdentifier'];
             $data['name']            = resMas('e');
@@ -130,8 +163,9 @@ class SuratKeluraModel extends Model
 
         $data['NoSurat']         = $surat[0]['NoSurat'];
         $data['DataTambahan']    = base64_decode($surat[0]['DataTambahan']);
-        $data['TimeStamp']       = $surat[0]['TimeStamp'];
+        $data['created_at']      = $surat[0]['created_at'];
         $data['namaMHS']         = $namaMHS[0]['Nama'];
+        $data['mshw_id']         = $surat[0]['mshw_id'];
         $data['SuratIdentifier'] = $surat[0]['SuratIdentifier'];
         $data['name']            = $surat[0]['name'];
         $data['isiSurat']        = base64_decode($surat[0]['isiSurat']);
@@ -140,7 +174,80 @@ class SuratKeluraModel extends Model
         return $data;
     }
 
-    function seeAllnoNoSuratWithJenis($jenisSurat = 'all', $TextF = null)
+    function cekIdSuratByIdenti($identi)
+    {
+        $data = $this->select('id')->where('SuratIdentifier', $identi)->findAll(2);
+        if (count($data) !== 1) {
+            return 0;
+        }
+        return $data[0]['id'];
+    }
+
+    function cekSuratByIdenti($identi, $idMshw = null)
+    {
+        helper('authvalid');
+
+        $prefix = "Query_DataSurat_" . $identi;
+        if (cekCacheData($prefix, '')) {
+
+            $db = \Config\Database::connect("siautama", false);
+            $builder = $db->table('mhsw');
+
+            $surat = $this
+                ->select('
+            SK_ttd_MintaSurat.NoSurat,
+            SK_ttd_MintaSurat.DataTambahan,
+            SK_ttd_MintaSurat.created_at,
+            SK_ttd_MintaSurat.mshw_id,
+            SK_ttd_MintaSurat.SuratIdentifier,
+            SK_MasterSurat.name,
+            SK_MasterSurat.isiSurat,
+            SK_MasterSurat.form,
+            ')
+                ->join('SK_MasterSurat', 'SK_MasterSurat.id=SK_ttd_MintaSurat.MasterSurat_id')
+                ->Where('SK_ttd_MintaSurat.SuratIdentifier', $identi)
+                ->find();
+
+
+
+
+            if (!count($surat) > 0) {
+                $data['error']        = 'y';
+                return $data;
+            }
+
+            $namaMHS = $builder
+                ->select('mhsw.Nama')
+                ->where('Login', $surat[0]['mshw_id'])
+                ->get()
+                ->getResultArray();
+
+            $data['NoSurat']         = $surat[0]['NoSurat'];
+            $data['DataTambahan']    = base64_decode($surat[0]['DataTambahan']);
+            $data['created_at']      = $surat[0]['created_at'];
+            $data['namaMHS']         = $namaMHS[0]['Nama'];
+            $data['SuratIdentifier'] = $surat[0]['SuratIdentifier'];
+            $data['name']            = $surat[0]['name'];
+            $data['isiSurat']        = base64_decode($surat[0]['isiSurat']);
+            $data['form']            = base64_decode($surat[0]['form']);
+            $data['error']           = 'n';
+
+            setCacheData($prefix, $data, 30, '');
+        } else {
+            $data = getCachaData($prefix, '');
+        }
+
+        if (!is_null($idMshw)) {
+            if ($data['namaMHS'] !== $idMshw) {
+                $data['error'] = 'y';
+                return $data;
+            }
+        }
+
+        return $data;
+    }
+
+    function seeAllnoNoSuratWithJenis($jenisSurat = 'all', $TextF = null, $dateS = null, $dateE = null, $BL = 1)
     {
         $db = \Config\Database::connect("siautama", false);
         $builder = $db->table('mhsw');
@@ -148,32 +255,59 @@ class SuratKeluraModel extends Model
 
         $quary = $this
             ->select('
-            SK_ttd_SuratMasuk.id,
-            SK_ttd_SuratMasuk.NoSurat,
-            SK_ttd_SuratMasuk.SuratIdentifier,
-            SK_ttd_SuratMasuk.TimeStamp,
-            SK_ttd_SuratMasuk.mshw_id,
-            SK_ttd_SuratMasuk.JenisSurat_id,
-            SK_JenisSurat.name,
+            SK_ttd_MintaSurat.id,
+            SK_ttd_MintaSurat.NoSurat,
+            SK_ttd_MintaSurat.SuratIdentifier,
+            SK_ttd_MintaSurat.created_at,
+            SK_ttd_MintaSurat.mshw_id,
+            SK_ttd_MintaSurat.MasterSurat_id,
+            SK_MasterSurat.name,
             ')
             ->groupStart()
-            ->where('SK_ttd_SuratMasuk.NoSurat', 'Belum_Memiliki_No_Surat')
-            ->where('SK_ttd_SuratMasuk.deleteAt', null)
-            ->join('SK_JenisSurat', 'SK_JenisSurat.id=SK_ttd_SuratMasuk.JenisSurat_id')
-            ->orderBy('SK_ttd_SuratMasuk.TimeStamp', 'ASC')
+            ->where('SK_ttd_MintaSurat.NoSurat', 'Belum_Memiliki_No_Surat')
+            // ->where('SK_ttd_MintaSurat.deleted_at', null)
+            ->join('SK_MasterSurat', 'SK_MasterSurat.id=SK_ttd_MintaSurat.MasterSurat_id')
+            ->join('Server_MHSW_BlackList', 'Server_MHSW_BlackList.mshw_id=SK_ttd_MintaSurat.mshw_id', 'left')
+            // ->where('Server_MHSW_BlackList.Status', $BL)
+            ->groupStart()
+            ->where('Server_MHSW_BlackList.Status', NULL)
+            ->orWhere('Server_MHSW_BlackList.Status', $BL)
+            ->groupEnd()
+
+            ->where('SK_MasterSurat.deleted_at', null)
+            ->orderBy('SK_ttd_MintaSurat.created_at', 'ASC')
             ->groupEnd();
 
         if ($jenisSurat !== 'all') {
             $quary
                 ->groupStart()
-                ->where('JenisSurat_id', $jenisSurat)
+                ->where('MasterSurat_id', $jenisSurat)
                 ->groupEnd();
         }
+
         if (!is_null($TextF)) {
             $quary
                 ->groupStart()
-                ->like('SK_ttd_SuratMasuk.mshw_id', $TextF)
-                ->orLike('SK_ttd_SuratMasuk.SuratIdentifier', $TextF)
+                ->like('SK_ttd_MintaSurat.mshw_id', $TextF)
+                ->orLike('SK_ttd_MintaSurat.SuratIdentifier', $TextF)
+                ->groupEnd();
+        }
+
+        if (!is_null($dateS)) {
+            $dateS = $dateS . " 00:00:01";
+            $textquery = 'SK_ttd_MintaSurat.created_at BETWEEN "' . $dateS . '"';
+
+            if (!is_null($dateE)) {
+                $dateE = '"' . $dateE . " 23:59:59" . '"';
+            } else {
+                helper('textsurat');
+                $dateE = '"' . getDateTime() . '"';
+            }
+
+            $textquery = $textquery . " AND " . $dateE;
+
+            $quary->groupStart()
+                ->where($textquery)
                 ->groupEnd();
         }
 
@@ -193,9 +327,9 @@ class SuratKeluraModel extends Model
 
     function seeAllnoNoSuratCount()
     {
-        return $this->select('count("*") as totalCount')->where('SK_ttd_SuratMasuk.NoSurat', 'Belum_Memiliki_No_Surat')
-            ->join('SK_JenisSurat', 'SK_JenisSurat.id=SK_ttd_SuratMasuk.JenisSurat_id')
-            ->where('SK_ttd_SuratMasuk.deleteAt', null)
+        return $this->select('count("*") as totalCount')->where('SK_ttd_MintaSurat.NoSurat', 'Belum_Memiliki_No_Surat')
+            ->join('SK_MasterSurat', 'SK_MasterSurat.id=SK_ttd_MintaSurat.MasterSurat_id')
+            ->where('SK_ttd_MintaSurat.deleted_at', null)
             ->findAll()[0]['totalCount'];
     }
 
@@ -208,12 +342,18 @@ class SuratKeluraModel extends Model
             return false;
         }
 
+        // d($cek);
+        // helper('authvalid');
+        // $prefix = "Query_DataSurat_" . $cek[0]['Query_DataSurat_'];
+        // delCacheData($prefix, '');
+
         return $this->update($id, ['NoSurat' => $NoSurat]);
     }
 
     function deleteSurat($id)
     {
-        return $this->update($id, ['DeleteAt' => getUnixTimeStamp()]);
+        return $this->delete($id);
+        // return $this->update($id, ['deleted_at' => getUnixTimeStamp()]);
     }
 
     function cekExistNoSurat($noSurat)
@@ -235,5 +375,41 @@ class SuratKeluraModel extends Model
         ];
 
         return $data;
+    }
+
+    // !Report
+    function addReport($id, $diskripsi)
+    {
+        $data = [
+            'Status' => 1,
+            'Report_diskripsi' => base64_encode(json_encode($diskripsi))
+        ];
+        return $this->update($id, $data);
+    }
+
+    function seeAllReport($search = null, $limit = 10)
+    {
+        $query = $this->select(
+            'SK_ttd_MintaSurat.SuratIdentifier,
+            SK_ttd_MintaSurat.NoSurat,
+            SK_MasterSurat.name as JenisSurat,
+            SK_ttd_MintaSurat.mshw_id,
+            SK_ttd_MintaSurat.Report_diskripsi,
+            SK_ttd_MintaSurat.updated_at'
+        )
+            ->join('SK_MasterSurat', 'SK_MasterSurat.id = SK_ttd_MintaSurat.MasterSurat_id')
+            ->where('SK_ttd_MintaSurat.Status', 1);
+
+        if (!is_null($search)) {
+
+            $query
+                ->groupStart()
+                ->like('SK_ttd_MintaSurat.mshw_id', $search)
+                ->orLike('SK_ttd_MintaSurat.SuratIdentifier', $search)
+                ->groupEnd();
+        }
+
+        $query = $query->findAll($limit);
+        return $query;
     }
 }

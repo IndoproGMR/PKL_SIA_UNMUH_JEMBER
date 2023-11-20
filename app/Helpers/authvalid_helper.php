@@ -5,6 +5,21 @@ use CodeIgniter\Config\Services;
 
 $cache = \Config\Services::cache();
 
+function getToken($TokenName = 'X-token')
+{
+    $request = \Config\Services::request();
+    $token = $request->getHeaderLine($TokenName);
+
+    if (is_null($token) || $token == 'null' || $token == '') {
+        $data['status'] = false;
+        return $data;
+    }
+
+    $data['status'] = true;
+    $data['Token'] = $token;
+    return $data;
+}
+
 /**
  * @param string $prefix
  * @param string $customId null = userID
@@ -153,13 +168,16 @@ function userInfo(): array
         return $session->get('userdata');
     }
 
+
+
     return  [
         'id'       => 'error',
         'FotoUser' => 'img/level/personal.png',
         'NamaUser' => 'mohon login',
         'namaLVL'  => 'mohon login',
         'Gelar'    => '',
-        'IP'       => 'error'
+        'IP'       => 'error',
+        'BL'       => 'Y'
     ];
 }
 

@@ -70,12 +70,13 @@ function transformData($data)
 
     foreach ($data['TTD'] as $value) {
         $ttdData = [
-            'Status' => 0,
-            'hash' => NULL,
-            'TimeStamp' => 0,
+            'id'              => generateIdentifier(),
+            'Status'          => 0,
+            'hash'            => NULL,
             'SuratIdentifier' => $data['SuratIdentifier'],
-            'jenisttd' => '', // Jenis TTD: Group atau Perorangan
-            'pendattg_id' => '' // Nilai pendattg_id berdasarkan jenis TTD
+            'jenisttd'        => '', // Jenis TTD: Group atau Perorangan
+            'pendattg_id'     => '', // Nilai pendattg_id berdasarkan jenis TTD
+            'created_at'      => getDateTime()
         ];
 
         if (strpos($value, 'Group_') === 0) {
@@ -119,9 +120,13 @@ function pecahkan(String $text)
     return explode("_", $text);
 }
 
-function hash256($data, $length = 12)
+function hash256($data, $length = 64)
 {
-    return substr(hash("sha256", $data), 0, $length);
+    if (is_array($data)) {
+        return substr(hash("sha512", base64_encode(json_encode($data))), 0, $length);
+    }
+
+    return substr(hash("sha512", $data), 0, $length);
 }
 
 function UUIDv4()
@@ -184,96 +189,7 @@ function ubaharray($array)
     return $newArray;
 }
 
-/**
- * $timestamp = unixTime
- * 
- * $jenis = default 'yunani'
- * yunani     = Monday, 03 July 2023 22:51:34
- * yunanitgl  = Monday, 03 July 2023
- * 
- * hijriah    = Monday, 14 Dhu al-Hijjah 1444 22:53:43
- * hijriahtgl = Monday, 14 Dhu al-Hijjah 1444
- */
 
-function timeconverter(int $timestamp = 0, $jenis = 'yunani')
-{
-    // tgl hijriah
-    date_default_timezone_set('Asia/Jakarta');
-    $Arabic = new \ArPHP\I18N\Arabic();
-
-
-    $Arabic->setDateMode(8);
-    $correction = $Arabic->dateCorrection($timestamp);
-
-
-    // tgl yunani
-    $date = new DateTime("@$timestamp");
-    $date->setTimezone(new DateTimeZone('GMT+7'));
-
-    $daysInIndonesian = [
-        'Sunday'    => 'Minggu',
-        'Monday'    => 'Senin',
-        'Tuesday'   => 'Selasa',
-        'Wednesday' => 'Rabu',
-        'Thursday'  => 'Kamis',
-        'Friday'    => 'Jumat',
-        'Saturday'  => 'Sabtu'
-    ];
-
-    $monthsInIndonesia = [
-        'January'   => 'Januari',
-        'February'  => 'Februari',
-        'March'     => 'Maret',
-        'April'     => 'April',
-        'May'       => 'Mei',
-        'June'      => 'Juni',
-        'July'      => 'Juli',
-        'August'    => 'Agustus',
-        'September' => 'September',
-        'October'   => 'Oktober',
-        'November'  => 'November',
-        'December'  => 'Desember'
-    ];
-
-    $indonesianDay = $daysInIndonesian[$date->format('l')];
-    $indonesianMonth = " " . $monthsInIndonesia[$date->format('F')] . " ";
-
-    switch ($jenis) {
-            // ! tanggal yunani
-        case 'yunani':
-            // $indonesianDay = $daysInIndonesian[$date->format('l')];
-            // $indonesianMonth = " " . $monthsInIndonesia[$date->format('F')] . " ";
-            $data = $indonesianDay . ', ' . $date->format('d') . $indonesianMonth . $date->format('Y H:i:s');
-            break;
-        case 'yunanitgl':
-            // $indonesianDay = $daysInIndonesian[$date->format('l')];
-            // $indonesianMonth = " " . $monthsInIndonesia[$date->format('F')] . " ";
-            // $data = $indonesianDay . ', ' . $date->format('d F Y');
-            $data = $indonesianDay . ', ' . $date->format('d') . $indonesianMonth . $date->format('Y');;
-            break;
-
-            // ! tanggal hijriah
-        case 'hijriah':
-            // $indonesianDay = $daysInIndonesian[$Arabic->date('l', $timestamp, $correction)];
-            $data = $indonesianDay . $Arabic->date(', j F Y H:i:s', $timestamp, $correction);
-            break;
-        case 'hijriahtgl':
-            // $indonesianDay = $daysInIndonesian[$Arabic->date('l', $timestamp, $correction)];
-            $data = $indonesianDay . $Arabic->date(', j F Y', $timestamp, $correction);
-            break;
-
-            // ! error
-        default:
-            $data = 'jenis tanggal tidak ditemukan';
-            break;
-    }
-    return $data;
-}
-
-function getUnixTimeStamp()
-{
-    return Time::now('Asia/Jakarta')->getTimestamp();
-}
 
 function cekDir($dir)
 {
@@ -291,31 +207,6 @@ function cekFile($file)
         return false;
     }
     return false;
-}
-
-function generateIdentifier(int $length = 16, $mode = 'haxtime')
-{
-    $timestamp = time();
-    $timestampHex = $timestamp;
-    if ($mode == 'haxtime') {
-        $timestampHex = dechex($timestamp);
-    }
-
-    if (function_exists('random_bytes')) {
-        $randomBytes = random_bytes($length - strlen($timestampHex) / 2);
-    } elseif (function_exists('openssl_random_pseudo_bytes')) {
-        $randomBytes = openssl_random_pseudo_bytes($length - strlen($timestampHex) / 2);
-    } else {
-        $randomBytes = '';
-        for ($i = 0; $i < $length - strlen($timestampHex) / 2; $i++) {
-            $randomBytes .= chr(mt_rand(0, 255));
-        }
-    }
-
-    $randomHex = bin2hex($randomBytes);
-    $identifier = $timestampHex . "-" . $randomHex;
-
-    return substr($identifier, 0, $length);
 }
 
 function recursiveCopy($source, $destination)
@@ -424,4 +315,139 @@ function createZipFromFolder($sourceFolder, $destinationZip)
     } else {
         return false;
     }
+}
+
+
+function getUnixTimeStamp()
+{
+    return strtotime(Time::now()->toDateTimeString());
+}
+
+function getDateTime()
+{
+    return Time::now()->toDateTimeString(); // out:"2023-11-05 15:38:22"
+}
+
+// !future proof sampai tahun 9999 atau upgrade Bahasa atau database :v
+function generateIdentifier(int $length = 16)
+{
+    $timestamp = getDateTime();
+
+    $timestampHex = $timestamp;
+    $timestampHex = dechex(strtotime($timestamp));
+
+    if (function_exists('random_bytes')) {
+        $randomBytes = random_bytes($length - strlen($timestampHex) / 2);
+    } elseif (function_exists('openssl_random_pseudo_bytes')) {
+        $randomBytes = openssl_random_pseudo_bytes($length - strlen($timestampHex) / 2);
+    } else {
+        $randomBytes = '';
+        for ($i = 0; $i < $length - strlen($timestampHex) / 2; $i++) {
+            $randomBytes .= chr(mt_rand(0, 255));
+        }
+    }
+
+    $randomHex = bin2hex($randomBytes);
+    $identifier = $timestampHex . "-" . $randomHex;
+
+    return substr($identifier, 0, $length);
+}
+
+
+
+/**
+ * $timestamp = unixTime
+ * 
+ * $jenis = default 'yunani'
+ * yunani     = Monday, 03 July 2023 22:51:34
+ * yunanitgl  = Monday, 03 July 2023
+ * 
+ * hijriah    = Monday, 14 Dhu al-Hijjah 1444 22:53:43
+ * hijriahtgl = Monday, 14 Dhu al-Hijjah 1444
+ */
+
+function timeconverter($timestamp = 0, $jenis = 'yunani')
+{
+    if ($timestamp == 0) {
+        $timestamp = getUnixTimeStamp();
+    }
+    if (is_string($timestamp)) {
+        $timestamp = strtotime($timestamp);
+    }
+
+
+    // tgl hijriah
+    $Arabic = new \ArPHP\I18N\Arabic();
+
+
+    $Arabic->setDateMode(8);
+    $correction = $Arabic->dateCorrection($timestamp);
+
+
+    // tgl yunani
+    $date = new DateTime("@$timestamp");
+    $date->setTimezone(new DateTimeZone('GMT+7'));
+
+    $daysInIndonesian = [
+        'Sunday'    => 'Minggu',
+        'Monday'    => 'Senin',
+        'Tuesday'   => 'Selasa',
+        'Wednesday' => 'Rabu',
+        'Thursday'  => 'Kamis',
+        'Friday'    => 'Jumat',
+        'Saturday'  => 'Sabtu'
+    ];
+
+    $monthsInIndonesia = [
+        'January'   => 'Januari',
+        'February'  => 'Februari',
+        'March'     => 'Maret',
+        'April'     => 'April',
+        'May'       => 'Mei',
+        'June'      => 'Juni',
+        'July'      => 'Juli',
+        'August'    => 'Agustus',
+        'September' => 'September',
+        'October'   => 'Oktober',
+        'November'  => 'November',
+        'December'  => 'Desember'
+    ];
+
+    $indonesianDay = $daysInIndonesian[$date->format('l')];
+    $indonesianMonth = " " . $monthsInIndonesia[$date->format('F')] . " ";
+
+    switch ($jenis) {
+            // ! tanggal yunani
+        case 'yunani':
+            // $indonesianDay = $daysInIndonesian[$date->format('l')];
+            // $indonesianMonth = " " . $monthsInIndonesia[$date->format('F')] . " ";
+            $data = $indonesianDay . ', ' . $date->format('d') . $indonesianMonth . $date->format('Y H:i:s');
+            break;
+        case 'yunanitgl':
+            // $indonesianDay = $daysInIndonesian[$date->format('l')];
+            // $indonesianMonth = " " . $monthsInIndonesia[$date->format('F')] . " ";
+            // $data = $indonesianDay . ', ' . $date->format('d F Y');
+            $data = $indonesianDay . ', ' . $date->format('d') . $indonesianMonth . $date->format('Y');;
+            break;
+
+            // ! tanggal hijriah
+        case 'hijriah':
+            date_default_timezone_set('Asia/Jakarta');
+
+            // $indonesianDay = $daysInIndonesian[$Arabic->date('l', $timestamp, $correction)];
+            $data = $indonesianDay . $Arabic->date(', j F Y H:i:s', $timestamp, $correction);
+            break;
+        case 'hijriahtgl':
+            date_default_timezone_set('Asia/Jakarta');
+
+            // $indonesianDay = $daysInIndonesian[$Arabic->date('l', $timestamp, $correction)];
+            $data = $indonesianDay . $Arabic->date(', j F Y', $timestamp, $correction);
+            break;
+
+            // ! error
+        default:
+            $data = 'jenis tanggal tidak ditemukan';
+            break;
+    }
+    return $data;
 }

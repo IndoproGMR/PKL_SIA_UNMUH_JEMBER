@@ -51,6 +51,7 @@ if (env('CI_ENVIRONMENT') == 'development') {
 // ?login ======================================================================
 $routes->get('/login', 'Login::index');
 $routes->get('/logout', 'Login::index');
+
 $routes->post('/login', 'Login::loginProses');
 
 // ?Api Auth ===================================================================
@@ -84,6 +85,25 @@ if (env('MAINTENANCE_ENVIRONMENT', 'false') == 'true') {
  * ?fungsi Route
  */
 
+// !PDF ======================================================================>>
+// ?Semua User
+$routes->get('/Preview_Master-Surat/(:any)', 'PDFController::PreviewMasterSurat/$1');
+
+// ?Mahasiswa
+$routes->post('/Download_Surat', 'PDFController::DownloadSurat');
+
+// ?Staff
+$routes->get('/Staff/Preview_Master-Surat/(:any)', 'PDFController::PreviewMasterSuratStaff/$1');
+$routes->get('/Preview_Surat-Mahasiswa/(:any)', 'PDFController::PreviewSuratMahasiswa/$1');
+
+// ?Test
+$routes->get('/Staff/Test/Master-Surat/(:any)', 'PDFController::staffTestMasterSurat/$1');
+$routes->get('/Staff/Test-proses/Master-Surat/(:any)', 'PDFController::staffTestMasterSuratProses/$1');
+
+
+// ! =========================================================================<<
+
+
 
 // We get a performance increase by specifying the default
 // route since we don't have to scan directories.
@@ -99,6 +119,7 @@ $routes->get('/help', 'Home::MahasiswaHelp');
 $routes->get('/testinfo', 'Home::TestInfo');
 $routes->post('/testinfo/proses', 'Home::TestInfoProses');
 $routes->get('/testinfo/data', 'Home::TestInfoput');
+
 // ! =========================================================================<<
 
 // ?
@@ -112,12 +133,10 @@ $routes->get('/Surat/riwayat-Minta-TandaTangan', 'SuratKeluarController::indexRi
 
 // ?penambahan =================================================================
 $routes->get('/Surat/Minta-TandaTangan/(:any)', 'SuratKeluarController::indexMintaSurat/$1');
-$routes->post('/Surat/Minta-TandaTangan/(:any)', 'SuratKeluarController::addMintaSuratProses/$1');
+$routes->post('/Surat-Input_Proses/Minta-TandaTangan', 'SuratKeluarController::addMintaSuratProses');
 
 // ?PDF ========================================================================
-$routes->post('/Download/Surat', 'Pdfrender::DownloadSurat');
 
-$routes->get('/Preview/(:any)', 'Pdfrender::PreviewJenisSurat/$1');
 
 // *===========================================================================<
 // ! =========================================================================<<
@@ -130,21 +149,26 @@ $routes->get('/Staff/Permintaan_TTD-Surat_Tanpa_NoSurat', 'SuratKeluarController
 
 $routes->get('/Staff/Master-Surat', 'SuratKeluarController::indexJenisSurat');
 
+
 $routes->post('/Staff/Edit/Permintaan_TTD-Surat_Tanpa_NoSurat', 'SuratKeluarController::updateTanpaNoSurat');
+
 $routes->post('/Staff/Edit-proses/Permintaan_TTD-Surat_Tanpa_NoSurat', 'SuratKeluarController::updateTanpaNoSuratProses');
+
 
 $routes->post('/delete-proses/surat-tanpa_NoSurat', 'SuratKeluarController::deleteTanpaNoSuratProses');
 
-// ?penambahan =================================================================
-$routes->get('/input/master-surat', 'SuratKeluarController::addJenisSurat');
-$routes->post('/input-proses/master-surat', 'SuratKeluarController::addJenisSuratProses');
+$routes->get('/Staff/Semua-Report', 'SuratKeluarController::indexReport');
+
+// ?Input ======================================================================
+$routes->get('/Staff/Input/Master-Surat', 'SuratKeluarController::addJenisSurat');
+$routes->post('/Staff/Input-proses/Master-Surat', 'SuratKeluarController::addJenisSuratProses');
 
 // ?Toggle =====================================================================
 $routes->post('/toggleshow-surat', 'SuratKeluarController::updateJenisSuratToggleProses');
 
-// ?detail =====================================================================
-$routes->get('/Staff/detail/Master-Surat/(:any)', 'SuratKeluarController::detailJenisSurat/$1');
-$routes->post('/Staff/detail/Master-Surat', 'SuratKeluarController::updateJenisSuratProses');
+// ?edit-proses =====================================================================
+$routes->post('/Staff/Edit/Master-Surat/(:any)', 'SuratKeluarController::editJenisSurat/$1');
+$routes->post('/Staff/Edit-proses/Master-Surat', 'SuratKeluarController::editJenisSuratProses');
 
 // ?PenandaTangan ==============================================================
 $routes->get('/Surat_Perlu_TandaTangan', 'SuratKeluarController::indexStatusTTD');
@@ -152,13 +176,13 @@ $routes->post('/TandaTangan-proses/Surat_Perlu_TandaTangan', 'SuratKeluarControl
 
 $routes->get('/Riwayat_TandaTangan', 'SuratKeluarController::indexRiwayatTTD');
 
+$routes->post('/Report-Surat', 'SuratKeluarController::reportSurat');
+$routes->post('/Update-Proses/Report-Surat', 'SuratKeluarController::reportSuratProses');
 
+$routes->post('/BlackList-Mahasiswa', 'SuratKeluarController::BlackListMahasiswa');
+$routes->post('/Update-Proses/BlackList-Mahasiswa', 'SuratKeluarController::BlackListMahasiswaProses');
 // ?PDF ========================================================================
-$routes->post('/staff/Preview-Surat', 'Pdfrender::staffPreviewSurat');
-$routes->get('/staff/Preview/(:any)', 'Pdfrender::staffPreviewJenisSurat/$1');
 
-$routes->get('/Staff/test/Master-Surat/(:any)', 'Pdfrender::staffTestJenisSurat/$1');
-$routes->get('/Staff/test-proses/Master-Surat', 'Pdfrender::staffTestJenisSuratProses');
 
 
 // *===========================================================================<
@@ -236,7 +260,7 @@ $routes->get('/api/v1/cekNomerSurat', 'Apiv1::cekNoSurat');
 
 // !deprecated ===============================================================>>
 $routes->get('/api/v1/validasi/qr', 'Apiv1::validasiqr');
-$routes->get('/api/v1/image/(:segment)', 'Apiv1::imagecache/$1');
+$routes->post('/Download/Surat', 'Pdfrender::DownloadSurat');
 
 // $routes->get('/quary', 'TestQuary::index');
 // $routes->post('/quary', 'TestQuary::caridata');

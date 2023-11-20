@@ -30,7 +30,7 @@
             </tr>
             <tr>
                 <td>kapan Surat Dibuat:</td>
-                <td><?= esc(timeconverter($TimeStamp)) ?></td>
+                <td><?= esc(timeconverter($created_at)) ?></td>
             </tr>
             <tr>
                 <td>Jenis Surat:</td>
@@ -45,7 +45,7 @@
 
     <br>
     <div>
-        <label for="DiskripsiSurat">NoSurat Surat:</label>
+        <label for="NoSurat">NoSurat Surat:</label>
         <br>
         <input type="text" name="NoSurat" id="NoSurat">
     </div>
@@ -69,12 +69,13 @@
 
 <div class="outForm">
     <?= view_cell('TombolIdCell', [
-        'link'              => 'staff/Preview-Surat',
+        'link'              => '/Preview_Surat-Mahasiswa/' . $SuratIdentifier,
         'valueinput'        => $id,
         'tombolsubmitclass' => 'Actions',
         'textsubmit'        => 'Preview Surat',
         'confirmdialog'     => false,
-        'target'            => '_blank'
+        'target'            => '_blank',
+        'method'            => 'redirect'
     ]) ?>
 
 
@@ -84,7 +85,18 @@
         'tombolsubmitclass' => 'Actions danger',
         'textsubmit'        => 'Delete Surat',
         'confirmdialog'     => true,
-        'target'            => '_self'
+        'target'            => '_self',
+        'method'            => 'post'
+    ]) ?>
+
+    <?= view_cell('TombolIdCell', [
+        'link'              => 'BlackList-Mahasiswa',
+        'valueinput'        => $mshw_id,
+        'tombolsubmitclass' => 'Actions danger',
+        'textsubmit'        => 'BlackList Peminta',
+        'confirmdialog'     => true,
+        'target'            => '_self',
+        'method'            => 'post'
     ]) ?>
 
 </div>
@@ -96,9 +108,11 @@
 <script>
     const url_api = "<?= base_url(getenv('urlapi') . '/cekNomerSurat')  ?>";
 
-    document.getElementById('NoSurat').addEventListener("change", () => {
-        document.getElementById("tombolUpdate").classList.add('danger')
+    // Input field
+    document.getElementById('NoSurat').addEventListener("input", () => {
+        document.getElementById("tombolUpdate").classList.add('danger');
         document.getElementById("tombolUpdate").setAttribute('disabled', '');
+        document.getElementById("ceklist").type = 'hidden';
         document.getElementById("ceklist").checked = false;
     });
 
@@ -106,6 +120,8 @@
         document.getElementById("tombolUpdate").classList.remove('danger')
         document.getElementById("tombolUpdate").removeAttribute('disabled');
     });
+
+
 
     document.getElementById("cekNomer").addEventListener("click", () => {
         var nomerSurat = btoa(document.getElementById("NoSurat").value);

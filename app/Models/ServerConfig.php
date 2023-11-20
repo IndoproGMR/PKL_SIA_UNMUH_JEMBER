@@ -57,4 +57,35 @@ class ServerConfig extends Model
         $id = $this->where('name', $name)->find()[0]['id'];
         return $this->delete($id);
     }
+
+    function addBL($idMHSW, $description)
+    {
+        $dataInsert = [
+            'mshw_id'     => $idMHSW,
+            'description' => $description
+        ];
+        $data = $this->db->table('Server_MHSW_BlackList');
+        return $data->insert($dataInsert);
+    }
+
+    function cekBL($iduser)
+    {
+        $data = $this->db->table('Server_MHSW_BlackList')
+            ->where('mshw_id', $iduser)->countAllResults();
+        // d($data);
+        if ($data > 0) {
+            return true;
+        }
+        return false;
+    }
+
+    function cekBLDetail($idMHSW)
+    {
+        $data = $this->db->table('Server_MHSW_BlackList')
+            ->where('mshw_id', $idMHSW)
+            ->select('mshw_id,description,UpdateTime,Status')
+            ->get();
+
+        return $data->getResultArray()[0];
+    }
 }

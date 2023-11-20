@@ -1,50 +1,47 @@
 <?php
-// !Depre
+
 namespace App\Models;
 
 use CodeIgniter\Model;
 
-class JenisSuratKeluarModel extends Model
+class MasterSuratModel extends Model
 {
     // protected $DBGroup          = 'default';
-    protected $table            = 'SK_JenisSurat';
+    protected $table            = 'SK_MasterSurat';
     protected $primaryKey       = 'id';
-    protected $useAutoIncrement = true;
+    // protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = true;
     protected $protectFields    = true;
     protected $allowedFields    = [
         'name',
+        'description',
         'isiSurat',
         'form',
-        'description',
         'show',
-        'delete'
+        'created_at',
+        'updated_at',
+        'deleted_at',
     ];
 
     // Dates
-    // protected $useTimestamps = true;
-    // protected $dateFormat    = 'datetime';
-    // protected $createdField  = 'created_at';
-    // protected $updatedField  = 'updated_at';
-    // protected $deletedField  = 'deleted_at';
-
-
-    public function countdb()
-    {
-        return $this->countAllResults();
-    }
+    protected $useTimestamps = true;
+    protected $dateFormat    = 'datetime';
+    protected $createdField  = 'created_at';
+    protected $updatedField  = 'updated_at';
+    protected $deletedField  = 'deleted_at';
 
     public function seeall($showall = false, $onlyshow = 1)
     {
         if ($showall) {
             return $this->findAll();
         }
+
         return $this->where('show', $onlyshow)->findAll();
     }
 
 
-    public function seebyID(String $id, int $showAll = 0)
+    public function seeMasterSuratbyID(String $id, int $showAll = 0)
     {
         $data['error'] = 'y';
         if ($showAll == 1) {
@@ -52,7 +49,6 @@ class JenisSuratKeluarModel extends Model
         } else {
             $datasurat = $this->where('id', $id)->where('show', 1)->find();
         }
-
 
         if (count($datasurat) > 0) {
             $data['id']          = $datasurat[0]['id'];
@@ -65,63 +61,8 @@ class JenisSuratKeluarModel extends Model
         return $data;
     }
 
-    public function addJenisSurat(String $jenissurat, String $description, String $isiSurat, String $form)
-    {
-        return $this->db->table('SK_JenisSurat')->insert([
-            'id'            => generateIdentifier(),
-            'name'          => $jenissurat,
-            'description'   => $description,
-            'isiSurat'      => base64_encode($isiSurat),
-            'form'          => base64_encode($form),
-            'TimeStamp'     => getUnixTimeStamp()
-        ]);
-    }
 
-    function updateJenisSurat($id, String $jenissurat, String $description, String $isiSurat)
-    {
-        return $this->update(
-            $id,
-            [
-                'name'        => $jenissurat,
-                'description' => $description,
-                'isiSurat'    => base64_encode($isiSurat),
-            ]
-        );
-    }
-
-    function deleteJenisSurat(int $id)
-    {
-        return $this->update(
-            $id,
-            [
-                'show'   => 0,
-                'delete' => time()
-            ]
-        );
-    }
-
-    function toggleshow($id)
-    {
-        $cek = $this->where('id', $id)->find();
-        // d($cek);
-        if (!(count($cek) > 0)) {
-            return false;
-        }
-
-        if ($cek[0]['show'] == 1) {
-            return $this->update($id, [
-                'show' => 0
-            ]);
-        }
-
-        if ($cek[0]['show'] == 0) {
-            return $this->update($id, [
-                'show' => 1
-            ]);
-        }
-    }
-
-    function seegrouplvl()
+    function seeGrouplvl()
     {
         $db = \Config\Database::connect("siautama", false);
         $builder = $db->table('level')->orderBy('LevelID', 'ASC');
@@ -144,5 +85,51 @@ class JenisSuratKeluarModel extends Model
             ->union($union);
 
         return $db->newQuery()->fromSubquery($builder, 'q')->orderBy('namattd', 'ASC')->get()->getResultArray();
+    }
+
+    public function addMasterSurat(String $jenissurat, String $description, String $isiSurat, String $form)
+    {
+        $data = [
+            'id'            => generateIdentifier(),
+            'name'          => $jenissurat,
+            'description'   => $description,
+            'isiSurat'      => base64_encode($isiSurat),
+            'form'          => base64_encode($form),
+            'created_at'    => getDateTime()
+        ];
+
+        return $this->db->table('SK_MasterSurat')->insert($data);
+    }
+
+    function updateMasterSurat($id, String $jenissurat, String $description, String $isiSurat)
+    {
+        return $this->update(
+            $id,
+            [
+                'name'        => $jenissurat,
+                'description' => $description,
+                'isiSurat'    => base64_encode($isiSurat),
+            ]
+        );
+    }
+
+    function toggleshow($id)
+    {
+        $cek = $this->where('id', $id)->find();
+        if (!(count($cek) > 0)) {
+            return false;
+        }
+
+        if ($cek[0]['show'] == 1) {
+            return $this->update($id, [
+                'show' => 0
+            ]);
+        }
+
+        if ($cek[0]['show'] == 0) {
+            return $this->update($id, [
+                'show' => 1
+            ]);
+        }
     }
 }

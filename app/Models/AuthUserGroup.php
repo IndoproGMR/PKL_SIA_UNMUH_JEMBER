@@ -31,46 +31,33 @@ class AuthUserGroup extends Model
             ->join('mhsw', 'level.LevelID = mhsw.LevelID', 'left')
             ->join('dosen', 'level.LevelID = dosen.LevelID', 'left')
             ->join('karyawan', 'level.LevelID = karyawan.LevelID', 'left')
+
+            // ?Mahasiswa
             ->groupStart()
             ->where('mhsw.Login', $datalogin)
             ->where('mhsw.Password', $datapassword)
             ->where('mhsw.StatusMhswID', 'A')
             ->groupEnd()
+
+            // ?Dosen
             ->orGroupStart()
             ->where('dosen.Login', $datalogin)
             ->where('dosen.Password', $datapassword)
+
+            ->groupStart()
+            ->where('dosen.NIDN !=', '')
+            ->Where('dosen.NIDN !=', 'None')
             ->groupEnd()
+
+            ->groupEnd()
+
+            // ?Karyawan
             ->orGroupStart()
             ->where('karyawan.Login', $datalogin)
             ->where('karyawan.Password', $datapassword)
             ->groupEnd()
+
             ->get()->getResultArray();
-
-
-
-
-
-        // $sql = "SELECT `level`.`Nama` as namaLVL 
-        // FROM `level` 
-        // LEFT JOIN `mhsw` ON `level`.`LevelID`=`mhsw`.`LevelID` 
-        // LEFT JOIN `dosen` on `level`.`LevelID`=`dosen`.`LevelID` 
-        // LEFT JOIN `karyawan` ON `level`.`LevelID`=`karyawan`.`LevelID` 
-        // WHERE (`mhsw`.`Login` = '" .
-        //     $db->escapeLikeString($datalogin) .
-        //     "' AND `mhsw`.`Password`='" .
-        //     $db->escapeLikeString($datapassword) .
-        //     "' AND `mhsw`.`StatusMhswID`='A') 
-        // OR (`dosen`.`Login`='" .
-        //     $db->escapeLikeString($datalogin) .
-        //     "' AND `dosen`.`Password`='" .
-        //     $db->escapeLikeString($datapassword) . "') 
-        // OR (`karyawan`.`Login`='" .
-        //     $db->escapeLikeString($datalogin) .
-        //     "' AND `karyawan`.`Password`='" .
-        //     $db->escapeLikeString($datapassword) . "');";
-        // $hasil = $db->query($sql)->getResultArray();
-
-        // d($hasil);
 
         if (count($hasil) == 1) {
             return true;
@@ -80,57 +67,79 @@ class AuthUserGroup extends Model
 
     function cekdoseninfo($iduser)
     {
-        $db = \Config\Database::connect("siautama", false);
-        $builder = $db->table('level');
-        $hasil = $builder->select('
-        `level`.`Nama` AS namaLVL, 
-        COALESCE( `dosen`.`Nama`, `karyawan`.`Nama`) AS NamaUser, 
-        COALESCE(`dosen`.`Gelar`) AS Gelar ')
-            ->join('dosen', '`level`.`LevelID` = `dosen`.`LevelID`', 'left')
-            ->join('karyawan', '`level`.`LevelID` = `karyawan`.`LevelID`', 'left')
-            ->groupStart()
-            ->Where('`dosen`.`Login`', $iduser)
-            ->orWhere('`karyawan`.`Login`', $iduser)
-            ->limit(1)
-            ->groupEnd()->get()->getResultArray()[0];
+        helper('authvalid');
 
-        if ($hasil['Gelar'] === null) {
-            $gelar = '';
+        $prefix = "Data_InfoDosen_" . $iduser;
+        if (cekCacheData($prefix, '')) {
+
+
+            $db = \Config\Database::connect("siautama", false);
+            $builder = $db->table('level');
+            $hasil = $builder->select('
+                    `level`.`Nama` AS namaLVL, 
+                    `dosen`.`NIDN` AS NIDN,
+                    COALESCE( `dosen`.`Nama`, `karyawan`.`Nama`) AS NamaUser, 
+                    COALESCE(`dosen`.`Gelar`) AS Gelar ')
+                ->join('dosen', '`level`.`LevelID` = `dosen`.`LevelID`', 'left')
+                ->join('karyawan', '`level`.`LevelID` = `karyawan`.`LevelID`', 'left')
+                ->groupStart()
+                ->Where('`dosen`.`Login`', $iduser)
+                ->orWhere('`karyawan`.`Login`', $iduser)
+                ->limit(1)
+                ->groupEnd()->get()->getResultArray()[0];
+
+            if ($hasil['Gelar'] === null) {
+                $gelar = '';
+            } else {
+                $gelar = $hasil['Gelar'];
+            }
+
+            $dataUser = [
+                'namaLVL'   => $hasil['namaLVL'],
+                'NamaUser'  => $hasil['NamaUser'],
+                'Gelar'     => $gelar,
+                'NIDN'      => $hasil['NIDN']
+            ];
+
+            setCacheData($prefix, $dataUser, 3600, '');
         } else {
-            $gelar = $hasil['Gelar'];
+            $dataUser = getCachaData($prefix, '');
         }
 
-        $dataUser = [
-            'namaLVL'   => $hasil['namaLVL'],
-            'NamaUser'  => $hasil['NamaUser'],
-            'Gelar'     => $gelar
-        ];
         return $dataUser;
     }
 
     function cekmahasiswainfo($iduser)
     {
-        $db = \Config\Database::connect("siautama", false);
-        $builder = $db->table('level');
-        $hasil = $builder->select('
-        `level`.`Nama` AS namaLVL, 
-        COALESCE(`mhsw`.`Nama`) AS NamaUser, 
-        COALESCE(`mhsw`.`Login`) AS LoginUser, 
-        COALESCE(`mhsw`.`Foto` ,`level`.`Simbol`) AS FotoUser')
-            ->join('mhsw', '`level`.`LevelID` = `mhsw`.`LevelID`', 'left')
-            ->groupStart()
-            ->where('`mhsw`.`Login`', $iduser)
-            ->limit(1)
-            ->groupEnd()->get()->getResultArray()[0];
+        helper('authvalid');
 
+        $prefix = "Data_InfoMahasiswa_" . $iduser;
+        if (cekCacheData($prefix, '')) {
 
-        $dataUser = [
-            'namaLVL'   => $hasil['namaLVL'],
-            'NamaUser'  => $hasil['NamaUser'],
-            'LoginUser' => $hasil['LoginUser'],
-            'FotoUser'  => $hasil['FotoUser']
-        ];
+            $db = \Config\Database::connect("siautama", false);
+            $builder = $db->table('level');
+            $hasil = $builder->select('
+                    `level`.`Nama` AS namaLVL, 
+                    COALESCE(`mhsw`.`Nama`) AS NamaUser, 
+                    COALESCE(`mhsw`.`Login`) AS LoginUser, 
+                    COALESCE(`mhsw`.`Foto` ,`level`.`Simbol`) AS FotoUser')
+                ->join('mhsw', '`level`.`LevelID` = `mhsw`.`LevelID`', 'left')
+                ->groupStart()
+                ->where('`mhsw`.`Login`', $iduser)
+                ->limit(1)
+                ->groupEnd()->get()->getResultArray()[0];
 
+            $dataUser = [
+                'namaLVL'   => $hasil['namaLVL'],
+                'NamaUser'  => $hasil['NamaUser'],
+                'LoginUser' => $hasil['LoginUser'],
+                'FotoUser'  => $hasil['FotoUser']
+            ];
+
+            setCacheData($prefix, $dataUser, 3600, '');
+        } else {
+            $dataUser = getCachaData($prefix, '');
+        }
         return $dataUser;
     }
 
@@ -171,21 +180,6 @@ class AuthUserGroup extends Model
         ];
 
         return $dataUser;
-
-
-        // $sql = "SELECT `level`.`Nama` AS namaLVL, 
-        // COALESCE(`mhsw`.`Nama` , `dosen`.`Nama`, `karyawan`.`Nama`) AS NamaUser, 
-        // COALESCE(`mhsw`.`Login`, `dosen`.`Login`, `karyawan`.`Login`) AS LoginUser, 
-        // COALESCE(`mhsw`.`Foto` ,`level`.`Simbol`) AS FotoUser 
-        // FROM `level` 
-        // LEFT JOIN `mhsw` ON `level`.`LevelID` = `mhsw`.`LevelID` 
-        // LEFT JOIN `dosen` ON `level`.`LevelID` = `dosen`.`LevelID` 
-        // LEFT JOIN `karyawan` ON `level`.`LevelID` = `karyawan`.`LevelID` 
-        // WHERE 
-        // (`mhsw`.`Login` = '" . $db->escapeLikeString($iduser) . "' 
-        // OR `dosen`.`Login` = '" . $db->escapeLikeString($iduser) . "' 
-        // OR `karyawan`.`Login` = '" . $db->escapeLikeString($iduser) . "');";
-        // return $db->query($sql)->getResultArray()[0];
     }
 }
 

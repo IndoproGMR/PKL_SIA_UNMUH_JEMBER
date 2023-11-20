@@ -59,6 +59,7 @@ class Login extends BaseController
 
         $model = model('AuthUserGroup');
         if (!$model->proseslogin(esc($postdata['dataLogin']), $hashpass)) {
+            // !kirim data error
             return redirect()->to('login');
         }
 
@@ -70,6 +71,14 @@ class Login extends BaseController
             $datauser = getCachaData($prefix, $postdata['dataLogin']);
         }
 
+        $model2 = model('ServerConfig');
+        $dataBL = $model2->cekBL($datauser['LoginUser']);
+
+        if ($dataBL) {
+            $dataBL = 'Y';
+        } else {
+            $dataBL = 'N';
+        }
 
         $data['userdata'] = [
             'id'       => $datauser['LoginUser'],
@@ -77,7 +86,8 @@ class Login extends BaseController
             'FotoUser' => $datauser['FotoUser'],
             'namaLVL'  => $datauser['namaLVL'],
             'Gelar'    => $datauser['Gelar'],
-            'IP'       => $this->request->getIPAddress()
+            'IP'       => $this->request->getIPAddress(),
+            'BL'       => $dataBL
         ];
 
         $session->set($data);

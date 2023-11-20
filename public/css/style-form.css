@@ -17,6 +17,8 @@
     color: var(--txt-white);
     font-weight: bold;
     transition: all ease-in-out 0.3s;
+
+    min-width: 150px;
 }
 
 .Actions:hover {
@@ -138,7 +140,7 @@ form.inputform input[type="number"] {
     display: inline-block;
     text-decoration: none;
     font-size: 14px;
-    padding: 5px 20px;
+    padding: 5px 10px;
     margin: 5px 0px;
     font-weight: 500;
 
@@ -177,6 +179,36 @@ form.inputform input[type="submit"]:hover {
     background-color: var(--clr-buttom-hover);
     border: 1px solid var(--txt-black);
     border-radius: 5px;
+}
+
+/* Mengatur lebar dan tinggi textarea */
+form.inputform textarea {
+    width: 100%;
+    height: 150px;
+
+    border: 1px solid var(--clr-buttom);
+
+    display: inline-block;
+    text-decoration: none;
+    font-size: 18px;
+    padding: 5px 10px;
+    margin: 5px 0px;
+    font-weight: 500;
+
+    transition: all ease-in-out 0.3s;
+
+    /* Mengatur border dan radius untuk tampilan frame yang lebih baik */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+
+    /* Mengatur efek transisi ketika ada perubahan */
+    transition: border-color 0.3s ease-in-out;
+}
+
+/* Memberikan efek highlight pada textarea saat di-focus */
+form.inputform textarea:focus {
+    border-color: #66afe9; /* Warna dapat disesuaikan */
+    outline: none; /* Menghapus outline default pada focus */
 }
 
 /* !Mini Nav */
@@ -299,6 +331,21 @@ form.inputform input[type="submit"]:hover {
 .filter form input[type="submit"]:hover {
     color: var(--txt-black);
     background-color: var(--clr-buttom-hover);
+    border: 1px solid var(--txt-black);
+    border-radius: 5px;
+}
+
+.filter form div#fiterKontener {
+    background-color: #ffffff27;
+    /* background-color: red; */
+    border-radius: 5px;
+}
+
+.filter form label {
+    margin-top: 5px;
+    padding: 2px 5px;
+    color: var(--txt-white);
+    background-color: var(--clr-buttom);
     border: 1px solid var(--txt-black);
     border-radius: 5px;
 }

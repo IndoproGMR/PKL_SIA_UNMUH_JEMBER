@@ -72,8 +72,8 @@
                     $model1 = model('SuratKeluraModel');
                     $model2 = model('TandaTangan');
 
-                    $cachedata['perluNoSurat'] = $model1->seeAllnoNoSuratCount();
-                    $cachedata['perluttd']     = $model2->cekStatusSuratTTDCount(userInfo());
+                    $cachedata['perluNoSurat'] = $model1->cekNotifPerluNoSurat();
+                    $cachedata['perluttd']     = $model2->cekNotifPerluTTD();
 
                     cache()->save($namacache, $cachedata, 30);
                 }
@@ -106,12 +106,25 @@
                         'shortcut'  => ''
                     ]
                 ) ?>
+
                 <?= view_cell(
                     'SidebarLinkNotifCell',
                     [
-                        'link'      => '/input/master-surat',
+                        'link'      => '/Staff/Input/Master-Surat',
                         'linktext'  => 'Tambah Master Surat',
                         'imagelink' => 'asset/svg/pen-solid.svg',
+                        'shortcut'  => ''
+                    ]
+                ) ?>
+
+                <hr class="line">
+
+                <?= view_cell(
+                    'SidebarLinkNotifCell',
+                    [
+                        'link'      => '/Staff/Semua-Report',
+                        'linktext'  => 'Semua Report',
+                        'imagelink' => 'asset/svg/list-ul-solid.svg',
                         'shortcut'  => ''
                     ]
                 ) ?>
@@ -174,18 +187,34 @@
                         'shortcut'  => ''
                     ]
                 ) ?>
+                <div id="adminpanel">
+                    <hr class="line">
+                    <?= view_cell(
+                        'SidebarLinkNotifCell',
+                        [
+                            'link'      => 'Admin-Panel',
+                            'linktext'  => 'Admin Panel',
+                            'imagelink' => 'asset/svg/user-gear-solid.svg',
+                            'shortcut'  => ''
+                        ]
+                    ) ?>
+                </div>
+                <script>
+                    // get locale storage
+                    let admin = localStorage.getItem('showadmin');
+                    console.log(admin);
+                    console.log(admin == 'false');
 
-                <hr class="line">
-
-                <?= view_cell(
-                    'SidebarLinkNotifCell',
-                    [
-                        'link'      => 'Admin-Panel',
-                        'linktext'  => 'Admin Panel',
-                        'imagelink' => 'asset/svg/user-gear-solid.svg',
-                        'shortcut'  => ''
-                    ]
-                ) ?>
+                    function cekadmin() {
+                        // check if showadmin is true or false
+                        if (admin == 'false') {
+                            document.getElementById("adminpanel").style.display = "none";
+                        } else {
+                            document.getElementById("adminpanel").style.display = "";
+                        }
+                    }
+                    cekadmin();
+                </script>
             <?php endif ?>
 
             <?php if (in_group(['Administrator'])) : ?>
@@ -200,6 +229,7 @@
                         'shortcut'  => ''
                     ]
                 ) ?>
+
             <?php endif ?>
 
 
@@ -259,7 +289,7 @@
 
         </div>
         <br>
-        <h5 class="Version">Web Version: Beta 0.70</h5>
+        <h5 class="Version">Web Version: Beta 0.80</h5>
     </div>
 
     <!-- main Conten -->

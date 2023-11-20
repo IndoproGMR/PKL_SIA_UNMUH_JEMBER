@@ -47,15 +47,12 @@
 
 
 
-
-
-
             <div>
                 <?= view_cell('TombolIdCell', [
                     'link'              => '/Admin-Panel/Input-info',
                     'valueinput'        => '',
                     'tombolsubmitclass' => 'Actions',
-                    'textsubmit'        => 'Tambahkan Informasi',
+                    'textsubmit'        => 'Ubah Informasi Board',
                     'target'            => '_self',
                     'method'            => 'get'
                 ]) ?>
@@ -78,6 +75,13 @@
         <?php endif ?>
     <?php else : ?>
         <h4>Request Access</h4>
+        <button>Hide Admin Panel?</button>
+        <script>
+            document.querySelector("button").addEventListener("click", function() {
+                localStorage.setItem("showadmin", "false");
+                window.location = "/";
+            });
+        </script>
     <?php endif ?>
 </div>
 

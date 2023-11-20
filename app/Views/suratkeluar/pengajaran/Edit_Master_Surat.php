@@ -126,7 +126,7 @@
 <?= $this->section('main') ?>
 
 <br>
-<form class="inputform" action="<?= base_url('/Staff/detail/Master-Surat'); ?>" method="post" id="inputisi">
+<form class="inputform" action="<?= base_url('/Staff/Edit-proses/Master-Surat'); ?>" method="post" id="inputisi">
     <h1 style="text-align: center;">Edit isi Surat</h1>
     <hr>
     <br>
@@ -158,5 +158,10 @@
 <p class="informasipenting">Mohon maaf input form dan ttd masi belum support untuk di edit</p>
 <br>
 <hr>
+<?php
+d($datasurat);
+
+
+?>
 
 <?= $this->endSection() ?>

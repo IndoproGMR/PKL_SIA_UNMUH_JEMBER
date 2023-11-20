@@ -7,6 +7,7 @@
 
 <div class="filter">
     <p class="first">Filter:</p>
+
     <form>
         <?= view_cell('SelectOptionCell', [
             'options'      => $jenisFilter,
@@ -15,9 +16,20 @@
             'firstoptions' => ['value' => 'all', 'name' => 'Semua Surat'],
             'selected'     => $filter,
         ]) ?>
+
+        <br>
+
         <input type="text" name="TextF" id="TextF" placeholder="NIM / identiti" value="<?= esc($dataGetTextF) ?>">
+
+        <div>
+            <input type="date" name="tglS" id="" value="<?= esc($dateStart) ?>">
+            =>
+            <input type="date" name="tglE" id="" value="<?= esc($dateEnd) ?>">
+        </div>
+
         <input type="submit" value="Cari">
     </form>
+
     <?= timedecor() ?>
 </div>
 
@@ -42,7 +54,7 @@
                 <td class="num"><?= esc($index++) ?></td>
                 <td><?= esc($key['NoSurat']) ?></td>
                 <td><?= esc($key['name']) ?></td>
-                <td><?= esc(timeconverter($key['TimeStamp'])) ?></td>
+                <td><?= esc(timeconverter($key['created_at'])) ?></td>
 
                 <td><?= esc($key['namaMahasiswa']['Nama']) . moreInfo($key['SuratIdentifier']) ?></td>
 
@@ -58,12 +70,12 @@
                     ]) ?>
 
                     <?= view_cell('TombolIdCell', [
-                        'link'              => 'staff/Preview-Surat',
-                        'valueinput'        => $key['id'],
+                        'link'              => '/Preview_Surat-Mahasiswa/' . $key['SuratIdentifier'],
                         'tombolsubmitclass' => 'Actions',
                         'textsubmit'        => 'Preview Surat',
                         'confirmdialog'     => false,
-                        'target'            => '_blank'
+                        'target'            => '_blank',
+                        'method'            => 'redirect'
                     ]) ?>
                 </td>
             </tr>

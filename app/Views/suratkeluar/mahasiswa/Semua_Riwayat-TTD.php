@@ -4,56 +4,12 @@
 <?= $this->endSection() ?>
 
 
-<?php
-$waktu = [
-    [
-        'id' => 1,
-        'name' => '1 Bulan Lalu'
-    ],
-    [
-        'id' => 2,
-        'name' => '2 Bulan Lalu'
-    ],
-    [
-        'id' => 3,
-        'name' => '3 Bulan Lalu'
-    ],
-    [
-        'id' => 6,
-        'name' => '6 Bulan Lalu'
-    ],
-    [
-        'id' => 9,
-        'name' => '9 Bulan Lalu'
-    ],
-    [
-        'id' => 12,
-        'name' => '1 Tahun Lalu'
-    ],
-    [
-        'id' => 18,
-        'name' => '1 Tahun 6 Bulan Lalu'
-    ],
-    [
-        'id' => 24,
-        'name' => '2 Tahun Lalu'
-    ]
-];
-?>
-
 <?= $this->section('main') ?>
 
 <div class="filter">
     <p class="first">Filter:</p>
     <form>
-        <?= view_cell('SelectOptionCell', [
-            'options'      => $waktu,
-            'nameselect'   => 'filter_waktu',
-            'idselect'     => 'filter_waktu',
-            // 'firstoptions' => ['value' => 'all', 'name' => 'Semua Waktu'],
-            'selected'     => $filter_waktu,
-        ]) ?>
-        <br>
+
         <?= view_cell('SelectOptionCell', [
             'options'      => $jenisFilter,
             'nameselect'   => 'filter',
@@ -61,7 +17,24 @@ $waktu = [
             'firstoptions' => ['value' => 'all', 'name' => 'Semua Surat'],
             'selected'     => $filter,
         ]) ?>
-        <br>
+
+        <div id="filterChackbox" style="display: block;">
+            <label for="filterquation">advanced mode ?</label>
+            <input type="checkbox" id="filterquation">
+        </div>
+
+        <div id="fiterKontener" style="display: none;">
+            <label for="tanggal">Filter dari tanggal hingga tanggal:</label>
+            <div id="tanggal">
+                <input type="date" name="tglS" id="" value="<?= esc($dateStart) ?>">
+                =>
+                <input type="date" name="tglE" id="" value="<?= esc($dateEnd) ?>">
+            </div>
+            <label for="limit">Limit Output:</label>
+            <br>
+            <input type="number" name="limit" id="limit" value="<?= esc($limit) ?>">
+        </div>
+
         <input type="submit" value="Cari">
     </form>
     <?= timedecor() ?>
@@ -85,12 +58,12 @@ $waktu = [
                 <tr>
                     <td class="num"><?= esc($indexnum++) ?></td>
                     <th><?= esc($key['namaJenisSurat']) ?></th>
-                    <td><?= esc(timeconverter($key['TimeStamp'])) ?></td>
+                    <td><?= esc(timeconverter($key['created_at'])) ?></td>
                     <td><?= esc($key['NoSurat']) ?></td>
                     <td>
                         <?= view_cell('TombolIdCell', [
-                            'link'              => 'Download/Surat',
-                            'valueinput'        => $key['NoSurat'],
+                            'link'              => 'Download_Surat',
+                            'valueinput'        => $key['SuratIdentifier'],
                             'tombolsubmitclass' => 'Actions green',
                             'textsubmit'        => 'Download Surat'
                         ]) ?>

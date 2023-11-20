@@ -15,7 +15,29 @@
             'firstoptions' => ['value' => 'all', 'name' => 'Semua Surat'],
             'selected'     => $filter,
         ]) ?>
+        <br>
         <input type="text" name="TextF" id="TextF" placeholder="NIM / Nomer Surat" value="<?= esc($dataGetTextF) ?>">
+
+
+        <div id="filterChackbox" style="display: block;">
+            <label for="filterquation">advanced mode ?</label>
+            <input type="checkbox" id="filterquation">
+        </div>
+
+        <div id="fiterKontener" style="display: none;">
+
+            <label for="tanggal">Filter dari tanggal hingga tanggal:</label>
+            <div id="tanggal">
+                <input type="date" name="tglS" id="" value="<?= esc($dateStart) ?>">
+                =>
+                <input type="date" name="tglE" id="" value="<?= esc($dateEnd) ?>">
+            </div>
+
+            <label for="limit">Limit Output:</label>
+            <br>
+            <input type="number" name="limit" id="limit" value="<?= esc($limit) ?>">
+        </div>
+
         <input type="submit" value="Cari">
     </form>
     <?= timedecor() ?>
@@ -40,7 +62,7 @@
                 <tr>
                     <td class="num"><?= esc($indexnum++) ?></td>
                     <td><?= esc($key['namaJenisSurat']) ?></td>
-                    <td><?= esc(timeconverter($key['TimeStamp'])) ?></td>
+                    <td><?= esc(timeconverter($key['created_at'])) ?></td>
                     <td><?= esc($key['NoSurat']) ?></td>
 
                     <td>
@@ -55,20 +77,20 @@
                     </td>
                     <td>
                         <?= view_cell('TombolIdCell', [
-                            'link'              => 'staff/Preview-Surat',
-                            'valueinput'        => $key['NoSurat'],
+                            'link'              => '/Preview_Surat-Mahasiswa/' . $key['SuratIdentifier'],
                             'tombolsubmitclass' => 'Actions',
                             'textsubmit'        => 'Preview Surat',
+                            'confirmdialog'     => false,
                             'target'            => '_blank',
-                            'method'            => 'post'
+                            'method'            => 'redirect'
                         ]) ?>
 
                         <?= view_cell('TombolIdCell', [
-                            'link'              => '/',
-                            'valueinput'        => $key['idttd'],
+                            'link'              => '/Report-Surat',
+                            'valueinput'        => $key['SuratIdentifier'],
                             'tombolsubmitclass' => 'Actions danger-hover',
                             'textsubmit'        => 'Report Surat',
-                            'method'            => 'get'
+                            'method'            => 'post'
                         ]) ?>
                     </td>
                 </tr>

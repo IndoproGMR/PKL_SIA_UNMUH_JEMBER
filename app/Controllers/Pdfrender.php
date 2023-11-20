@@ -1,5 +1,5 @@
 <?php
-
+// ! Depre
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
@@ -77,39 +77,38 @@ class Pdfrender extends BaseController
 
         $namapdf = $dataSurat['name'] . ' - ' . $postdata;
 
-
-        // !Start cek apakah file pdf di buat atau belum
-        // !bila sudah di buat maka baca binary nya
-        if (cekFile(WRITEPATH . 'pdf/' . hash256($namapdf) . ".pdf")) {
-            helper('filesystem');
-            $namaFile = hash256($namapdf) . ".pdf";
-            try {
-                $path = WRITEPATH . 'pdf/' . $namaFile;
-                $file = new \CodeIgniter\Files\File($path, true);
-            } catch (\Throwable $th) {
+        if ($GLOBALS['RenderPDF'] !== 'debug') {
+            // !Start cek apakah file pdf di buat atau belum
+            // !bila sudah di buat maka baca binary nya
+            if (cekFile(WRITEPATH . 'pdf/' . hash256($namapdf) . ".pdf")) {
+                helper('filesystem');
+                $namaFile = hash256($namapdf) . ".pdf";
                 try {
-                    $path = "../Z_Archive/pdf/" . $namaFile;
+                    $path = WRITEPATH . 'pdf/' . $namaFile;
                     $file = new \CodeIgniter\Files\File($path, true);
                 } catch (\Throwable $th) {
-                    return FlashException(resMas('e.server.n.dp.read.fl'));
+                    try {
+                        $path = "../Z_Archive/pdf/" . $namaFile;
+                        $file = new \CodeIgniter\Files\File($path, true);
+                    } catch (\Throwable $th) {
+                        return FlashException(resMas('e.server.n.dp.read.fl'));
+                    }
                 }
-            }
 
-            $binary = readfile($path);
-            return $this->response
-                ->setHeader('Content-Type', $file->getMimeType())
-                ->setHeader('Content-disposition', 'inline; filename="' . $file->getBasename() . '"')
-                ->setStatusCode(200)
-                ->setBody($binary);
+                $binary = readfile($path);
+                return $this->response
+                    ->setHeader('Content-Type', $file->getMimeType())
+                    ->setHeader('Content-disposition', 'inline; filename="' . $file->getBasename() . '"')
+                    ->setStatusCode(200)
+                    ->setBody($binary);
+            }
+            // !END
         }
-        // !END
 
 
         // !bila pdf tidak ada di server maka akan membuat kan file yang baru
         $model2 = model('TandaTangan');
         $data['ttd'] = $model2->seeallbyIdenti($dataSurat['SuratIdentifier']);
-
-
 
         // !Start cek bila foto qr ada di server
         foreach ($data['ttd'] as $key => $value) {
@@ -125,6 +124,7 @@ class Pdfrender extends BaseController
             $data['ttd'][$key]['NamaPenanda'] = $datapenanda['NamaUser'] . " " . $datapenanda['Gelar'];
             $data['ttd'][$key]['path'] = $path;
             $data['ttd'][$key]['namaLVL'] = $datapenanda['namaLVL'];
+            $data['ttd'][$key]['NIDN'] = $datapenanda['NIDN'];
         }
         // !END
 
@@ -139,14 +139,25 @@ class Pdfrender extends BaseController
 
         $dataTambahan = ubaharray($dataJsonDecode);
 
+        $nosutat['nosurat'] = $dataSurat['NoSurat'];
+
         $data['isi'] = replacetextarray($dataSurat['isiSurat'], $dataTambahan);
         $data['kop'] = 1;
 
         $html = view('surat/layout', $data);
         $html = replacetextarray($html, $dataTambahan);
 
-        $this->response->setHeader('Content-Type', 'application/pdf');
-        return Render_mpdf($html, '11', $namapdf);
+        if ($GLOBALS['RenderPDF'] !== 'debug') {
+            $this->response->setHeader('Content-Type', 'application/pdf');
+            return Render_mpdf($html, '11', $namapdf);
+        }
+
+        d($dataJsonDecode);
+        d($dataTambahan);
+        d($dataSurat);
+        d($GLOBALS);
+        d($data);
+        d($html);
     }
 
 
@@ -357,6 +368,7 @@ class Pdfrender extends BaseController
             return Render_mpdf($html, '01', 'PreviewSurat_-_' . $dataSurat['name'], $data);
         }
 
+        d($data);
         d($dataJsonDecode);
         d($html);
     }

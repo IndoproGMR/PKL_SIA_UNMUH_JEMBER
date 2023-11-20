@@ -16,8 +16,10 @@ function resMas(string $errorCategory)
         'make'   => 'Membuat',
         'done'   => 'Sudah',
         'read'   => 'membaca',
+        'report' => 'Report',
 
 
+        'id'       => 'ID',
         'ttd'      => 'Tanda Tangan',
         'surat'    => 'Surat',
         'num'      => 'Nomer',
@@ -32,6 +34,8 @@ function resMas(string $errorCategory)
         'qr'       => 'QRCode',
         'token'    => 'Token',
         'enkrip'   => 'Enkripsi',
+        'master'   => 'Master',
+        'bl'       => 'Black List',
 
 
         'exist' => 'ada',
@@ -166,6 +170,18 @@ function datacallResponddep($id)
         default:
             $data = 'Error Kode 0';
             break;
+    }
+    return $data;
+}
+
+function ApiStandarisasi($result, $msg = 'success', $code = 200, $json = false)
+{
+    $data['status'] = $code;   // Status Code (200,401,404)
+    $data['detail'] = $msg;    // success, access unauthorized
+    $data['result'] = $result; // {"nomer Surat":"2302",...}
+
+    if ($json) {
+        return json_encode($data);
     }
     return $data;
 }

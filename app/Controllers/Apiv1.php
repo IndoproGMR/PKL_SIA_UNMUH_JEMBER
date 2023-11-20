@@ -17,6 +17,9 @@ class Apiv1 extends ResourceController
             'qrcode'
         ]);
 
+
+
+
         if (is_null($dataGet['nosurat']) || is_null($dataGet['qrcode'])) {
 
             helper('datacall');
@@ -29,7 +32,8 @@ class Apiv1 extends ResourceController
                 'TimeStamp'     => resMas('e'),
                 'valid'         => resMas('e.param.n.exist'),
             ];
-            return $this->respond($data['respond']);
+            return $this->respond()->setJSON(ApiStandarisasi($data['respond']));
+            // return $this->respond($data['respond']);
         }
 
         helper(['textsurat', 'datacall', 'authvalid']);
@@ -55,14 +59,15 @@ class Apiv1 extends ResourceController
                 'TimeStamp'     => resMas('e'),
                 'valid'         => resMas('e.param.n.exist'),
             ];
-            return $this->respond($data['respond']);
+            // return $this->respond($data['respond']);
+            return $this->respond()->setJSON(ApiStandarisasi($data['respond']));
         }
         // !==================================================================<<
 
         // !==================================================================>>
         // cek info mahasiswa dan penandatangan
         $prefix = "Query_cekdoseninfo_" . $data['dataJson']['pendattg_id'];
-        if (cekCacheData($prefix)) {
+        if (cekCacheData($prefix, '')) {
             $model = model('AuthUserGroup');
             $penandatangan = $model->cekdoseninfo($data['dataJson']['pendattg_id']);
 
@@ -73,13 +78,13 @@ class Apiv1 extends ResourceController
         }
 
         $prefix = "Query_cekmahasiswainfo_" . $data['dataJson']['mshw_id'];
-        if (cekCacheData($prefix)) {
+        if (cekCacheData($prefix, '')) {
 
             $model = model('AuthUserGroup');
             $Mahasiswa = $model->cekmahasiswainfo($data['dataJson']['mshw_id']);
             setCacheData($prefix, $Mahasiswa, 360, '');
         } else {
-            $Mahasiswa = getCachaData($prefix);
+            $Mahasiswa = getCachaData($prefix, '');
         }
         // !==================================================================<<
 
@@ -90,22 +95,28 @@ class Apiv1 extends ResourceController
         $data['respond']['TimeStamp']     = timeconverter($data['dataJson']['TimeStamp']);
         $data['respond']['valid']         = $data['dataJson']['valid'];
 
-        return $this->respond($data['respond']);
+        return $this->respond()->setJSON(ApiStandarisasi($data['respond']));
+        // return $this->respond($data['respond']);
     }
 
     function cekNoSurat()
     {
-        $token = $this->request->getHeaderLine('X-token');
+        // $token = $this->request->getHeaderLine('X-token');
         helper(['datacall', 'authvalid']);
 
+        $token = getToken();
+
+
         // cek Token apakah dikirim?
-        if (is_null($token) || $token == 'null' || $token == '') {
+        if (!$token['status']) {
             $data = [
                 'massage_status'  => '1',
                 'massage' => resMas('f.:.perm.n.valid')
             ];
             return $this->respond($data, 401, 'access_denied');
         }
+
+
 
         $dataGet = $this->request->getGet(['NoSurat']);
 
@@ -119,7 +130,7 @@ class Apiv1 extends ResourceController
         }
 
         // cek apakah token ada di dalam redis
-        if (cekCacheData($token, '')) {
+        if (cekCacheData($token['Token'], '')) {
             $data = [
                 'massage_status'  => '-1',
                 'massage' => resMas('f.n')
@@ -139,36 +150,6 @@ class Apiv1 extends ResourceController
 
         return $this->respond($dataSurat['respond'], 200);
     }
-
-    public function imagecache($imagename)
-    {
-        $image = \Config\Services::image();
-        // return 'asset/logo/unmuh.png';
-        $path = '';
-        $data['imagepath'] = match ($imagename) {
-            'logo'  => 'asset/logo/unmuh.png',
-            default => 'asset/logo/error_img.png',
-        };
-
-        $binary = readfile($data['imagepath']);
-        $options = [
-            'max-age'  => 2592000,
-            's-maxage' => 2592000,
-            'etag'     => 'abcde',
-        ];
-
-        return $this->response
-
-            ->setHeader('Content-Type', 'image/png')
-            ->setCache($options)
-            // ->setHeader('Content-Type', $file->getMimeType())
-            // ->setHeader('Content-disposition', 'inline; filename="' . $file->getBasename() . '"')
-            ->setStatusCode(200)
-            ->setBody($binary);
-        // return $data['imagepath'];
-    }
-
-
 
     /**
      * @deprecated

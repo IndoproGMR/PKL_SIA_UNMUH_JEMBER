@@ -15,7 +15,7 @@ class Home extends BaseController
 
             // cek apakah browser memiliki cookie API
             if (is_null(get_cookie('API'))) {
-                $pinAPI = hash256(generateIdentifier(), 64);
+                $pinAPI = hash256(generateIdentifier());
 
                 $cookie = new Cookie(
                     'API',
@@ -80,6 +80,21 @@ class Home extends BaseController
     // ! TEST
     public function TestInfo()
     {
+
+        // d(getUnixTimeStamp());
+        // d(getDateTime());
+        // d(generateIdentifier());
+        // d(strtotime("9999-12-30 23:59:59"));
+        // d(timeconverter(0, 'hijriah'));
+
+        // d(getToken());
+        // $data['nomerSurat'] = 2342;
+        // $data['nama Mahasiswa'] = 'YES';
+        // d(ApiStandarisasi($data, 'success', 200, true));
+        // d(ApiStandarisasi($data, 'success', 200));
+
+        // return $this->response->setJSON(ApiStandarisasi($data));
+
         // d($this->request->getIPAddress());
 
 

@@ -71,6 +71,31 @@ if (!empty($title)) {
 
 <!-- global JavaScript -->
 <script>
+    // bila filterquation tidak ada maka skip code ini
+    var filterquation = document.getElementById('filterquation');
+
+    // <div id="filterChackbox" style="display: block;">
+    //         <label for="filterquation">Open Filter ?</label>
+    //         <input type="checkbox" id="filterquation">
+    // </div>
+
+    // <div id="fiterKontener" style="display: none;">
+    // code
+    // </div>
+
+    if (filterquation) {
+        filterquation.addEventListener('click', function() {
+            console.log('update');
+
+            // tambahkan hidden
+            document.getElementById('filterChackbox').style.display = 'none';
+
+            // hapus hidden
+            document.getElementById('fiterKontener').style.display = 'block';
+        });
+    }
+
+
     function consolwarning() {
         const mas = '⚠️ Warning: Anda Tidak Seharusnya Membuka Console';
 

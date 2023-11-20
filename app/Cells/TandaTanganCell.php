@@ -15,7 +15,6 @@ class TandaTanganCell extends Cell
     protected $nama;
 
     protected $nomer;
-    protected $nip = true;
 
     public function mount()
     {
@@ -44,9 +43,5 @@ class TandaTanganCell extends Cell
     public function getNomerProperty()
     {
         return $this->nomer;
-    }
-    public function getNipProperty()
-    {
-        return $this->nip;
     }
 }

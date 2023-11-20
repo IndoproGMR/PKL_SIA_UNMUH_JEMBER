@@ -26,6 +26,18 @@ $datacoba = [
         'password' => '*3E5287812'
     ],
     '7' => [
+        'login' => '20110168',
+        'password' => '*1D90AF5D1'
+    ],
+    '8' => [
+        'login' => '00063007',
+        'password' => '*EE624E607'
+    ],
+    '9' => [
+        'login' => '0001096501',
+        'password' => '*F1DBCC704'
+    ],
+    '10' => [
         'login' => generateIdentifier(16, 'time'),
         'password' => generateIdentifier()
     ],

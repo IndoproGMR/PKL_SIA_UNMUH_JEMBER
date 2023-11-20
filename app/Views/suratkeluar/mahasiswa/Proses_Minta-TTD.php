@@ -32,7 +32,11 @@
 
 
 <?php if ($minta == 1) : ?>
-    <form class="inputform" action="" enctype="multipart/form-data" method="post" accept-charset="utf-8">
+    <form class="inputform" action="<?= base_url('/Surat-Input_Proses/Minta-TandaTangan'); ?>" enctype="multipart/form-data" method="post" accept-charset="utf-8">
+
+        <?= csrf_field() ?>
+        <input type="hidden" name="id" value="<?= esc($datasurat['id']) ?>">
+
         <table>
             <tr>
                 <td>Nama Surat:</td>
@@ -48,7 +52,17 @@
             </tr>
             <tr>
                 <td>Preview Surat:</td>
-                <td><?= TombolTo('/Preview/' . $datasurat['id'], 'Preview Surat', '', '_blank') ?></td>
+                <td>
+                    <?= view_cell('TombolIdCell', [
+                        'link'              => '/Preview_Master-Surat/' . $datasurat['id'],
+                        'tombolsubmitclass' => 'Actions',
+                        'textsubmit'        => 'Preview Surat',
+                        'target'            => '_blank',
+                        'method'            => 'redirect'
+                    ]) ?>
+
+
+                </td>
             </tr>
         </table>
 

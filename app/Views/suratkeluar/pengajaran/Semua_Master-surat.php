@@ -9,6 +9,8 @@
 
 <div class="filter">
     <p class="first">Filter:</p>
+
+
     <?= timedecor() ?>
 </div>
 
@@ -33,40 +35,40 @@
                     <td><?= esc($key['description']) ?></td>
 
                     <?php if ($key['show'] == 0) : ?>
-                        <td><?= TombolIDcheck(0, '/toggleshow-surat', $key['id']) ?></td>
+                        <td><?= TombolIDcheck(0, 'toggleshow-surat', $key['id']) ?></td>
                     <?php elseif ($key['show'] == 1) : ?>
-                        <td><?= TombolIDcheck(1, '/toggleshow-surat', $key['id']) ?></td>
+                        <td><?= TombolIDcheck(1, 'toggleshow-surat', $key['id']) ?></td>
                     <?php endif ?>
 
                     <td>
 
                         <?= view_cell('TombolIdCell', [
-                            'link'              => '/Staff/detail/Master-Surat/' . $key['id'],
+                            'link'              => '/Staff/Edit/Master-Surat/' . $key['id'],
                             'valueinput'        => $key['id'],
                             'tombolsubmitclass' => 'Actions',
                             'textsubmit'        => 'Edit Surat',
                             'confirmdialog'     => true,
-                            'method'            => 'get'
+                            'method'            => 'post'
                         ]) ?>
 
                         <?= view_cell('TombolIdCell', [
-                            'link'              => '/staff/Preview/' . $key['id'],
+                            'link'              => '/Staff/Preview_Master-Surat/' . $key['id'],
                             'valueinput'        => $key['id'],
                             'tombolsubmitclass' => 'Actions',
                             'textsubmit'        => 'Preview Surat',
                             'target'            => '_blank',
                             'confirmdialog'     => false,
-                            'method'            => 'get'
+                            'method'            => 'redirect'
                         ]) ?>
 
                         <?= view_cell('TombolIdCell', [
-                            'link'              => '/Staff/test/Master-Surat/' . $key['id'],
+                            'link'              => '/Staff/Test/Master-Surat/' . $key['id'],
                             'valueinput'        => $key['id'],
                             'tombolsubmitclass' => 'Actions',
                             'textsubmit'        => 'Test Surat',
                             'target'            => '_blank',
                             'confirmdialog'     => false,
-                            'method'            => 'get'
+                            'method'            => 'redirect'
                         ]) ?>
 
                     </td>

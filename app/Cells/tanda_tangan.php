@@ -21,10 +21,6 @@
 
     <p class="underline"><strong><?= esc($nama) ?></strong></p>
 
-    <?php if ($nip) : ?>
-        <p><Strong><span>NIP : </span></Strong><span><?= esc($nomer) ?></span></p>
-    <?php else : ?>
-        <p><Strong><span>NPK : </span></Strong><span><?= esc($nomer) ?></span></p>
-    <?php endif ?>
+    <p><Strong><span>NIDN : </span></Strong><span><?= esc($nomer) ?></span></p>
 
 </div>

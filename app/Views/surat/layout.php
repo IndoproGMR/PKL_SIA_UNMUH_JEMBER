@@ -72,10 +72,9 @@
 </style>
 
 <body>
+
     <!-- START Kop Surat -->
     <?php
-
-    use PhpParser\Node\Identifier;
 
     if ($kop == 1) : ?>
         <!-- kop surat 1 -->
@@ -88,6 +87,9 @@
         <?= $this->include('surat/_kopsurat'); ?>
     <?php endif ?>
     <!-- END Kop Surat -->
+    <p>No Surat: <span><?= esc($NoSurat) ?></span></p>
+
+
 
     <!-- START isi Surat -->
     <div class="isi">
@@ -118,8 +120,7 @@
                             'nama'    => $key['NamaPenanda'],
                             'jabatan' => $key['namaLVL'],
 
-                            'nip'   => true,
-                            'nomer' => '034720',
+                            'nomer' => $key['NIDN'],
                         ]) ?>
                     </td>
 

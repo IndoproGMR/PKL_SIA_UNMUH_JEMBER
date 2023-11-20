@@ -122,7 +122,7 @@
 <?= $this->section('main') ?>
 <br>
 
-<form class="inputform" action="<?= base_url('/input-proses/master-surat'); ?>" method="post" id="inputisi">
+<form class="inputform" action="<?= base_url('/Staff/input-proses/master-surat'); ?>" method="post" id="inputisi">
     <h1 style="text-align: center;">Input isi Surat</h1>
     <hr>
     <br>

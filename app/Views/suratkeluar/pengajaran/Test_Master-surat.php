@@ -22,7 +22,7 @@
     <?= timedecor() ?>
 </div>
 
-<form class="inputform" action="<?= base_url('/Staff/test-proses/Master-Surat'); ?>" method="get" id="inputisi" target="_blank">
+<form class="inputform" action="<?= base_url('/Staff/Test-proses/Master-Surat'); ?>/<?= esc($id) ?>" method="get" id="inputisi" target="_blank">
     <?= csrf_field() ?>
     <table>
         <tr>
@@ -39,12 +39,21 @@
         </tr>
         <tr>
             <td>Preview Surat:</td>
-            <td><?= TombolTo('/staff/Preview/' . $datasurat['id'], 'Preview Surat', '', '_blank') ?></td>
+            <td>
+                <?= view_cell('TombolIdCell', [
+                    'link'              => '/Preview_Master-Surat/' . $datasurat['id'],
+                    'tombolsubmitclass' => 'Actions',
+                    'textsubmit'        => 'Preview Surat',
+                    'target'            => '_blank',
+                    'method'            => 'redirect'
+                ]) ?>
+
+
+            </td>
         </tr>
     </table>
 
-
-    <input hidden type="hidden" name="id" value="<?= esc($id) ?>">
+    <br>
 
     <?php foreach ($dataform['input'] as $inputfild) : ?>
         <div>
@@ -53,14 +62,6 @@
         </div>
     <?php endforeach ?>
 
-    <?php if (isset($dataform['tambahan'])) : ?>
-        <?php if (in_array('foto', $dataform['tambahan'])) : ?>
-            <div>
-                <label for="foto">Foto:</label>
-                <input type="file" name="foto" id="foto" accept="image/*">
-            </div>
-        <?php endif ?>
-    <?php endif ?>
 
     <br>
 
@@ -68,17 +69,4 @@
 </form>
 
 
-<?= $this->endSection() ?>
-
-<?= $this->section('jsF') ?>
-<script>
-    var url = "<?= base_url('/Surat/Minta-TandaTangan/'); ?>";
-
-    function mintaa() {
-        var idjenis = document.getElementById('jenissuratid').value;
-        console.log(idjenis);
-
-        window.location.href = url + idjenis;
-    }
-</script>
 <?= $this->endSection() ?>

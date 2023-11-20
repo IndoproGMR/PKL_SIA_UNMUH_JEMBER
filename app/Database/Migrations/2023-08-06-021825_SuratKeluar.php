@@ -3,6 +3,7 @@
 namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
+use CodeIgniter\Database\RawSql;
 
 $GLOBALS['dbprefix'] = "SK_";
 $GLOBALS['attributes'] = ['ENGINE' => 'InnoDB'];
@@ -11,12 +12,12 @@ class SuratKeluar extends Migration
 {
     public function up()
     {
-        // !JenisSurat
-        $tablee = "JenisSurat";
+        // !MasterSurat
+        $tablee = "MasterSurat";
         $fields = [
             'id' => [
-                'type'           => 'varchar',
-                'constraint'     => 16,
+                'type'       => 'varchar',
+                'constraint' => 16,
             ],
             'name' => [
                 'type'       => 'varchar',
@@ -37,25 +38,28 @@ class SuratKeluar extends Migration
                 'constraint' => 1,
                 'default'    => 0
             ],    // di show kepada user
-            'TimeStamp' => [
-                'type'       => 'int',
-                'constraint' => 10,
-                'unsigned'   => true
+
+            'created_at' => [
+                'type'       => 'datetime',
+                'default' => new RawSql('CURRENT_TIMESTAMP')
             ],
-            'DeleteAt' => [
-                'type'       => 'int',
-                'constraint' => 10,
+            'updated_at' => [
+                'type'       => 'datetime',
+                'default'    => null
+            ],
+            'deleted_at' => [
+                'type'       => 'datetime',
                 'default'    => null
             ],
         ];
         $this->forge->addField($fields);
         $this->forge->addKey('id', true);
         $this->forge->addKey('show');
-        $this->forge->addKey('TimeStamp');
+        $this->forge->addKey('created_at');
         $this->forge->createTable($GLOBALS['dbprefix'] . "$tablee", true, $GLOBALS['attributes']);
 
         // !ttd-SuratMasuk
-        $tablee = "ttd_SuratMasuk";
+        $tablee = "ttd_MintaSurat";
         $fields = [
             'id' => [
                 'type'           => 'int',
@@ -75,12 +79,7 @@ class SuratKeluar extends Migration
             'DataTambahan' => [
                 'type' => 'text'
             ],                         //json base64
-            'TimeStamp' => [
-                'type'       => 'int',
-                'constraint' => 10,
-                'unsigned'   => true
-            ],
-            'JenisSurat_id' => [
+            'MasterSurat_id' => [
                 'type'       => 'varchar',
                 'constraint' => 16,
                 'default'    => 0
@@ -90,18 +89,36 @@ class SuratKeluar extends Migration
                 'constraint' => 20,
                 'default'    => 0
             ],
-            'DeleteAt' => [
-                'type'       => 'int',
-                'constraint' => 10,
+            'Status' => [
+                'type'       => 'tinyint',
+                'constraint' => 1,
+                'default'    => 0
+            ], // 0 = aman; 1 = Reported; 2 = 
+            'Report_diskripsi' => [
+                'type'       => 'varchar',
+                'constraint' => 255,
+                'default'    => Null
+            ],
+
+            'created_at' => [
+                'type'       => 'datetime',
+                'default' => new RawSql('CURRENT_TIMESTAMP')
+            ],
+            'updated_at' => [
+                'type'       => 'datetime',
+                'default'    => null
+            ],
+            'deleted_at' => [
+                'type'       => 'datetime',
                 'default'    => null
             ]
         ];
         $this->forge->addField($fields);
         $this->forge->addKey('id', true);
         $this->forge->addKey('SuratIdentifier');
-        $this->forge->addKey('TimeStamp');
+        $this->forge->addKey('created_at');
         $this->forge->addKey('mshw_id');
-        $this->forge->addForeignKey('JenisSurat_id', $GLOBALS['dbprefix'] . 'JenisSurat', 'id', 'CASCADE', 'SET DEFAULT');
+        $this->forge->addForeignKey('MasterSurat_id', $GLOBALS['dbprefix'] . 'MasterSurat', 'id', 'CASCADE', 'SET DEFAULT');
         $this->forge->createTable($GLOBALS['dbprefix'] . "$tablee", true, $GLOBALS['attributes']);
 
 
@@ -109,10 +126,8 @@ class SuratKeluar extends Migration
         $tablee = "ttd";
         $fields = [
             'id' => [
-                'type'           => 'int',
-                'constraint'     => 10,
-                'unsigned'       => true,
-                'auto_increment' => true
+                'type'       => 'varchar',
+                'constraint' => 16
             ],
             'SuratIdentifier' => [
                 'type'       => 'varchar',
@@ -141,12 +156,19 @@ class SuratKeluar extends Migration
                 'constraint' => 20,
                 'default'    => NULL
             ], // nama grup atau id login
-            'TimeStamp' => [
-                'type'       => 'int',
-                'constraint' => 10,
-                'unsigned'   => true,
-                'default'    => 0
+
+            'created_at' => [
+                'type'       => 'datetime',
+                'default' => new RawSql('CURRENT_TIMESTAMP')
             ],
+            'updated_at' => [
+                'type'       => 'datetime',
+                'default'    => null
+            ],
+            'deleted_at' => [
+                'type'       => 'datetime',
+                'default'    => null
+            ]
         ];
         $this->forge->addField($fields);
         $this->forge->addKey('id', true);
@@ -154,19 +176,16 @@ class SuratKeluar extends Migration
         $this->forge->addKey('Status');
         $this->forge->addKey('jenisttd');
         $this->forge->addKey('pendattg_id');
-        $this->forge->addKey('TimeStamp');
+        $this->forge->addKey('created_at');
+        $this->forge->addKey('updated_at');
 
         $this->forge->createTable($GLOBALS['dbprefix'] . "$tablee", true, $GLOBALS['attributes']);
     }
 
     public function down()
     {
-        $this->forge->dropTable($GLOBALS['dbprefix'] . 'JenisSurat', true);
-        $this->forge->dropTable($GLOBALS['dbprefix'] . 'ttd_SuratMasuk', true);
+        $this->forge->dropTable($GLOBALS['dbprefix'] . 'MasterSurat', true);
+        $this->forge->dropTable($GLOBALS['dbprefix'] . 'ttd_MintaSurat', true);
         $this->forge->dropTable($GLOBALS['dbprefix'] . 'ttd', true);
     }
 }
-
-
-// ALTER TABLE `SK_ttd`
-// ADD INDEX idx_NoSurat(`NoSurat`)
