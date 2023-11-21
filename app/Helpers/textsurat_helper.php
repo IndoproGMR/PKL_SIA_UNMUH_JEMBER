@@ -372,8 +372,18 @@ function timeconverter($timestamp = 0, $jenis = 'yunani')
         $timestamp = getUnixTimeStamp();
     }
     if (is_string($timestamp)) {
-        $timestamp = strtotime($timestamp);
+        try {
+            $testString = strtotime($timestamp);
+            $date = new DateTime("@$testString");
+            $timestamp = strtotime($timestamp);
+            $date = new DateTime("@$timestamp");
+        } catch (\Throwable $th) {
+            $timestamp = hexdec($timestamp);
+            $date = new DateTime("@$timestamp");
+        }
     }
+
+
 
 
     // tgl hijriah
@@ -383,9 +393,9 @@ function timeconverter($timestamp = 0, $jenis = 'yunani')
     $Arabic->setDateMode(8);
     $correction = $Arabic->dateCorrection($timestamp);
 
-
     // tgl yunani
-    $date = new DateTime("@$timestamp");
+
+
     $date->setTimezone(new DateTimeZone('GMT+7'));
 
     $daysInIndonesian = [

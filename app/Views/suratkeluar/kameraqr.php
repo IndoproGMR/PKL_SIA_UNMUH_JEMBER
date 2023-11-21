@@ -1,264 +1,312 @@
 <?= $this->extend('templates/layout.php') ?>
+<?= $this->section('jsH') ?>
+<script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
+<script src="<?= base_url('/js/API_lib.js'); ?>" type="text/javascript"></script>
+<?= $this->endSection() ?>
+
+
 <?= $this->section('style') ?>
-
 <style>
-    video {
-        width: 300px;
-        /* height: 300px; */
-        /* overflow: hidden; */
-        z-index: 1;
+    input[type='text'] {
+        height: 30px;
     }
 
-    .vidcontainer {
-        position: relative;
+    textarea {
+        height: 80px;
     }
 
-    .videogb {
-        width: 350px;
-        background-color: gray;
-        padding: 20px;
-        border-radius: 10px;
-        z-index: -1;
-    }
 
-    .vidcontainer video {
-        position: relative;
 
-    }
 
-    .overlay {
-        position: absolute;
-        /* position: relative; */
-        top: 50px;
-        left: 50px;
-        z-index: 0;
+    /* input[type='button'] {
         background-color: red;
-        border-radius: 20px;
-        padding: 20px;
-        font-size: larger;
+        width: 400px;
+        height: 30px;
+
+    } */
+
+
+    input[type='text']:hover,
+    textarea:hover {
+        background-color: var(--clr-select-hover);
+        border-radius: 3px;
     }
 
-    .detailhide {
-        display: none;
+    input[type='text'],
+    textarea {
+
+        border-radius: 10px;
+        border: 1px solid var(--clr-buttom);
+
+        display: inline-block;
+        text-decoration: none;
+        font-size: 14px;
+        padding: 5px 10px;
+        margin: 5px 0px;
+        font-weight: 500;
+
+        width: 400px;
+        transition: all ease-in-out 0.3s;
+    }
+
+    .kontenerInformasi {
+        margin-top: 30px;
+        width: 100%;
+        /* background-color: #f00; */
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+    }
+
+    .InputQR {
+        display: grid;
+        justify-content: center;
+        height: 600px;
+
+        /* background-color: red; */
+        /* background-color: rgb(218, 218, 218); */
+        /* border-radius: 20px; */
+    }
+
+    .form {
+        display: grid;
+        justify-content: center;
+        /* margin-top: 20px; */
+    }
+
+
+    #reader {
+        width: 400px;
+        height: 400px;
+
+        border-radius: 20px;
+
+    }
+
+
+    .InformasiSurat {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        width: 400px;
+        height: 600px;
+        background-color: rgb(218, 218, 218);
+        padding: 20px;
+        /* Mengubah padding untuk memberi ruang lebih di sekitar elemen */
+        border-radius: 20px;
+        /* width: 400px;
+        height: 600px;
+        background-color: rgb(218, 218, 218);
+        padding: 10px 20px;
+        border-radius: 20px; */
+    }
+
+
+    h3 {
+        text-align: center;
+        margin-bottom: 10px;
+        /* Memberi margin bawah pada h3 */
+    }
+
+    table {
+        width: 100%;
+        height: 400px;
+    }
+
+
+
+    td {
+        padding: 10px;
+        /* padding-bottom: 10px; */
+
+    }
+
+
+    div.InformasiSurat hr {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        width: 100%;
+        border-color: #000;
+    }
+
+    a.Actions {
+        width: 100%;
+        text-align: center;
+        bottom: 0px;
+        align-self: flex-end;
+
+    }
+
+    /* Gaya tambahan untuk checkbox agar lebih terlihat baik */
+    input[type="checkbox"] {
+        transform: scale(1.5);
+        /* Memperbesar ukuran checkbox */
+        margin-top: 5px;
+        /* Memberi margin atas pada checkbox */
     }
 </style>
-
 <?= $this->endSection() ?>
-
-
 
 <?= $this->section('main') ?>
+<div class="kontenerInformasi">
 
-<div class="vidcontainer">
-    <div class="videogb">
-        <video id="preview"></video>
+    <div class="InputQR">
+        <div id="reader"></div>
+
+        <div class="form">
+            <input type="text" id="nosurat" placeholder="Nomer Surat">
+
+            <textarea id="DataQRCode" placeholder="Data QRCode"></textarea>
+
+            <input type="button" id="cekTTD" value="Cek TandaTangan" class="Actions">
+        </div>
     </div>
 
-    <div class="overlay">
-        <p>Kamera sedang mati</p>
+    <div class="InformasiSurat">
+        <h3>Cek Validasi</h3>
+        <hr>
+        <table>
+            <tr>
+                <td>
+                    <strong>Nomer Surat:</strong>
+                    <br>
+                    <p id="NomerSurat">Nomer Surat:</p>
+                </td>
+                <td>
+                    <input type="checkbox">
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <strong>Jenis Surat:</strong>
+                    <br>
+                    <p id="JenisSurat">Jenis Surat</p>
+                </td>
+                <td>
+                    <input type="checkbox">
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <strong>Tanggal Meminta Surat:</strong>
+                    <br>
+                    <p id="TanggalMeminta">Tanggal Meminta Surat</p>
+                </td>
+                <td>
+                    <input type="checkbox">
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <strong>PenandaTangan:</strong>
+                    <br>
+                    <p id="PenandaTangan">PenandaTangan</p>
+                </td>
+                <td>
+                    <input type="checkbox">
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <strong>Mahasiswa:</strong>
+                    <br>
+                    <p id="Mahasiswa">Mahasiswa</p>
+                </td>
+                <td>
+                    <input type="checkbox">
+                </td>
+            </tr>
+        </table>
+        <hr>
+        <h3 id="Valid">Unknown</h3>
+
+        <a class="Actions" id="PreviewSurat" href="">Preview Surat</a>
     </div>
 </div>
-<h1 id="valid"> - </h1>
-
-<input type="text" name="nosurat" id="nosurat" placeholder="NoSurat">
-<br>
-<br>
-<textarea name="qrcode" id="qrcode" cols="30" rows="10"></textarea>
-<br>
-<br>
-<?php if (!$nocam) : ?>
-    <select name="kamera" id="kamera" onchange="setCamera(this.value)">
-    </select>
-    <button onclick="restartCamera()">Start Camera</button>
-    <button onclick="stopcam()">Stop Camera</button>
-<?php else : ?>
-    <select name="kamera" id="kamera">
-        <option value="">camera has been disable</option>
-    </select>
-    <button onclick="startCamera()">Start Camera</button>
-<?php endif ?>
-
-<br>
-<br>
-<input type="submit" value="detail" id="button_detail">
-<br>
-
-<?php if (!in_group(['Mahasiswa'])) : ?>
-
-    <div>
-        <p><input type="checkbox"> No Surat: <span id="no-surat"></span></p>
-        <p><input type="checkbox"> Mahasiswa: <span id="Mahasiswa"></span></p>
-        <p><input type="checkbox"> Penandatangan: <span id="Penandatangan"></span></p>
-        <p><input type="checkbox"> timestamp: <span id="timestamp"></span></p>
-        <p><input type="checkbox"> JenisSurat: <span id="JenisSurat"></span></p>
-    </div>
-
-    <input hidden type="text" id="inputNoSurat" name="noSurat">
-    <input hidden type="text" id="inputMahasiswa" name="Mahasiswaat">
-
-<?php else : ?>
-
-    <div>
-        <p>No Surat: <span id="no-surat"></span></p>
-        <p>Mahasiswa: <span id="Mahasiswa"></span></p>
-        <p>Penandatangan: <span id="Penandatangan"></span></p>
-        <p>timestamp: <span id="timestamp"></span></p>
-        <p>JenisSurat: <span id="JenisSurat"></span></p>
-    </div>
-
-<?php endif ?>
-
-
 <?= $this->endSection() ?>
 
+
+
 <?= $this->section('jsF') ?>
-<!-- Js Script untuk Footer -->
-<!-- <script type="text/javascript"> -->
 <script>
-    // import API_library from '<?= base_url('/js/API_library.js'); ?>';
-
-
-
-    const url_api = "<?= base_url(getenv('urlapi') . '/validasi/qr')  ?>";
-    const url_apidetail = "<?= base_url(getenv('urlapi') . "/validasi/qr/detail") ?>";
-
-    <?php if (!$nocam) : ?> Instascan.Camera.getCameras()
-            .then(function(cameras) {
-                if (cameras.length > 0) {
-                    var selectopt = document.getElementById('kamera')
-                    for (let index = 0; index < cameras.length; index++) {
-                        const opt = document.createElement('option');
-                        opt.value = index;
-                        opt.textContent = cameras[index].name;
-                        selectopt.appendChild(opt);
-
-                        var idcamera = document.getElementById('kamera').value;
-
-                        if (localStorage.getItem('kameraID') == null) {
-                            localStorage.setItem('kameraID', idcamera);
-                        }
-                    }
-                    jalankancamera();
-                } else {
-                    const opt = document.createElement('option');
-                    opt.value = 0;
-                    opt.textContent = "No cameras found.";
-                    selectopt.appendChild(opt);
-                    console.error("No cameras found.");
-                }
-            }).catch(function(e) {
-                console.error(e);
-            });
-
-
-        function jalankancamera() {
-            let scanner = new Instascan.Scanner({
-                video: document.getElementById("preview")
-            });
-
-            scanner.addListener("scan", function(content) {
-                document.getElementById("qrcode").value = content;
-                detail(url_api)
-            });
-
-            var idcamera = localStorage.getItem('kameraID');
-
-            Instascan.Camera.getCameras()
-                .then(function(cameras) {
-                    scanner.start(cameras[idcamera])
-                        .then(() => {
-                                console.log('Camera Ready');
-                            },
-                            () => {
-                                localStorage.setItem('kameraID', 0);
-                                window.location.reload();
-                            })
-                }).catch(function(e) {
-                    console.error(e);
-                });
-
-        };
-
-        function stopcam() {
-            localStorage.setItem('kameraID', 0);
-            window.location.href = "<?= base_url('/qr-validasi'); ?>?nocam=true";
-        }
-
-
-        function setCamera(id) {
-            localStorage.setItem('kameraID', id);
-        }
-
-        function restartCamera() {
-            window.location.reload();
-        }
-
-    <?php endif ?>
-
-    function startCamera() {
-        window.location.href = "<?= base_url('/qr-validasi'); ?>";
+    function onScanSuccess(decodedText, decodedResult) {
+        // handle the scanned code as you like, for example:
+        // console.log(`Code matched = ${decodedText}`, decodedResult);
+        inputDataQRCode(decodedText);
     }
 
-    const tomboldetail = document.getElementById('button_detail');
+    // function onScanFailure(error) {
+    //     // handle scan failure, usually better to ignore and keep scanning.
+    //     // for example:
+    //     console.warn(`Code scan error = ${error}`);
+    // }
 
-    tomboldetail.addEventListener('click', () => {
-        console.log('klick');
+    let html5QrcodeScanner = new Html5QrcodeScanner(
+        "reader", {
+            fps: 10,
+            qrbox: {
+                width: 250,
+                height: 250
+            }
+        },
+        /* verbose= */
+        false);
+    html5QrcodeScanner.render(onScanSuccess);
+
+
+
+    function inputDataQRCode(value) {
+        document.getElementById('DataQRCode').textContent = value;
+        detail();
+    }
+
+    var cekTTD = document.getElementById('cekTTD')
+
+    function textLoading() {
+        document.getElementById('NomerSurat').textContent = 'LOADING...';
+        document.getElementById('JenisSurat').textContent = 'LOADING...';
+        document.getElementById('TanggalMeminta').textContent = 'LOADING...';
+        document.getElementById('PenandaTangan').textContent = 'LOADING...';
+        document.getElementById('Mahasiswa').textContent = 'LOADING...';
+        document.getElementById('Valid').textContent = 'LOADING...';
+        cekTTD.value = 'LOADING...';
+    }
+    cekTTD.addEventListener('click', () => {
+        console.log('test');
+        textLoading();
         detail();
     });
 
     function detail() {
-        var nosurat = document.getElementById("nosurat").value
-        var qrcode = encodeURIComponent(document.getElementById("qrcode").value);
+        var nosurat = document.getElementById('nosurat').value;
+        var DataQRCode = document.getElementById('DataQRCode').textContent;
+        textLoading();
 
-        // const apilib = new API_library("<?= base_url(getenv('urlapi') . "/validasi/qr/detail") ?>");
-        var urlq = url_apidetail + "?nosurat=" + nosurat + "&qrcode=" + qrcode;
+        var url = "<?= base_url(''); ?>" + '/api/v1/validasi/qr/detail?nosurat=' + nosurat + '&qrcode=' + DataQRCode;
 
-        // apilib.setQuery(urlQ);
-        // console.log(apilib.getURL());
-
-        // var dataa;
-        // await apilib.getRespond()
-        //     .then(
-        //         function(result) {
-        //             return result;
-        //         })
-        //     .then(function(result) {
-        //         dataa = result;
-        //     });
-        // console.log('respond succes: ', dataa);
-
-
-        // return;
-        fetch(urlq)
+        fetch(url)
             .then((response) => {
                 return response.json();
             })
             .then((data) => {
-                document.getElementById("valid").textContent = data.valid;
-                document.getElementById("no-surat").textContent = data.nosurat;
-                document.getElementById("Mahasiswa").textContent = data.Mahasiswa;
-                document.getElementById("Penandatangan").textContent = data.penandatangan;
-                document.getElementById("timestamp").textContent = data.TimeStamp;
-                document.getElementById("JenisSurat").textContent = data.JenisSurat;
+                // console.log(data.result.nosurat);
+                document.getElementById('NomerSurat').textContent = data.result.nosurat;
+                document.getElementById('JenisSurat').textContent = data.result.JenisSurat;
+                document.getElementById('TanggalMeminta').textContent = data.result.TimeStamp;
+                document.getElementById('PenandaTangan').textContent = data.result.penandatangan;
+                document.getElementById('Mahasiswa').textContent = data.result.Mahasiswa;
+                document.getElementById('Valid').textContent = data.result.valid;
+                cekTTD.value = 'Cek TandaTangan';
 
-                document.getElementById('inputNoSurat').value = data.nosurat;
-                document.getElementById('inputMahasiswa').value = data.Mahasiswa;
             }).catch(function(error) {
                 console.error("Terjadi kesalahan:", error);
             });
 
-    };
+    }
 </script>
-<?= $this->endSection() ?>
-
-<?= $this->section('jsH') ?>
-<!-- Js Script untuk Header -->
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.1.10/vue.min.js"></script>
-
-<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/webrtc-adapter/3.3.3/adapter.min.js"></script>
-
-<!-- <script type="text/javascript" src="<?= base_url('/') ?>js/instascan.min.js"></script> -->
-
-<script type="text/javascript" src="https://rawgit.com/schmich/instascan-builds/master/instascan.min.js"></script>
-
 <?= $this->endSection() ?>

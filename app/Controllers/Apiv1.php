@@ -40,14 +40,16 @@ class Apiv1 extends ResourceController
 
         // !==================================================================>>
         // cek apakah tandaTanga nya Valid
-        $prefix = "Query_validasiqrdetail_" . $dataGet['qrcode'] . "_" . $dataGet['nosurat'];
-        if (cekCacheData($prefix, '')) {
-            $validasienkripsi = new enkripsi_library;
-            $data['dataJson'] = $validasienkripsi->validasiTTD($dataGet['qrcode'], $dataGet['nosurat']);
-            setCacheData($prefix, $data['dataJson'], 60, '');
-        } else {
-            $data['dataJson'] = getCachaData($prefix, '');
-        }
+        // $prefix = "Query_validasiqrdetail_" . $dataGet['qrcode'] . "_" . $dataGet['nosurat'];
+        // if (cekCacheData($prefix, '')) {
+        $validasienkripsi = new enkripsi_library;
+        $data['dataJson'] = $validasienkripsi->validasiTTD($dataGet['qrcode'], $dataGet['nosurat']);
+        // setCacheData($prefix, $data['dataJson'], 60, '');
+        // } else {
+        //     $data['dataJson'] = getCachaData($prefix, '');
+        // }
+
+
 
         // Bila tidak valid out kan error
         if ($data['dataJson']['pendattg_id'] == resMas('e')) {
@@ -59,7 +61,7 @@ class Apiv1 extends ResourceController
                 'TimeStamp'     => resMas('e'),
                 'valid'         => resMas('e.param.n.exist'),
             ];
-            // return $this->respond($data['respond']);
+
             return $this->respond()->setJSON(ApiStandarisasi($data['respond']));
         }
         // !==================================================================<<
@@ -70,16 +72,13 @@ class Apiv1 extends ResourceController
         if (cekCacheData($prefix, '')) {
             $model = model('AuthUserGroup');
             $penandatangan = $model->cekdoseninfo($data['dataJson']['pendattg_id']);
-
-
             setCacheData($prefix, $penandatangan, 360, '');
         } else {
-            $penandatangan = getCachaData($prefix);
+            $penandatangan = getCachaData($prefix, '');
         }
 
         $prefix = "Query_cekmahasiswainfo_" . $data['dataJson']['mshw_id'];
         if (cekCacheData($prefix, '')) {
-
             $model = model('AuthUserGroup');
             $Mahasiswa = $model->cekmahasiswainfo($data['dataJson']['mshw_id']);
             setCacheData($prefix, $Mahasiswa, 360, '');
@@ -87,7 +86,8 @@ class Apiv1 extends ResourceController
             $Mahasiswa = getCachaData($prefix, '');
         }
         // !==================================================================<<
-
+        // d($data);
+        // return;
         $data['respond']['nosurat']       = $data['dataJson']['NoSurat'];
         $data['respond']['JenisSurat']    = $data['dataJson']['jenisSurat'];
         $data['respond']['Mahasiswa']     = $Mahasiswa['NamaUser'];
@@ -96,7 +96,6 @@ class Apiv1 extends ResourceController
         $data['respond']['valid']         = $data['dataJson']['valid'];
 
         return $this->respond()->setJSON(ApiStandarisasi($data['respond']));
-        // return $this->respond($data['respond']);
     }
 
     function cekNoSurat()

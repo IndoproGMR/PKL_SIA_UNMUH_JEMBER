@@ -62,7 +62,7 @@ class TandaTangan extends Model
         $data = $this
             ->select('
             SK_ttd_MintaSurat.NoSurat,
-            SK_ttd.updated_at,
+            SK_ttd.updated_at as TimeStamp,
             SK_ttd.pendattg_id,
             SK_ttd_MintaSurat.mshw_id,
             SK_MasterSurat.name as jenisSurat')
