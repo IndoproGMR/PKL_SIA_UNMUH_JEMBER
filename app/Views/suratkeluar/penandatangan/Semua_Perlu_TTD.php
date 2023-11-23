@@ -86,6 +86,15 @@
                         ]) ?>
 
                         <?= view_cell('TombolIdCell', [
+                            'link'              => '/Preview_Surat-TandaTangan/' . $key['SuratIdentifier'],
+                            'tombolsubmitclass' => 'Actions',
+                            'textsubmit'        => 'Preview TandaTangan',
+                            'confirmdialog'     => false,
+                            'target'            => '_blank',
+                            'method'            => 'redirect'
+                        ]) ?>
+
+                        <?= view_cell('TombolIdCell', [
                             'link'              => '/Report-Surat',
                             'valueinput'        => $key['SuratIdentifier'],
                             'tombolsubmitclass' => 'Actions danger-hover',

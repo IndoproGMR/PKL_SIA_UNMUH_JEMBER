@@ -174,7 +174,7 @@
                     <p id="NomerSurat">Nomer Surat:</p>
                 </td>
                 <td>
-                    <input type="checkbox">
+                    <input type="checkbox" class="CekBox">
                 </td>
             </tr>
 
@@ -185,7 +185,7 @@
                     <p id="JenisSurat">Jenis Surat</p>
                 </td>
                 <td>
-                    <input type="checkbox">
+                    <input type="checkbox" class="CekBox">
                 </td>
             </tr>
 
@@ -196,7 +196,7 @@
                     <p id="TanggalMeminta">Tanggal Meminta Surat</p>
                 </td>
                 <td>
-                    <input type="checkbox">
+                    <input type="checkbox" class="CekBox">
                 </td>
             </tr>
 
@@ -207,7 +207,7 @@
                     <p id="PenandaTangan">PenandaTangan</p>
                 </td>
                 <td>
-                    <input type="checkbox">
+                    <input type="checkbox" class="CekBox">
                 </td>
             </tr>
 
@@ -218,14 +218,14 @@
                     <p id="Mahasiswa">Mahasiswa</p>
                 </td>
                 <td>
-                    <input type="checkbox">
+                    <input type="checkbox" class="CekBox">
                 </td>
             </tr>
         </table>
         <hr>
         <h3 id="Valid">Unknown</h3>
 
-        <a class="Actions" id="PreviewSurat" href="">Preview Surat</a>
+        <a class="Actions" id="PreviewSurat" href="#" target="_blank">Preview Surat</a>
     </div>
 </div>
 <?= $this->endSection() ?>
@@ -274,7 +274,15 @@
         document.getElementById('PenandaTangan').textContent = 'LOADING...';
         document.getElementById('Mahasiswa').textContent = 'LOADING...';
         document.getElementById('Valid').textContent = 'LOADING...';
+        document.getElementById('PreviewSurat').href = '#';
         cekTTD.value = 'LOADING...';
+
+        // men uncheckBox semua yang memiliki class cekbox
+        var checkboxes = document.getElementsByClassName('CekBox');
+
+        for (var i = 0; i < checkboxes.length; i++) {
+            checkboxes[i].checked = false;
+        }
     }
     cekTTD.addEventListener('click', () => {
         console.log('test');
@@ -283,12 +291,14 @@
     });
 
     function detail() {
-        var nosurat = document.getElementById('nosurat').value;
-        var DataQRCode = document.getElementById('DataQRCode').textContent;
         textLoading();
 
-        var url = "<?= base_url(''); ?>" + '/api/v1/validasi/qr/detail?nosurat=' + nosurat + '&qrcode=' + DataQRCode;
+        var nosurat = document.getElementById('nosurat').value;
+        var DataQRCode = document.getElementById('DataQRCode').value;
 
+        var url = "<?= base_url('/'); ?>" + '/api/v1/validasi/qr/detail?nosurat=' + nosurat + '&qrcode=' + DataQRCode;
+
+        console.log(url);
         fetch(url)
             .then((response) => {
                 return response.json();
@@ -302,6 +312,12 @@
                 document.getElementById('Mahasiswa').textContent = data.result.Mahasiswa;
                 document.getElementById('Valid').textContent = data.result.valid;
                 cekTTD.value = 'Cek TandaTangan';
+
+                if (data.result.nosurat == "Error") {
+                    document.getElementById('PreviewSurat').href = '#';
+                }
+
+                document.getElementById('PreviewSurat').href = "<?= base_url('/Preview_Surat-TandaTangan/'); ?>" + data.result.nosurat;
 
             }).catch(function(error) {
                 console.error("Terjadi kesalahan:", error);

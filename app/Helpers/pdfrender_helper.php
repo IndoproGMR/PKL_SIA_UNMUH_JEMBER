@@ -13,6 +13,18 @@ function replaceHolder($html, $json, $options = 1)
 
 function TandaTanganFormater($datapenanda)
 {
+
+    if (!is_string($datapenanda) && count($datapenanda) == 0) {
+        $data['ttd'][0] = [
+            'TimeStamp'   => 1,
+            'path'        => 'asset/logo/unmuh.png',
+            'NamaPenanda' => 'Nama' . " " . 'Gelar',
+            'namaLVL'     => 'Pangkat',
+            'NIDN'        => 1
+        ];
+    }
+
+    // d($datapenanda);
     // !memasukan data penanda tangan ke dalam array
     $model3 = model('AuthUserGroup');
 
@@ -72,6 +84,7 @@ function TandaTanganFormater($datapenanda)
     }
     // !END
 
-    return $data;
     // d($data);
+    // return;
+    return $data;
 }

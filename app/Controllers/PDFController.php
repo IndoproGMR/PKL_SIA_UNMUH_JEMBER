@@ -100,6 +100,8 @@ class PDFController extends BaseController
 
         $model = model('SuratKeluraModel');
         $dataSurat = $model->cekSuratByIdenti($SuratIdentifier);
+        // d($dataSurat);
+        // return;
 
         // cek apakah id yang diminta ada di db ?
         if ($dataSurat['error'] == 'y') {
@@ -129,6 +131,91 @@ class PDFController extends BaseController
         d($datapenanda);
         d($datajson);
         d($data);
+        d($html);
+    }
+
+    public function PreviewSuratMahasiswaDenganTTD(string $noSurat)
+    {
+        PagePerm(['Dosen']);
+
+        $postdata = $noSurat;
+
+        $model = model('SuratKeluraModel');
+        $dataSurat = $model->cekSuratByIdenti($postdata);
+
+        // d($dataSurat);
+        // return;
+
+        // cek apakah id yang diminta ada di db ?
+        if ($dataSurat['error'] == 'y') {
+            return FlashMassage('/', [resMas('surat.n.exist')]);
+        }
+
+        $namapdf = $dataSurat['name'] . ' - ' . $dataSurat['NoSurat'];
+
+        if ($this->RenderPDF == "Public") {
+            // !Start cek apakah file pdf di buat atau belum
+            // !bila sudah di buat maka baca binary nya
+            if (cekFile(WRITEPATH . 'pdf/' . hash256($namapdf) . ".pdf")) {
+                helper('filesystem');
+                $namaFile = hash256($namapdf) . ".pdf";
+                try {
+                    $path = WRITEPATH . 'pdf/' . $namaFile;
+                    $file = new \CodeIgniter\Files\File($path, true);
+                } catch (\Throwable $th) {
+                    try {
+                        $path = "../Z_Archive/pdf/" . $namaFile;
+                        $file = new \CodeIgniter\Files\File($path, true);
+                    } catch (\Throwable $th) {
+                        return FlashException(resMas('e.server.n.dp.read.fl'));
+                    }
+                }
+
+                $binary = readfile($path);
+                return $this->response
+                    ->setHeader('Content-Type', $file->getMimeType())
+                    ->setHeader('Content-disposition', 'inline; filename="' . $file->getBasename() . '"')
+                    ->setStatusCode(200)
+                    ->setBody($binary);
+            }
+            // !END
+        }
+
+        // !bila pdf tidak ada di server maka akan membuat kan file yang baru
+        $model2 = model('TandaTangan');
+        $datapenanda = $model2->seeallbyIdenti($dataSurat['SuratIdentifier']);
+        $data = TandaTanganFormater($datapenanda);
+        // !END
+
+
+        // !Start cek bila foto yang di upload ada di server
+        $datajson = $dataSurat['DataTambahan'];
+        if (isset($datajson['foto'])) {
+            if (!file_exists($datajson['foto'])) {
+                $datajson['foto'] = 'asset/logo/error_img.png';
+            }
+        }
+        // !END
+
+        $data['NoSurat'] = $dataSurat['NoSurat'];
+        $data['isi'] = $dataSurat['isiSurat'];
+        $data['kop'] = 1;
+
+        $html = view('surat/layout', $data);
+        $html = replaceHolder($html, $datajson);
+
+
+        if ($this->RenderPDF == "Public") {
+            $this->response->setHeader('Content-Type', 'application/pdf');
+            return Render_mpdf($html, '01', "Preview-Surat: " . $namapdf);
+        }
+
+        d($postdata);
+        d($dataSurat);
+        d($datapenanda);
+        d($datajson);
+        d($data);
+        d($namapdf);
         d($html);
     }
 

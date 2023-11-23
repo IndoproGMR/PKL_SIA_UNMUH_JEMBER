@@ -112,7 +112,7 @@ $waktu = [
 
                     <td>
                         <?= view_cell('TombolIdCell', [
-                            'link'              => '/Preview_Surat-Mahasiswa/' . $key['SuratIdentifier'],
+                            'link'              => '/Preview_Surat-TandaTangan/' . $key['SuratIdentifier'],
                             'tombolsubmitclass' => 'Actions',
                             'textsubmit'        => 'Preview Surat',
                             'confirmdialog'     => false,

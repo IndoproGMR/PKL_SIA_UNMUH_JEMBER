@@ -95,6 +95,7 @@ $routes->post('/Download_Surat', 'PDFController::DownloadSurat');
 // ?Staff
 $routes->get('/Staff/Preview_Master-Surat/(:any)', 'PDFController::PreviewMasterSuratStaff/$1');
 $routes->get('/Preview_Surat-Mahasiswa/(:any)', 'PDFController::PreviewSuratMahasiswa/$1');
+$routes->get('/Preview_Surat-TandaTangan/(:any)', 'PDFController::PreviewSuratMahasiswaDenganTTD/$1');
 
 // ?Test
 $routes->get('/Staff/Test/Master-Surat/(:any)', 'PDFController::staffTestMasterSurat/$1');

@@ -206,6 +206,7 @@ class SuratKeluraModel extends Model
             ')
                 ->join('SK_MasterSurat', 'SK_MasterSurat.id=SK_ttd_MintaSurat.MasterSurat_id')
                 ->Where('SK_ttd_MintaSurat.SuratIdentifier', $identi)
+                ->orWhere('SK_ttd_MintaSurat.NoSurat', $identi)
                 ->find();
 
 

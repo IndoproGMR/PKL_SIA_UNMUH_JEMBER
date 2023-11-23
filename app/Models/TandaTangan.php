@@ -53,7 +53,10 @@ class TandaTangan extends Model
 
     function seeallbyIdenti($Identi)
     {
-        return $this->where('SuratIdentifier', $Identi)->findAll();
+        return $this
+            ->where('SuratIdentifier', $Identi)
+            ->where('Status', 1)
+            ->findAll();
     }
 
 
