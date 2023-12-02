@@ -6,7 +6,7 @@
 
 <?= $this->section('main') ?>
 
-<form action="<?= base_url('/edit-proses/archive-surat'); ?>" method="post">
+<form class="inputform" action="<?= base_url('/edit-proses/archive-surat'); ?>" method="post">
     <?= csrf_field() ?>
     <input type="hidden" name="id" value="<?= esc($id); ?>">
     <br>
@@ -42,7 +42,7 @@
 <?= view_cell('TombolIdCell', [
     'link'              => 'delete-proses/archive-surat',
     'valueinput'        => $id,
-    'tombolsubmitclass' => 'signature',
+    'tombolsubmitclass' => 'Actions danger',
     'textsubmit'        => 'Delete Surat'
 ]) ?>
 

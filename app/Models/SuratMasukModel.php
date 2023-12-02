@@ -11,7 +11,7 @@ class SuratMasukModel extends Model
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
-    // protected $useSoftDeletes   = false;
+    protected $useSoftDeletes   = true;
     protected $protectFields    = true;
     protected $allowedFields    = [
         'DiskirpsiSurat',
@@ -20,10 +20,19 @@ class SuratMasukModel extends Model
         'DataSurat',
         'NamaFile',
         'JenisSuratArchice_id',
-        'TimeStamp',
-        'TimeStampUpdate',
-        'DeleteAt'
+        'created_at',
+        'updated_at',
+        'deleted_at'
     ];
+
+
+    // Dates
+    protected $useTimestamps = true;
+    protected $dateFormat    = 'datetime';
+    protected $createdField  = 'created_at';
+    protected $updatedField  = 'updated_at';
+    protected $deletedField  = 'deleted_at';
+
 
     public function seebyid($id)
     {
@@ -34,12 +43,12 @@ class SuratMasukModel extends Model
         SM_SuratArchice.DataSurat,
         SM_SuratArchice.TanggalSurat,
         SM_SuratArchice.DiskirpsiSurat,
-        SM_SuratArchice.TimeStamp,
+        SM_SuratArchice.created_at as TimeStamp,
         SM_SuratArchice.JenisSuratArchice_id,
         SM_JenisSuratArchice.name,
         SM_SuratArchice.NamaFile
         ')
-            ->join('SM_JenisSuratArchice', 'SM_JenisSuratArchice.id=SM_SuratArchice.JenisSuratArchice_id')
+            ->join('SM_JenisSuratArchice', 'SM_JenisSuratArchice.id=SM_SuratArchice.JenisSuratArchice_id', 'left')
             ->find($id);
     }
 
@@ -51,14 +60,11 @@ class SuratMasukModel extends Model
 
     function deleteSuratMasuk($id)
     {
-        $data = [
-            'DeleteAt' => getUnixTimeStamp()
-        ];
-        return $this->update($id, $data);
+        return $this->delete($id);
     }
 
 
-    public function seeallbyFilter($idJenis = 'all', $TanggalSurat = null, $TextF = null)
+    public function seeallbyFilter($idJenis = 'all', $TextF = null, $dateS = null, $dateE = null, $limit = 10)
     {
         $build = $this->select('
         SM_SuratArchice.id as idSurat,
@@ -68,16 +74,27 @@ class SuratMasukModel extends Model
         SM_SuratArchice.TanggalSurat as TanggalSurat,
         ')
             ->join('SM_JenisSuratArchice', 'SM_JenisSuratArchice.id=SM_SuratArchice.JenisSuratArchice_id')
-            ->where('SM_SuratArchice.DeleteAt', null)
-            ->orderBy('SM_SuratArchice.TimeStamp', 'DESC');
+            ->orderBy('SM_SuratArchice.created_at', 'DESC');
 
 
-        if (!is_null($TanggalSurat)) {
-            $build
-                ->groupStart()
-                ->where('SM_SuratArchice.TanggalSurat', $TanggalSurat)
+        if (!is_null($dateS)) {
+            // $dateS = $dateS . " 00:00:01";
+            $textquery = 'SM_SuratArchice.TanggalSurat BETWEEN "' . $dateS . '"';
+
+            if (!is_null($dateE)) {
+                $dateE = '"' . $dateE . '"';
+            } else {
+                helper('textsurat');
+                $dateE = '"' . getDateTime('date') . '"';
+            }
+
+            $textquery = $textquery . " AND " . $dateE;
+
+            $build->groupStart()
+                ->where($textquery)
                 ->groupEnd();
         }
+
 
         if (!is_null($TextF)) {
             $build
@@ -95,15 +112,25 @@ class SuratMasukModel extends Model
                 ->findAll();
         }
 
-        return $build->findAll(100);
+        return $build->findAll($limit);
     }
 
-
+    function seeAllNoJenisSuratID()
+    {
+        return $this->select('
+        SM_SuratArchice.id as idSurat,
+        SM_SuratArchice.DiskirpsiSurat as DiskripsiSurat,
+        SM_SuratArchice.NomerSurat as NoSurat,
+        SM_SuratArchice.TanggalSurat as TanggalSurat,
+        ')
+            // ->join('SM_JenisSuratArchice', 'SM_JenisSuratArchice.id=SM_SuratArchice.JenisSuratArchice_id')
+            ->orderBy('SM_SuratArchice.updated_at', 'DESC')
+            ->where('SM_SuratArchice.JenisSuratArchice_id', 0)->findAll();
+    }
 
     function addSuratMasuk($data)
     {
         $data['id'] = generateIdentifier();
-        d($data);
         return $this->db->table('SM_SuratArchice')->insert($data);
     }
 

@@ -376,4 +376,34 @@ class PDFController extends BaseController
         d($data);
         d($html);
     }
+
+
+    // !Archive
+    public function staffViewSuratArchive()
+    {
+        $postdata = $this->request->getPost('id');
+        $model = Model('SuratMasukModel');
+        $namaFile = $model->seefilebyid($postdata);
+        helper('filesystem');
+        try {
+            $path = WRITEPATH . $namaFile;
+            $file = new \CodeIgniter\Files\File($path, true);
+        } catch (\Throwable $th) {
+            try {
+                $path = "../Z_Archive/" . $namaFile;
+                $file = new \CodeIgniter\Files\File($path, true);
+            } catch (\Throwable $th) {
+                // return FlashException('file Tidak ada didalam server');
+                FlashException('file Tidak ada didalam server');
+                return;
+            }
+        }
+        $binary = readfile($path);
+
+        return $this->response
+            ->setHeader('Content-Type', $file->getMimeType())
+            ->setHeader('Content-disposition', 'inline; filename="' . $file->getBasename() . '"')
+            ->setStatusCode(200)
+            ->setBody($binary);
+    }
 }

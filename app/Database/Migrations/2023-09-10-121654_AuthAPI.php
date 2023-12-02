@@ -4,11 +4,14 @@ namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
 
-$GLOBALS['dbprefix'] = "AUTH_";
-$GLOBALS['attributes'] = ['ENGINE' => 'InnoDB'];
+// $this->dbprefix = "AUTH_";
+// $this->attributes = ['ENGINE' => 'InnoDB'];
 
 class AuthAPI extends Migration
 {
+    protected $dbprefix = 'AUTH_';
+    protected $attributes = ['ENGINE' => 'InnoDB'];
+
     public function up()
     {
         // !Account_Admin_Panel
@@ -57,7 +60,7 @@ class AuthAPI extends Migration
         $this->forge->addKey('id_akun');
         $this->forge->addKey('password');
         $this->forge->addKey('TimeStamp');
-        $this->forge->createTable($GLOBALS['dbprefix'] . "$tablee", true, $GLOBALS['attributes']);
+        $this->forge->createTable($this->dbprefix . "$tablee", true, $this->attributes);
 
 
         // !Account_Admin_Panel
@@ -118,12 +121,12 @@ class AuthAPI extends Migration
         $this->forge->addKey('register_oleh');
         $this->forge->addKey('TimeStamp');
         $this->forge->addKey('expired');
-        $this->forge->createTable($GLOBALS['dbprefix'] . "$tablee", true, $GLOBALS['attributes']);
+        $this->forge->createTable($this->dbprefix . "$tablee", true, $this->attributes);
     }
 
     public function down()
     {
-        $this->forge->dropTable($GLOBALS['dbprefix'] . 'Account_Admin_Panel', true);
-        $this->forge->dropTable($GLOBALS['dbprefix'] . 'temp_pin', true);
+        $this->forge->dropTable($this->dbprefix . 'Account_Admin_Panel', true);
+        $this->forge->dropTable($this->dbprefix . 'temp_pin', true);
     }
 }

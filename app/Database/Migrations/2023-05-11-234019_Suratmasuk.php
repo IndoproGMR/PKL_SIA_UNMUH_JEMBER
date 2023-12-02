@@ -3,12 +3,17 @@
 namespace App\Database\Migrations;
 
 use CodeIgniter\Database\Migration;
+use CodeIgniter\Database\RawSql;
 
-$GLOBALS['dbprefix'] = 'SM_';
-$GLOBALS['attributes'] = ['ENGINE' => 'InnoDB'];
+// $this->dbprefix = 'SM_';
+// $this->attributes = ['ENGINE' => 'InnoDB'];
+
 
 class Suratmasuk extends Migration
 {
+    protected $dbprefix = 'SM_';
+    protected $attributes = ['ENGINE' => 'InnoDB'];
+
     public function up()
     {
         // !JenisSuratAr
@@ -29,21 +34,24 @@ class Suratmasuk extends Migration
                 'constraint' => 255,
                 'default'    => 'Tanpa Diskripsi'
             ],
-            'TimeStamp' => [
-                'type'       => 'int',
-                'constraint' => 10,
-                'unsigned'   => true
+
+            'created_at' => [
+                'type'       => 'datetime',
+                'default'    => new RawSql('CURRENT_TIMESTAMP')
             ],
-            'DeleteAt' => [
-                'type'       => 'int',
-                'constraint' => 10,
+            'updated_at' => [
+                'type'       => 'datetime',
+                'default'    => null
+            ],
+            'deleted_at' => [
+                'type'       => 'datetime',
                 'default'    => null
             ],
         ];
         $this->forge->addField($fields);
         $this->forge->addKey('id', true);
-        $this->forge->addKey('TimeStamp');
-        $this->forge->createTable($GLOBALS['dbprefix'] . "$tablee", true, $GLOBALS['attributes']);
+        $this->forge->addKey('created_at');
+        $this->forge->createTable($this->dbprefix . "$tablee", true, $this->attributes);
 
 
         // !SuratMasuk
@@ -77,21 +85,19 @@ class Suratmasuk extends Migration
                 'type'       => 'int',
                 'constraint' => 10,
                 'default'    => 0,
-                'unsigned'       => true,
+                'unsigned'   => true,
             ],
-            'TimeStamp' => [
-                'type'       => 'int',
-                'constraint' => 10,
-                'unsigned'   => true
+
+            'created_at' => [
+                'type'       => 'datetime',
+                'default'    => new RawSql('CURRENT_TIMESTAMP')
             ],
-            'TimeStampUpdate' => [
-                'type'       => 'int',
-                'constraint' => 10,
+            'updated_at' => [
+                'type'       => 'datetime',
                 'default'    => null
             ],
-            'DeleteAt' => [
-                'type'       => 'int',
-                'constraint' => 10,
+            'deleted_at' => [
+                'type'       => 'datetime',
                 'default'    => null
             ],
         ];
@@ -100,14 +106,14 @@ class Suratmasuk extends Migration
         $this->forge->addKey('NomerSurat');
         $this->forge->addKey('TanggalSurat');
         $this->forge->addKey('JenisSuratArchice_id');
-        $this->forge->addKey('TimeStamp');
-        $this->forge->addForeignKey('JenisSuratArchice_id', $GLOBALS['dbprefix'] . 'JenisSuratArchice', 'id', 'CASCADE', 'SET DEFAULT');
-        $this->forge->createTable($GLOBALS['dbprefix'] . "$tablee", true, $GLOBALS['attributes']);
+        $this->forge->addKey('created_at');
+        // $this->forge->addForeignKey('JenisSuratArchice_id', $this->dbprefix . 'JenisSuratArchice', 'id', 'CASCADE', 'SET DEFAULT');
+        $this->forge->createTable($this->dbprefix . "$tablee", true, $this->attributes);
     }
 
     public function down()
     {
-        $this->forge->dropTable($GLOBALS['dbprefix'] . 'JenisSuratArchice', true);
-        $this->forge->dropTable($GLOBALS['dbprefix'] . 'SuratArchice', true);
+        $this->forge->dropTable($this->dbprefix . 'JenisSuratArchice', true);
+        $this->forge->dropTable($this->dbprefix . 'SuratArchice', true);
     }
 }

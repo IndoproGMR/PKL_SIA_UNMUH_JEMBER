@@ -262,10 +262,13 @@ function FlashMassage(string $link = '', array $datainput = [], $type = 'unknown
         case 'set':
             $session->setFlashdata('datamassage', $data);
 
+            // d($session->setFlashdata('datamassage', $data));
+
             return redirect()->to($link);
             break;
 
         case 'get':
+            // d($session->getFlashdata('datamassage'));
             if ($session->getFlashdata('datamassage') !== '') {
                 return $session->getFlashdata('datamassage');
             }
@@ -286,13 +289,15 @@ function FlashException($dataError = "Error Tidak Di Ketahui", $mode = 'set')
 
     switch ($mode) {
         case 'set':
-            $session->setFlashdata('error', $dataError);
-            throw new \CodeIgniter\Router\Exceptions\RedirectException("/Error_Exception");
-            // return redirect()->to('/Error_Exception');
+            $session->setFlashdata('dataeror', $dataError);
+            throw new \CodeIgniter\Router\Exceptions\RedirectException("/error_exception");
             break;
 
         case 'get':
-            return $session->getFlashdata('error');
+            if ($session->getFlashdata('dataeror') !== null) {
+                return $session->getFlashdata('dataeror');
+            }
+            return "Gagal Mendapatkan Error";
             break;
 
         default:

@@ -111,7 +111,7 @@ $routes->get('/Staff/Test-proses/Master-Surat/(:any)', 'PDFController::staffTest
 // !home all user ============================================================>>
 $routes->get('/', 'Home::index');
 $routes->get('/error_perm', 'Home::error_perm');
-$routes->get('/Error_Exception', 'Home::CustomError');
+$routes->get('/error_exception', 'Home::CustomError');
 $routes->get('/qr-validasi', 'SuratKeluarController::kameraQR');
 
 $routes->get('/Staff/help', 'Home::StaffHelp');
@@ -193,7 +193,7 @@ $routes->post('/Update-Proses/BlackList-Mahasiswa', 'SuratKeluarController::Blac
 $routes->get('/semua-archive-surat', 'SuratMasukController::indexArchiveSurat');
 
 // ?Membuka File PDF ===========================================================
-$routes->post('/staff/Surat-Archive', 'Pdfrender::staffViewSurat');
+$routes->post('/staff/Surat-Archive', 'PDFController::staffViewSuratArchive');
 
 // ?Penambahan archive =========================================================
 $routes->get('/input-archive-surat', 'SuratMasukController::addArchiveSurat');
@@ -221,6 +221,9 @@ $routes->post('/staff/delete-proses/JenisSurat', 'SuratMasukController::deleteJe
 // *===========================================================================<
 
 // *quary =====================================================================>
+
+$routes->get('/Query', 'QueryController::index');
+
 
 // *===========================================================================<
 

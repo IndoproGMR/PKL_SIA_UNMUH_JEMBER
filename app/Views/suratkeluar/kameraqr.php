@@ -1,7 +1,6 @@
 <?= $this->extend('templates/layout.php') ?>
 <?= $this->section('jsH') ?>
 <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
-<script src="<?= base_url('/js/API_lib.js'); ?>" type="text/javascript"></script>
 <?= $this->endSection() ?>
 
 
@@ -256,6 +255,24 @@
         },
         /* verbose= */
         false);
+
+    // // This method will trigger user permissions
+    // Html5Qrcode.getCameras()
+    //         .then(devices => {
+    //             /**
+    //              * devices would be an array of objects of type:
+    //              * { id: "id", label: "label" }
+    //              */
+    //             if (devices && devices.length) {
+    //                 var cameraId = devices[0].id;
+    //                 // .. use this to start scanning.
+    //                 console.log(devices);
+    //                 console.log(cameraId);
+    //             }
+    //         }).catch(err => {
+    //             // handle err
+    //         });
+
     html5QrcodeScanner.render(onScanSuccess);
 
 

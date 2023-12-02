@@ -181,7 +181,7 @@
                 <?= view_cell(
                     'SidebarLinkNotifCell',
                     [
-                        'link'      => '',
+                        'link'      => '/Query',
                         'linktext'  => 'Query',
                         'imagelink' => 'asset/svg/database-solid.svg',
                         'shortcut'  => ''

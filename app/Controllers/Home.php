@@ -68,7 +68,8 @@ class Home extends BaseController
 
     public function CustomError()
     {
-        return view('home/customError');
+        return view('home/ExceptionMSG');
+        // return view('home/customError');
     }
 
     public function maintenance()

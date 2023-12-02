@@ -5,11 +5,14 @@ namespace App\Database\Migrations;
 use CodeIgniter\Database\Migration;
 use CodeIgniter\Database\RawSql;
 
-$GLOBALS['dbprefix'] = "SK_";
-$GLOBALS['attributes'] = ['ENGINE' => 'InnoDB'];
+// $this->dbprefix = "SK_";
+// $this->attributes = ['ENGINE' => 'InnoDB'];
 
 class SuratKeluar extends Migration
 {
+    protected $dbprefix = 'SK_';
+    protected $attributes = ['ENGINE' => 'InnoDB'];
+
     public function up()
     {
         // !MasterSurat
@@ -56,7 +59,7 @@ class SuratKeluar extends Migration
         $this->forge->addKey('id', true);
         $this->forge->addKey('show');
         $this->forge->addKey('created_at');
-        $this->forge->createTable($GLOBALS['dbprefix'] . "$tablee", true, $GLOBALS['attributes']);
+        $this->forge->createTable($this->dbprefix . "$tablee", true, $this->attributes);
 
         // !ttd-SuratMasuk
         $tablee = "ttd_MintaSurat";
@@ -118,8 +121,8 @@ class SuratKeluar extends Migration
         $this->forge->addKey('SuratIdentifier');
         $this->forge->addKey('created_at');
         $this->forge->addKey('mshw_id');
-        $this->forge->addForeignKey('MasterSurat_id', $GLOBALS['dbprefix'] . 'MasterSurat', 'id', 'CASCADE', 'SET DEFAULT');
-        $this->forge->createTable($GLOBALS['dbprefix'] . "$tablee", true, $GLOBALS['attributes']);
+        $this->forge->addForeignKey('MasterSurat_id', $this->dbprefix . 'MasterSurat', 'id', 'CASCADE', 'SET DEFAULT');
+        $this->forge->createTable($this->dbprefix . "$tablee", true, $this->attributes);
 
 
         // !ttd
@@ -179,13 +182,13 @@ class SuratKeluar extends Migration
         $this->forge->addKey('created_at');
         $this->forge->addKey('updated_at');
 
-        $this->forge->createTable($GLOBALS['dbprefix'] . "$tablee", true, $GLOBALS['attributes']);
+        $this->forge->createTable($this->dbprefix . "$tablee", true, $this->attributes);
     }
 
     public function down()
     {
-        $this->forge->dropTable($GLOBALS['dbprefix'] . 'MasterSurat', true);
-        $this->forge->dropTable($GLOBALS['dbprefix'] . 'ttd_MintaSurat', true);
-        $this->forge->dropTable($GLOBALS['dbprefix'] . 'ttd', true);
+        $this->forge->dropTable($this->dbprefix . 'MasterSurat', true);
+        $this->forge->dropTable($this->dbprefix . 'ttd_MintaSurat', true);
+        $this->forge->dropTable($this->dbprefix . 'ttd', true);
     }
 }

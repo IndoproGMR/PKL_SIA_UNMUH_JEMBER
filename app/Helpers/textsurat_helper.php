@@ -323,9 +323,21 @@ function getUnixTimeStamp()
     return strtotime(Time::now()->toDateTimeString());
 }
 
-function getDateTime()
+function getDateTime($type = "dateTime")
 {
-    return Time::now()->toDateTimeString(); // out:"2023-11-05 15:38:22"
+    switch ($type) {
+        case 'dateTime':
+            return Time::now()->toDateTimeString(); // out:"2023-11-05 15:38:22"
+            break;
+
+        case 'date':
+            return Time::now()->toDateString(); // out:"2023-11-05"
+            break;
+
+        default:
+            return Time::now()->toDateTimeString(); // out:"2023-11-05 15:38:22"
+            break;
+    }
 }
 
 // !future proof sampai tahun 9999 atau upgrade Bahasa atau database :v

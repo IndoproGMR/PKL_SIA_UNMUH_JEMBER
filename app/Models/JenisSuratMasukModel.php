@@ -11,14 +11,24 @@ class JenisSuratMasukModel extends Model
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
-    // protected $useSoftDeletes   = false;
+    protected $useSoftDeletes   = true;
     protected $protectFields    = true;
     protected $allowedFields    = [
         'name',
         'description',
-        'TimeStamp',
-        'DeleteAt'
+        'created_at',
+        'updated_at',
+        'deleted_at'
     ];
+
+
+    // Dates
+    protected $useTimestamps = true;
+    protected $dateFormat    = 'datetime';
+    protected $createdField  = 'created_at';
+    protected $updatedField  = 'updated_at';
+    protected $deletedField  = 'deleted_at';
+
 
 
     // protected $allowCallbacks = true;
@@ -47,7 +57,7 @@ class JenisSuratMasukModel extends Model
         if ($showall == 1) {
             return $this->select('id,name,description')->findAll();
         }
-        return $this->select('id,name,description')->where('DeleteAt', null)->findAll();
+        return $this->select('id,name,description')->findAll();
     }
 
     function seebyid($id)
@@ -57,16 +67,17 @@ class JenisSuratMasukModel extends Model
 
     function addJenisSurat($data)
     {
-        return $this->save($data);
+        return $this->insert($data);
     }
 
     function setdeleteJenisSurat($id)
     {
-        $data = [
-            'DeleteAt' => getUnixTimeStamp()
-        ];
+        return $this->delete($id);
+        // $data = [
+        // 'DeleteAt' => getUnixTimeStamp()
+        // ];
 
-        return $this->update($id, $data);
+        // return $this->update($id, $data);
     }
 
     function updateJenisSurat($id, $data)

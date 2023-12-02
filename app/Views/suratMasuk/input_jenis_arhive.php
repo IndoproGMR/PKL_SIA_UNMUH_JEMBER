@@ -1,36 +1,7 @@
 <?= $this->extend('templates/layout.php') ?>
 
 <?= $this->section('style') ?>
-<link rel="stylesheet" href="<?= base_url('/'); ?>css/status.css">
-<style>
-    /* Gaya untuk kotak sukses */
-    .success-box {
-        background-color: #4caf50;
-        color: white;
-        padding: 10px;
-        border-radius: 5px;
-        text-align: center;
-    }
-
-    /* Gaya untuk ikon centang */
-    .success-icon {
-        display: inline-block;
-        width: 20px;
-        height: 20px;
-        background-color: white;
-        border-radius: 50%;
-        text-align: center;
-        line-height: 20px;
-        margin-right: 10px;
-        color: #4caf50;
-    }
-
-    /* Gaya untuk pesan sukses */
-    .success-message {
-        display: inline-block;
-        vertical-align: middle;
-    }
-</style>
+<link rel="stylesheet" href="<?= base_url('/css/tablestyle.css'); ?>">
 <?= $this->endSection() ?>
 
 <?= $this->section('main') ?>
@@ -38,12 +9,12 @@
 
 
 
-<form action="/input-jenis-archive-surat" id="inputJenisSurat" style="display: none;">
+<form class="inputform" action="/input-jenis-archive-surat" id="inputJenisSurat" style="display: none;">
     <input type="submit" value="Tambah Jenis Surat">
 </form>
 <br>
 <br>
-<form action="" method="post">
+<form action="" method="post" class="inputform">
     <?= csrf_field() ?>
 
     <div>
@@ -69,10 +40,12 @@
         </tr>
     </thead>
     <tbody>
+        <?php $indexnum = 1; ?>
+
         <?php foreach ($jenisFilter as $index => $value) : ?>
             <?php if ($value['id'] > 0) : ?>
                 <tr>
-                    <td><?= $index ?></td>
+                    <td class="num"><?= esc($indexnum++) ?></td>
                     <td><?= esc($value['name']) ?></td>
                     <td><?= esc($value['description']) ?></td>
                     <td>
@@ -80,7 +53,7 @@
                         <?= view_cell('TombolIdCell', [
                             'link'              => 'staff/edit/JenisSurat',
                             'valueinput'        => $value['id'],
-                            'tombolsubmitclass' => 'signature',
+                            'tombolsubmitclass' => 'Actions',
                             'textsubmit'        => 'edit Jenis Surat',
                             'confirmdialog'     => false,
                         ]) ?>

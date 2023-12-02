@@ -5,11 +5,14 @@ namespace App\Database\Migrations;
 use CodeIgniter\Database\Migration;
 use CodeIgniter\Database\RawSql;
 
-$GLOBALS['dbprefix'] = "Server_";
-$GLOBALS['attributes'] = ['ENGINE' => 'InnoDB'];
+$this->dbprefix = "Server_";
+// $this->attributes = ['ENGINE' => 'InnoDB'];
 
 class ServerConfig extends Migration
 {
+    protected $dbprefix = 'Server_';
+    protected $attributes = ['ENGINE' => 'InnoDB'];
+
     public function up()
     {
         // !Config
@@ -41,7 +44,7 @@ class ServerConfig extends Migration
         $this->forge->addKey('id', true);
         $this->forge->addKey('name');
         $this->forge->addKey('UpdateTime');
-        $this->forge->createTable($GLOBALS['dbprefix'] . "$tablee", true, $GLOBALS['attributes']);
+        $this->forge->createTable($this->dbprefix . "$tablee", true, $this->attributes);
 
 
         // !BlackList
@@ -81,12 +84,12 @@ class ServerConfig extends Migration
         $this->forge->addKey('mshw_id');
         $this->forge->addKey('Status');
         $this->forge->addKey('UpdateTime');
-        $this->forge->createTable($GLOBALS['dbprefix'] . "$tablee", true, $GLOBALS['attributes']);
+        $this->forge->createTable($this->dbprefix . "$tablee", true, $this->attributes);
     }
 
     public function down()
     {
-        $this->forge->dropTable($GLOBALS['dbprefix'] . 'Config', true);
-        $this->forge->dropTable($GLOBALS['dbprefix'] . 'MHSW_BlackList', true);
+        $this->forge->dropTable($this->dbprefix . 'Config', true);
+        $this->forge->dropTable($this->dbprefix . 'MHSW_BlackList', true);
     }
 }
