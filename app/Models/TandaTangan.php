@@ -225,4 +225,10 @@ class TandaTangan extends Model
             ->groupEnd()
             ->findAll()[0]['total'];
     }
+
+    // !delete
+    function SeeDel()
+    {
+        return $this->where('deleted_at !=', null)->withDeleted()->findAll();
+    }
 }

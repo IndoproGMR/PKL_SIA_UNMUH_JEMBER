@@ -92,13 +92,14 @@ function delCacheData(string $prefix, string $customId = null): bool
 
     return cache()->delete($namacache);
 }
-
 /**
- * @param array $group 
- * @param int $secure
- * 0 = cek dari session user
- * 1 = cek dari database
- * @return bool
+ * Checks if the current user is in the specified group(s).
+ * 
+ * @param array $group Array of group names to check 
+ * @param int $secure Where to check group from:
+ *                    0 = check from user session data
+ *                    1 = check from database
+ * @return bool True if user is in one of the specified groups, false otherwise.
  */
 function in_group(array $group, int $secure = 0): bool
 {

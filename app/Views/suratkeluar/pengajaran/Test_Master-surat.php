@@ -41,7 +41,7 @@
             <td>Preview Surat:</td>
             <td>
                 <?= view_cell('TombolIdCell', [
-                    'link'              => '/Preview_Master-Surat/' . $datasurat['id'],
+                    'link'              => '/Staff/Preview_Master-Surat/' . $datasurat['id'],
                     'tombolsubmitclass' => 'Actions',
                     'textsubmit'        => 'Preview Surat',
                     'target'            => '_blank',

@@ -3,8 +3,8 @@
 namespace App\Libraries;
 
 /**
- * ?enkripsi_library Version 5
- * ?tanggal  30 - 9 - 2023
+ * ?enkripsi_library Version 7
+ * ?tanggal  25 - 12 - 2023
  */
 
 class enkripsi_library_public
@@ -21,12 +21,17 @@ class enkripsi_library_public
     }
 
     /**
-     * memanggil data enkripsiTTD
-     * 
-     * @param string $noSurat
-     * @param string $idmhs
-     * 
-     * @return string
+     * Encrypts signature data for storage.
+     *
+     * Encrypts the signature text containing the letter number, 
+     * random number, signer ID and student ID.  
+     * Uses the TwoWayEncryption method for encryption.
+     *
+     * @param string $noSurat Letter number
+     * @param string $idmhs Student ID 
+     * @param string $idPenandaTangan Signer ID, defaults to current user
+     * @param string $NamaTTD Signer name, defaults to current user
+     * @return string The encrypted signature text
      */
     public function get_EnkripsiTTD(string $noSurat, string $idmhs, $idPenandaTangan = null, $NamaTTD = null): string
     {
@@ -34,11 +39,17 @@ class enkripsi_library_public
     }
 
     /**
-     * memanggil data dekripsiTTD
+     * Decrypts encrypted signature data.
      * 
-     * @param string $text
-     * 
-     * @return array
+     * Takes an encrypted signature text and decrypts it to retrieve the original signature data.
+     * Uses the TwoWayEncryption method for decryption.
+     *
+     * @param string $text The encrypted signature text
+     * @return array An array containing the decrypted signature data:
+     *               [0] => Letter number 
+     *               [1] => Random number 
+     *               [2] => Signer ID  
+     *               [3] => Student ID
      */
     public function get_DekripsiTTD(string $text): array
     {
@@ -47,11 +58,14 @@ class enkripsi_library_public
     }
 
     /**
-     * Men Hash password
+     * Hashes a password using encryption.
+     *
+     * Takes a plaintext password string, encrypts it using the 
+     * enkripsiPass() method, and returns the encrypted hash.
      * 
-     * @param string $password
+     * @param string $password The plaintext password to hash
      * 
-     * @return string
+     * @return string The encrypted password hash
      */
     public function get_HashPass(string $password): string
     {
@@ -60,10 +74,18 @@ class enkripsi_library_public
 
 
 
-
-
     /**
-     * Men enkripsi TandaTangan
+     * Encrypts signature data for storage.
+     * 
+     * Encrypts the signature text containing the letter number, 
+     * random number, signer ID and student ID. 
+     * Uses the TwoWayEncryption method for encryption.
+     * 
+     * @param string $noSurat Letter number 
+     * @param string $idmhs Student ID
+     * @param string $idPenandaTangan Signer ID, defaults to current user
+     * @param string $NamaTTD Signer name, defaults to current user
+     * @return string The encrypted signature text 
      */
     private function enkripsiTTD($noSurat, $idmhs, $idPenandaTangan = null, $NamaTTD = null)
     {
@@ -87,7 +109,15 @@ class enkripsi_library_public
     }
 
     /**
-     * Men dekripsi TandaTangan
+     * Decrypts an encrypted signature text.
+     * 
+     * Takes an encrypted signature text and decrypts it using the TwoWayEncryption 
+     * method. The decrypted text contains the letter number, random number, 
+     * signer ID and student ID, which are extracted and returned.
+     * 
+     * @param string $text The encrypted signature text to decrypt.
+     * @return array The decrypted data containing letter number, random number,
+     *               signer ID and student ID.
      */
     private function dekripsiTTD(string $text)
     {
@@ -95,6 +125,15 @@ class enkripsi_library_public
         return $this->pecahkan($datadekripsi);
     }
 
+    /**
+     * Encrypts a password string for secure storage.
+     * 
+     * Checks if environment is development and returns plaintext password, 
+     * otherwise encrypts password using a hashing algorithm before returning.
+     * 
+     * @param string $password The plaintext password to encrypt
+     * @return string The encrypted password string
+     */
     private function enkripsiPass(string $password)
     {
         $env = $_ENV['AUTH_ENVIRONMENT'];
@@ -117,7 +156,11 @@ class enkripsi_library_public
     }
 
     /**
-     * untuk men enkripsi dan dekripsi data
+     * Encrypts or decrypts a message using OpenSSL.
+     *
+     * @param string $mode Either 'enkripsi' or 'dekripsi'. 
+     * @param string $msg The message to encrypt or decrypt.
+     * @return string The encrypted or decrypted message.
      */
     private function TwoWayEncryption(string $mode, string $msg)
     {
@@ -141,14 +184,19 @@ class enkripsi_library_public
         }
     }
 
-
-
-    private function enkripsiToken()
-    {
-        //
-    }
-
-    ///
+    /**
+     * Validates a digital signature data string against a document number.
+     * 
+     * Decrypts the signature data and checks if the document number matches. 
+     * If no match, tries to decrypt and validate the raw signature data.
+     * 
+     * Returns a validation result object indicating if signature is valid
+     * and extracted metadata if valid.
+     *
+     * @param string $data The encrypted digital signature data.
+     * @param string $noSurat The document number to validate against.  
+     * @return array Validation result object.
+     */
     public function validasiTTD(string $data, string $noSurat)
     {
         helper('datacall');
@@ -164,6 +212,7 @@ class enkripsi_library_public
 
         // !bila data dihash tidak ada di dalam DB maka dekripsikan hash nya
         $dataa['hashraw'] = $this->pecahkan($data);
+
         if (count($dataa['hashraw']) !== 3) {
             $dataa['validasi'] = [
                 'NoSurat'     => resMas('e'),
@@ -176,12 +225,14 @@ class enkripsi_library_public
             return $dataa['validasi'];
         }
 
+
+
         $dataa['hash'] = $this->dekripsiTTD($dataa['hashraw'][2]);
 
         if (count($dataa['hash']) > 2) {
             $dataa['validasi'] = [
                 'NoSurat'     => $dataa['hash'][0],
-                'TimeStamp'   => explode('-', $dataa['hash'][1])[1],
+                'TimeStamp'   => explode('-', $dataa['hash'][1])[0],
                 'pendattg_id' => $dataa['hash'][2],
                 'mshw_id'     => $dataa['hash'][3],
                 'jenisSurat'  => resMas('e'),
@@ -189,6 +240,7 @@ class enkripsi_library_public
             ];
             return $dataa['validasi'];
         }
+
 
         $dataa['validasi'] = [
             'NoSurat'     => resMas('e'),
@@ -201,15 +253,26 @@ class enkripsi_library_public
         return $dataa['validasi'];
     }
 
-    ///
+    /** Splits a string into an array by a given separator.
+     *
+     * @param string $text The string to split. 
+     * @param string $separator The separator to split on. Defaults to '_'.
+     * @return array The split string as an array.
+     */
     public function pecahkan(string $text, $seperator = '_')
     {
         return explode($seperator, $text);
     }
 
+    // !deprecated
     public function get_TwoWayEncryption(string $mode, string $msg)
     {
         return 0;
         // return $this->TwoWayEncryption($mode, $msg);
+    }
+
+    private function enkripsiToken()
+    {
+        //
     }
 }

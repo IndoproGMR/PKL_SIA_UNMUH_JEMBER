@@ -17,6 +17,8 @@ class QueryController extends BaseController
 
     public function index()
     {
+        // Semua Jumlah Mahasiswa yang ada di dalam database
+
         // TODO: Diisi dengan Tombol2 untuk ke pilihan Query
         return view('quary/index_Query');
     }

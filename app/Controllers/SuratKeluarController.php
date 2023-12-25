@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Libraries\enkripsi_library;
+use CodeIgniter\Files\FileCollection;
 
 class SuratKeluarController extends BaseController
 {
@@ -296,8 +297,32 @@ class SuratKeluarController extends BaseController
         PagePerm(['Dosen']);
 
         $jenissurat = model('MasterSuratModel');
-        $data['level'] = $jenissurat->seeGrouplvl();
-        $data['ttd'] = $jenissurat->seeNamaPettd();
+
+
+        $prefix = "QueryUntukTTD";
+        if (cekCacheData($prefix, '')) {
+            $data['level'] = $jenissurat->seeGrouplvl();
+            $data['ttd'] = $jenissurat->seeNamaPettd();
+
+            setCacheData($prefix, $data, 600, '');
+        } else {
+            $data = getCachaData($prefix, '');
+        }
+
+
+
+        // Membaca 
+        // d($data);
+        // d(FCPATH, ROOTPATH);
+        // d(APPPATH . 'Views/surat/kopSurat/' . '_kopsurat.php');
+
+
+
+        $data['FileKop'] = cekKopSurat();
+        // d($data);
+
+        // $files->;
+        // return;
         return view('suratkeluar/pengajaran/Input_Master-Surat', $data);
     }
 
@@ -310,7 +335,8 @@ class SuratKeluarController extends BaseController
             [
                 'inputisi',
                 'jenisSurat',
-                'diskripsi'
+                'diskripsi',
+                'Kopsurat'
             ]
         );
 
@@ -328,7 +354,8 @@ class SuratKeluarController extends BaseController
                 'inputisi',
                 'jenisSurat',
                 'diskripsi',
-                'TTD'
+                'TTD',
+                'Kopsurat'
             ]
         );
 
@@ -357,8 +384,12 @@ class SuratKeluarController extends BaseController
 
         $model = model('MasterSuratModel');
 
-        if (!$model->addMasterSurat($postdatasurat['jenisSurat'], $postdatasurat['diskripsi'], $postdatasurat['inputisi'], $data['json_data'])) {
-            // return FlashMassage('/input/master-surat', [resMas('f.u.save.master.surat.db')], 'fail');
+        // d($data);
+
+        // return;
+
+        if (!$model->addMasterSurat($postdatasurat['jenisSurat'], $postdatasurat['diskripsi'], $postdatasurat['inputisi'], $data['json_data'], $postdatasurat['Kopsurat'])) {
+            return FlashMassage('/Staff/Input/Master-Surat', [resMas('f.u.save.master.surat.db')], 'fail');
             // return FlashException('Tidak dapat Menambahkan Surat ke dalam DataBase');
         }
 
@@ -381,6 +412,8 @@ class SuratKeluarController extends BaseController
             return FlashMassage('/Surat/Master-Surat', [resMas('id.master.surat.n.exist')], 'unknown');
         }
 
+        $data['FileKop'] = cekKopSurat();
+
         return view('suratkeluar/pengajaran/Edit_Master_Surat', $data);
     }
 
@@ -393,7 +426,8 @@ class SuratKeluarController extends BaseController
                 'id',
                 'inputisi',
                 'jenisSurat',
-                'diskripsi'
+                'diskripsi',
+                'Kopsurat'
             ]
         );
 
@@ -413,7 +447,13 @@ class SuratKeluarController extends BaseController
         // !Validasi input End
 
         $model = model('MasterSuratModel');
-        if (!$model->updateMasterSurat($postdata['id'], $postdata['jenisSurat'], $postdata['diskripsi'], $postdata['inputisi'])) {
+        if (!$model->updateMasterSurat(
+            $postdata['id'],
+            $postdata['jenisSurat'],
+            $postdata['diskripsi'],
+            $postdata['inputisi'],
+            $postdata['Kopsurat']
+        )) {
             return FlashMassage('/Staff/Master-Surat', [resMas('f.update.master.surat.db')], 'success');
         }
 
@@ -609,6 +649,29 @@ class SuratKeluarController extends BaseController
         return FlashMassage('Staff/Permintaan_TTD-Surat_Tanpa_NoSurat', [resMas('S')], 'success');
     }
 
+    public function UploadKopSurat()
+    {
+        echo "asd";
+        // menampilkan form untuk upload file
+    }
+
+    public function UploadKopSuratProses()
+    {
+        // TODO: Buat fungsi untuk membaca file yang di upload dari tag php <php>
+
+        // menerima File php
+    }
+
+    public function updateKopSurat()
+    {
+        // Mengubah isi atau upload Ulang file
+    }
+
+    public function testKopSurat()
+    {
+        // menampilkan Semua file yang berada di dalam folder temp
+        // lalu menjalakan pdfRender
+    }
     // !END untuk pengajaran
 
 

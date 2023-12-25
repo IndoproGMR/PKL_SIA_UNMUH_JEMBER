@@ -144,3 +144,6 @@ writable/temp/*
 Z_Archive/*
 !Z_Archive/index.html
 !Z_Archive/.htaccess
+
+app/Views/surat/KopSurat/*
+!app/Views/surat/KopSurat/Default Kop surat by- Default.php

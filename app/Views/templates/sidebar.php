@@ -117,6 +117,16 @@
                     ]
                 ) ?>
 
+                <?= view_cell(
+                    'SidebarLinkNotifCell',
+                    [
+                        'link'      => '/Staff/Input/Kop-Master-Surat',
+                        'linktext'  => 'Tambah Kop Master Surat',
+                        'imagelink' => 'asset/svg/pen-solid.svg',
+                        'shortcut'  => ''
+                    ]
+                ) ?>
+
                 <hr class="line">
 
                 <?= view_cell(
@@ -202,8 +212,8 @@
                 <script>
                     // get locale storage
                     let admin = localStorage.getItem('showadmin');
-                    console.log(admin);
-                    console.log(admin == 'false');
+                    // console.log(admin);
+                    // console.log(admin == 'false');
 
                     function cekadmin() {
                         // check if showadmin is true or false

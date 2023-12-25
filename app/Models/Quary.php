@@ -1,5 +1,5 @@
 <?php
-
+// !deprecated
 namespace App\Models;
 
 use CodeIgniter\Model;

@@ -55,6 +55,7 @@ class MasterSuratModel extends Model
             $data['name']        = $datasurat[0]['name'];
             $data['description'] = $datasurat[0]['description'];
             $data['isiSurat']    = base64_decode($datasurat[0]['isiSurat']);
+            $data['kop']         = $datasurat[0]['Kopsurat'];
             $data['form']        = base64_decode($datasurat[0]['form']);
             $data['error']       = 'n';
         }
@@ -87,13 +88,14 @@ class MasterSuratModel extends Model
         return $db->newQuery()->fromSubquery($builder, 'q')->orderBy('namattd', 'ASC')->get()->getResultArray();
     }
 
-    public function addMasterSurat(String $jenissurat, String $description, String $isiSurat, String $form)
+    public function addMasterSurat(String $jenissurat, String $description, String $isiSurat, String $form, String $kopSurat)
     {
         $data = [
             'id'            => generateIdentifier(),
             'name'          => $jenissurat,
             'description'   => $description,
             'isiSurat'      => base64_encode($isiSurat),
+            'Kopsurat'      => $kopSurat,
             'form'          => base64_encode($form),
             'created_at'    => getDateTime()
         ];
@@ -101,7 +103,7 @@ class MasterSuratModel extends Model
         return $this->db->table('SK_MasterSurat')->insert($data);
     }
 
-    function updateMasterSurat($id, String $jenissurat, String $description, String $isiSurat)
+    function updateMasterSurat($id, String $jenissurat, String $description, String $isiSurat, String $kopSurat)
     {
         return $this->update(
             $id,
@@ -109,6 +111,7 @@ class MasterSuratModel extends Model
                 'name'        => $jenissurat,
                 'description' => $description,
                 'isiSurat'    => base64_encode($isiSurat),
+                'Kopsurat'    => $kopSurat,
             ]
         );
     }
@@ -131,5 +134,11 @@ class MasterSuratModel extends Model
                 'show' => 1
             ]);
         }
+    }
+
+    // !delete
+    function SeeDel()
+    {
+        return $this->where('deleted_at !=', null)->withDeleted()->findAll();
     }
 }

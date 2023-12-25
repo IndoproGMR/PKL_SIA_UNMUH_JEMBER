@@ -1,3 +1,7 @@
+<?php
+$kop = base64_decode($kop);
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -74,19 +78,10 @@
 <body>
 
     <!-- START Kop Surat -->
-    <?php
-
-    if ($kop == 1) : ?>
-        <!-- kop surat 1 -->
-        <?= $this->include('surat/_kopsurat1'); ?>
-    <?php elseif ($kop == 2) : ?>
-        <!-- kop surat 2 -->
-        <?= $this->include('surat/_kopsurat2'); ?>
-    <?php else : ?>
-        <!-- kop surat default -->
-        <?= $this->include('surat/_kopsurat'); ?>
-    <?php endif ?>
+    <?= $this->include('surat/kopSurat/' . $kop); ?>
     <!-- END Kop Surat -->
+
+
     <p>No Surat: <span><?= esc($NoSurat) ?></span></p>
 
 
@@ -96,6 +91,9 @@
         <?= $isi ?>
     </div>
     <!-- END isi Surat -->
+
+
+    <!-- START TandaTangan -->
 
     <?php
     // d($ttd);
@@ -132,28 +130,10 @@
         </table>
     </div>
 
-
-
-
-
+    <!-- END TandaTangan -->
 
 
 
 </body>
 
 </html>
-
-
-<!-- 
-tanggal
-Jabatan
-TTD
-nama
-NPK / NIP
-
-Mengetahui,
-tanggal
-Jabatan
-TTD
-nama 
--->

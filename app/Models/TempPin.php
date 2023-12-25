@@ -46,7 +46,7 @@ class TempPin extends Model
         $cek = $this
             ->where('expired >', $TimeStamp)
             ->where('pin1', $pin1)
-            ->where('pin2', '')
+            ->where('pin2', Null)
             ->where('JenisPin', 'ADMIN')
             ->findAll(2);
 

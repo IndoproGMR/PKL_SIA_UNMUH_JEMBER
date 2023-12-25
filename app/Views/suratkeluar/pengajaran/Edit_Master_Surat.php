@@ -150,6 +150,21 @@
         <input type="text" name="diskripsi" id="diskripsi" placeholder="diskripsi" value="<?= esc($datasurat['description']) ?>">
     </div>
 
+
+    <div>
+        <label for="Kopsurat">Pilih KopSurat</label>
+        <select name="Kopsurat" id="Kopsurat">
+            <?php foreach ($FileKop as $value) : ?>
+                <option value="<?php
+                                echo base64_encode($value);
+                                ?>">
+                    <?= esc($value) ?>
+                </option>
+
+            <?php endforeach ?>
+        </select>
+    </div>
+
     <input type="submit" id="submit" value="Update">
 </form>
 

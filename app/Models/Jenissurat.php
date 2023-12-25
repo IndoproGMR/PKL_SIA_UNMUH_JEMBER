@@ -1,5 +1,5 @@
 <?php
-// !Depre
+// !Deprecated
 
 namespace App\Models;
 

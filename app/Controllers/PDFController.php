@@ -38,7 +38,14 @@ class PDFController extends BaseController
 
         $data['NoSurat'] = 'Belum_Memiliki_No_Surat';
         $data['isi'] = $dataSurat['isiSurat'];
-        $data['kop'] = 1;
+
+        if (!file_exists(APPPATH . 'Views/surat/kopSurat/' . base64_decode($dataSurat['kop']) . '.php')) {
+            $dataSurat['kop'] = 'RGVmYXVsdCBLb3Agc3VyYXQ=';
+        } else {
+            $data['kop'] = $dataSurat['kop'];
+        }
+
+
 
         $html = view('surat/layout', $data);
         $html = replaceHolder($html, $datajson);
@@ -77,7 +84,14 @@ class PDFController extends BaseController
 
         $data['NoSurat'] = 'Belum_Memiliki_No_Surat';
         $data['isi'] = $dataSurat['isiSurat'];
-        $data['kop'] = 1;
+
+        if (!file_exists(APPPATH . 'Views/surat/kopSurat/' . base64_decode($dataSurat['kop']) . '.php')) {
+            $dataSurat['kop'] = 'RGVmYXVsdCBLb3Agc3VyYXQ=';
+        } else {
+            $data['kop'] = $dataSurat['kop'];
+        }
+
+
 
         $html = view('surat/layout', $data);
         $html = replaceHolder($html, $datajson);
@@ -117,7 +131,14 @@ class PDFController extends BaseController
 
         $data['NoSurat'] = $dataSurat['NoSurat'];
         $data['isi'] = $dataSurat['isiSurat'];
-        $data['kop'] = 1;
+
+        if (!file_exists(APPPATH . 'Views/surat/kopSurat/' . base64_decode($dataSurat['kop']) . '.php')) {
+            $dataSurat['kop'] = 'RGVmYXVsdCBLb3Agc3VyYXQ=';
+        } else {
+            $data['kop'] = $dataSurat['kop'];
+        }
+
+
 
         $html = view('surat/layout', $data);
         $html = replaceHolder($html, $datajson);
@@ -199,7 +220,14 @@ class PDFController extends BaseController
 
         $data['NoSurat'] = $dataSurat['NoSurat'];
         $data['isi'] = $dataSurat['isiSurat'];
-        $data['kop'] = 1;
+
+        if (!file_exists(APPPATH . 'Views/surat/kopSurat/' . base64_decode($dataSurat['kop']) . '.php')) {
+            $dataSurat['kop'] = 'RGVmYXVsdCBLb3Agc3VyYXQ=';
+        } else {
+            $data['kop'] = $dataSurat['kop'];
+        }
+
+
 
         $html = view('surat/layout', $data);
         $html = replaceHolder($html, $datajson);
@@ -277,9 +305,16 @@ class PDFController extends BaseController
         }
         // !END
 
+
         $data['NoSurat'] = $dataSurat['NoSurat'];
         $data['isi'] = $dataSurat['isiSurat'];
-        $data['kop'] = 1;
+
+        if (!file_exists(APPPATH . 'Views/surat/kopSurat/' . base64_decode($dataSurat['kop']) . '.php')) {
+            $dataSurat['kop'] = 'RGVmYXVsdCBLb3Agc3VyYXQ=';
+        } else {
+            $data['kop'] = $dataSurat['kop'];
+        }
+
 
         $html = view('surat/layout', $data);
         $html = replaceHolder($html, $datajson);
@@ -358,7 +393,14 @@ class PDFController extends BaseController
 
         $data['NoSurat'] = 'Belum_Memiliki_No_Surat';
         $data['isi'] = $dataSurat['isiSurat'];
-        $data['kop'] = 1;
+
+        if (!file_exists(APPPATH . 'Views/surat/kopSurat/' . base64_decode($dataSurat['kop']) . '.php')) {
+            $dataSurat['kop'] = 'RGVmYXVsdCBLb3Agc3VyYXQ=';
+        } else {
+            $data['kop'] = $dataSurat['kop'];
+        }
+
+
 
         $html = view('surat/layout', $data);
         $html = replaceHolder($html, $datajson);

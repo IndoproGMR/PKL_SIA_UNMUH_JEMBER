@@ -38,7 +38,13 @@ $routes->post('/Admin-Panel/join', 'AdminPanelController::newUser');
 $routes->get('/Admin-Panel/Input-info', 'AdminPanelController::addinformations');
 $routes->post('/Admin-Panel/Input-info/upload', 'AdminPanelController::addinformationsProses');
 
-// ambil data config dari db dan cache
+$routes->get('/Admin-Panel/Upload-KopSurat', 'AdminPanelController::uploadKopSuratKeServer');
+$routes->post('/Admin-Panel/Upload-proses/Upload-KopSurat', 'AdminPanelController::uploadKopSuratKeServerProses');
+
+$routes->get('/Admin-Panel/DB_Delete', 'AdminPanelController::DB_Delete');
+
+
+// TODO: ambil data config dari db dan cache
 
 if (env('CI_ENVIRONMENT') == 'development') {
     $routes->get('/Admin-Panel/CekServer', 'AdminPanelController::testServer');
@@ -101,7 +107,7 @@ $routes->get('/Preview_Surat-TandaTangan/(:any)', 'PDFController::PreviewSuratMa
 $routes->get('/Staff/Test/Master-Surat/(:any)', 'PDFController::staffTestMasterSurat/$1');
 $routes->get('/Staff/Test-proses/Master-Surat/(:any)', 'PDFController::staffTestMasterSuratProses/$1');
 
-
+// ?KopSurat
 // ! =========================================================================<<
 
 
@@ -163,6 +169,8 @@ $routes->get('/Staff/Semua-Report', 'SuratKeluarController::indexReport');
 // ?Input ======================================================================
 $routes->get('/Staff/Input/Master-Surat', 'SuratKeluarController::addJenisSurat');
 $routes->post('/Staff/Input-proses/Master-Surat', 'SuratKeluarController::addJenisSuratProses');
+
+$routes->get('/Staff/Input/Kop-Master-Surat', 'SuratKeluarController::UploadKopSurat');
 
 // ?Toggle =====================================================================
 $routes->post('/toggleshow-surat', 'SuratKeluarController::updateJenisSuratToggleProses');

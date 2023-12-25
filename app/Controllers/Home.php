@@ -81,7 +81,9 @@ class Home extends BaseController
     // ! TEST
     public function TestInfo()
     {
+        d(APPPATH . 'Views/surat/kopSurat/' . base64_decode('RGVmYXVsdCBLb3Agc3VyYXQ=') . '.php');
 
+        d(file_exists(APPPATH . 'Views/surat/kopSurat/' . base64_decode('RGVmYXVsdCBLb3Agc3VyYXQ=') . '.php'));
         // d(getUnixTimeStamp());
         // d(getDateTime());
         // d(generateIdentifier());

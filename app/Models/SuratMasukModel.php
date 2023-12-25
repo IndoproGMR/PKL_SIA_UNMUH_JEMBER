@@ -146,4 +146,10 @@ class SuratMasukModel extends Model
             ->set(['JenisSuratArchice_id' => 0])
             ->update();
     }
+
+    // !delete
+    function SeeDel()
+    {
+        return $this->where('deleted_at !=', null)->withDeleted()->findAll();
+    }
 }

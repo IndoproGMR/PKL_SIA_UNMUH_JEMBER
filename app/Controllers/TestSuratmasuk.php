@@ -1,9 +1,9 @@
 <?php
-
+// !deprecated
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use App\Libraries\enkripsi;
+use App\Libraries\enkripsi_library as enkripsi;
 use App\Models\Jenissurat;
 use App\Models\Suratmasuk;
 use App\Models\TandaTangan;

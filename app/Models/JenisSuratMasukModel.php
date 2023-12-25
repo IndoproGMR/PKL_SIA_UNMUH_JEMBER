@@ -89,4 +89,10 @@ class JenisSuratMasukModel extends Model
     {
         return $this->select('count("*") as countSurat')->join('SM_SuratArchice', 'SM_SuratArchice.JenisSuratArchice_id=SM_JenisSuratArchice.id')->where('SM_JenisSuratArchice.id', $id)->find()[0];
     }
+
+    // !delete
+    function SeeDel()
+    {
+        return $this->where('deleted_at !=', null)->withDeleted()->findAll();
+    }
 }

@@ -55,13 +55,29 @@ div.outForm input[type="submit"] {
     transition: all ease-in-out 0.3s;
 }
 
-div.outForm button:hover,
-div.outForm input[type="button"]:hover,
-div.outForm input[type="submit"]:hover {
-    color: var(--txt-black);
-    background-color: var(--clr-buttom-hover);
+div.outForm select {
+    cursor: pointer;
+    font-weight: bold;
+    background-color: var(--clr-select);
+    height: 30px;
+    margin-left: 10px;
+    padding: 5px 10px;
     border: 1px solid var(--txt-black);
-    border-radius: 5px;
+    border-radius: 10px;
+    margin: 5px 0px;
+
+    width: 100%;
+    transition: all ease-in-out 0.3s;
+}
+
+div.outForm select:hover {
+    background-color: var(--clr-select-hover);
+    border-radius: 3px;
+}
+
+div.outForm option {
+    background-color: var(--clr-select-options);
+    font-size: 15px;
 }
 
 form.inputform {
@@ -133,6 +149,7 @@ form.inputform input[type="file"]::file-selector-button:hover {
 
 form.inputform input[type="file"],
 form.inputform input[type="text"],
+form.inputform input[type="password"],
 form.inputform input[type="number"] {
     border-radius: 10px;
     border: 1px solid var(--clr-buttom);
@@ -150,6 +167,7 @@ form.inputform input[type="number"] {
 
 form.inputform input[type="file"]:hover,
 form.inputform input[type="text"]:hover,
+form.inputform input[type="password"]:hover,
 form.inputform input[type="number"]:hover,
 form.inputform input[type="date"] {
     background-color: var(--clr-select-hover);

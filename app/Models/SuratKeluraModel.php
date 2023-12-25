@@ -413,4 +413,10 @@ class SuratKeluraModel extends Model
         $query = $query->findAll($limit);
         return $query;
     }
+
+    // !delete
+    function SeeDel()
+    {
+        return $this->where('deleted_at !=', null)->withDeleted()->findAll();
+    }
 }

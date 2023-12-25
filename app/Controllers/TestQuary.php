@@ -1,4 +1,5 @@
 <?php
+// !deprecated
 
 namespace App\Controllers;
 

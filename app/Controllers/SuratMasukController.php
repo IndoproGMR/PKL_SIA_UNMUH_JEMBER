@@ -3,7 +3,6 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use App\Models\JenisSuratMasukModel;
 use App\Models\SuratMasukModel;
 
 // !Update FlashMassage
@@ -141,7 +140,7 @@ class SuratMasukController extends BaseController
             'JenisSuratArchice_id' => $postdata['jenissuratid'],
         ];
         // d($dataSimpan);
-        $model = model(SuratMasukModel::class);
+        $model = model('SuratMasukModel');
         if (!$model->addSuratMasuk($dataSimpan)) {
             return FlashMassage('/input-archive-surat', [resMas('f')]);
             // return FlashException('Tidak dapat menginputkan Surat kedatabase');

@@ -122,7 +122,7 @@
 <?= $this->section('main') ?>
 <br>
 
-<form class="inputform" action="<?= base_url('/Staff/input-proses/master-surat'); ?>" method="post" id="inputisi">
+<form class="inputform" action="<?= base_url('/Staff/Input-proses/Master-Surat'); ?>" method="post" id="inputisi">
     <h1 style="text-align: center;">Input isi Surat</h1>
     <hr>
     <br>
@@ -144,6 +144,20 @@
         <input type="text" name="diskripsi" id="diskripsi" placeholder="diskripsi">
     </div>
 
+    <div>
+        <label for="Kopsurat">Pilih KopSurat</label>
+        <select name="Kopsurat" id="Kopsurat">
+            <?php foreach ($FileKop as $value) : ?>
+                <option value="<?php
+                                echo base64_encode($value);
+                                ?>">
+                    <?= esc($value) ?>
+                </option>
+
+            <?php endforeach ?>
+        </select>
+    </div>
+
     <hr>
     <h4>Input Form</h4>
     <hr id="untuktambahdata">
@@ -155,37 +169,48 @@
 <hr>
 <div class="TombolADD">
     <button onClick="addInput()" class="tomboladd">
-        add input
+        Add Input
     </button>
     <button onClick="addfoto()" class="tomboladd">
-        add foto
+        Add Foto
     </button>
-    <button onclick="addTTD()" class="tomboladd">
-        add ttd
-    </button>
+
 </div>
 <br>
 <hr>
 <br>
-<!-- Penambahan TTD -->
-<select name="" id="TTD">
-    <option value="">TTD</option>
-    <optgroup label="GroupLVL" title="GroupLVL">
-        <?php foreach ($level as $levell) : ?>
-            <option value="Group_<?= esc($levell)['Nama'] ?>"><?= esc($levell)['Nama'] ?></option>
-        <?php endforeach ?>
-    </optgroup>
-    <optgroup label="Perorangan" title="Perorangan">
-        <?php foreach ($ttd as $ttdd) : ?>
-            <option value="Perorangan_<?= esc($ttdd)['login'] ?>"><?= esc($ttdd)['namattd'] ?> - <?= esc($ttdd)['lvl'] ?></option>
-        <?php endforeach ?>
-    </optgroup>
-</select>
-<!-- Penambahan TTD -->
+
+<div class="outForm">
+    <!-- Penambahan TTD -->
+    <div>
+        <label for="TTD" class="required">Pilih SIapa yang akan TandaTangan:</label>
+        <br>
+        <select name="" id="TTD">
+            <option value="">TTD</option>
+            <optgroup label="GroupLVL" title="GroupLVL">
+                <?php foreach ($level as $levell) : ?>
+                    <option value="Group_<?= esc($levell)['Nama'] ?>"><?= esc($levell)['Nama'] ?></option>
+                <?php endforeach ?>
+            </optgroup>
+            <optgroup label="Perorangan" title="Perorangan">
+                <?php foreach ($ttd as $ttdd) : ?>
+                    <option value="Perorangan_<?= esc($ttdd)['login'] ?>"><?= esc($ttdd)['namattd'] ?> - <?= esc($ttdd)['lvl'] ?></option>
+                <?php endforeach ?>
+            </optgroup>
+        </select>
+        <button onclick="addTTD()" class="tomboladd">
+            Add TandaTangan
+        </button>
+    </div>
+    <!-- Penambahan TTD -->
+</div>
+
 <br>
 <br>
 <hr>
 <br>
+
+
 
 <?= $this->endSection() ?>
 

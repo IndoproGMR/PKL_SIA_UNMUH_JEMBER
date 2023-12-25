@@ -41,7 +41,10 @@ class AdminPanel extends Model
 
         $passwordgaram = hash("sha256", $pass . "_" . $garam[0]['garam']);
 
+
         $useradmin = $this->where('password', $passwordgaram)->findAll(2);
+
+        // d($garam, $passwordgaram, $useradmin);
 
         if (count($useradmin) !== 1) {
             return false;
@@ -63,5 +66,11 @@ class AdminPanel extends Model
         ];
 
         return $this->insert($data);
+    }
+
+    // !delete
+    function SeeDel()
+    {
+        return $this->where('deleted_at !=', null)->withDeleted()->findAll();
     }
 }

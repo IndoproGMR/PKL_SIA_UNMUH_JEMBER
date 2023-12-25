@@ -33,6 +33,13 @@ class SuratKeluar extends Migration
             'isiSurat' => [
                 'type' => 'text'
             ], //json base64
+
+            'Kopsurat' => [
+                'type'       => 'varchar',
+                'constraint' => 510,
+                'default'    => 'defaultKop'
+            ], //json base64
+
             'form' => [
                 'type' => 'text'
             ], //json base64

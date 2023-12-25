@@ -2,15 +2,42 @@
 
 use CodeIgniter\Model;
 
-function replaceHolder($html, $json, $options = 1)
+/**
+ * Replaces placeholder text in an HTML string with values from a JSON object.
+ *
+ * @param string $html The HTML string containing placeholder text 
+ * @param string $json The JSON string containing key/value pairs for replacement
+ * 
+ * @return string The HTML with placeholders replaced by values from the JSON
+ */
+function replaceHolder($html, $json)
 {
     foreach (json_decode($json, true) as $carikata => $gantikata) {
-
         $html = str_replace("{{{$carikata}}}", $gantikata, $html);
     }
+
+    helper('textsurat');
+    $defaultText = [
+        'NOW'   => getDateTime(),
+        'TODAY' => getDateTime('date')
+
+    ];
+
+    foreach ($defaultText as $carikata => $gantikata) {
+        $html = str_replace("{{{$carikata}}}", $gantikata, $html);
+    }
+
+
     return $html;
 }
 
+/**
+ * Formats data for generating PDF signatures.
+ *
+ * @param mixed $datapenanda Signature data 
+ * 
+ * @return array Formatted signature data
+ */
 function TandaTanganFormater($datapenanda)
 {
 

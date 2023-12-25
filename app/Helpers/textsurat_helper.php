@@ -1,29 +1,8 @@
 <?php
 
+use CodeIgniter\Files\FileCollection;
 use CodeIgniter\I18n\Time;
 
-/**
- * masukan string text
- * cari kalimat yang ingin di ubah
- * options
- * 0 = tampah setting
- * 1 = {{$cariKata}}
- */
-function replacetext(String $datatext, String $cariKata, String $denganKata, String $options)
-{
-    switch ($options) {
-        case '1':
-            $cariKata = "{{{$cariKata}}}";
-            break;
-        case '0':
-            $cariKata = $cariKata;
-            break;
-        default:
-            $cariKata = $cariKata;
-            break;
-    }
-    return str_replace($cariKata, $denganKata, $datatext);
-}
 
 function potongString($inputString, $substring)
 {
@@ -176,19 +155,6 @@ function inputform($dataformarray, $class = '')
     }
 }
 
-function ubaharray($array)
-{
-    $newArray = [];
-
-    foreach ($array as $key => $value) {
-        $newArray[] = [
-            'carikata' => $key,
-            'dengankata' => $value
-        ];
-    }
-    return $newArray;
-}
-
 
 
 function cekDir($dir)
@@ -283,6 +249,59 @@ function moveFile($source, $destination)
         return false; // File sumber tidak ditemukan
     }
 }
+
+function cekKopSurat()
+{
+    $files = new FileCollection([APPPATH . 'Views/surat/kopSurat/']);
+
+    $semuaFile = $files->get();
+
+    foreach ($semuaFile as $key => $value) {
+        $pathClean = str_replace(APPPATH . 'Views/surat/kopSurat/', '', $value);
+
+        $nameClean = str_replace(".php", '', $pathClean);
+
+        $data[$key] = $nameClean;
+    }
+    return $data;
+}
+
+
+function DeteksiScript($filePath, $filename)
+{
+    $isiFile = file_get_contents($filePath . $filename);
+    $TedeksiScript = false;
+
+    if (strpos($isiFile, '<?php') !== false) {
+        $TedeksiScript = true;
+
+        $isiFile = str_replace('<?php', 'Script terdeteksi', $isiFile);
+    }
+
+    if (strpos($isiFile, 'phpinfo')) {
+        $TedeksiScript = true;
+
+        $isiFile = str_replace('phpinfo()', 'echo "Script Berbahaya terdeteksi"', $isiFile);
+    }
+
+
+
+
+    if ($TedeksiScript) {
+        // Mengganti teks dengan "Script terdeteksi"
+
+        // $isiFile = preg_replace('/\<?=/', '', $isiFile);
+
+        // Menyimpan perubahan ke file
+        file_put_contents($filePath . $filename, $isiFile);
+        FlashException('File yang di Upload Terdeteksi Script php');
+        // echo "Script telah terdeteksi dan diubah.\n";
+    }
+
+    return $TedeksiScript;
+}
+
+
 
 // !bug mengambil semua folder dari root (/) hingga folder web
 // createZipFromFolder('../Z_Archice', '../Z_Archice.zip'); // contoh penggunaan
@@ -469,4 +488,44 @@ function timeconverter($timestamp = 0, $jenis = 'yunani')
             break;
     }
     return $data;
+}
+
+
+
+// !Depre
+function ubaharray($array)
+{
+    $newArray = [];
+
+    foreach ($array as $key => $value) {
+        $newArray[] = [
+            'carikata' => $key,
+            'dengankata' => $value
+        ];
+    }
+    return $newArray;
+}
+
+
+/**
+ * masukan string text
+ * cari kalimat yang ingin di ubah
+ * options
+ * 0 = tampah setting
+ * 1 = {{$cariKata}}
+ */
+function replacetext(String $datatext, String $cariKata, String $denganKata, String $options)
+{
+    switch ($options) {
+        case '1':
+            $cariKata = "{{{$cariKata}}}";
+            break;
+        case '0':
+            $cariKata = $cariKata;
+            break;
+        default:
+            $cariKata = $cariKata;
+            break;
+    }
+    return str_replace($cariKata, $denganKata, $datatext);
 }
